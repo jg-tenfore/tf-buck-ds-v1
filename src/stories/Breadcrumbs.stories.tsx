@@ -34,7 +34,7 @@ export const Playground: Story = {
     },
 };
 
-/** Chevron dividers — the default Untitled UI separator. */
+/** Chevron dividers — the default Tenfore Golf separator. */
 export const ChevronDivider: Story = {
     args: {
         items: courseTrail,

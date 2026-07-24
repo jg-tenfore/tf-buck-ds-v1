@@ -9,6 +9,7 @@ import { MobileNavigationHeader } from "../base-components/mobile-header";
 import { NavAccountCard } from "../base-components/nav-account-card";
 import { NavItemBase } from "../base-components/nav-item";
 import { NavList } from "../base-components/nav-list";
+import { NavSearchButton } from "../base-components/nav-search-button";
 import type { NavItemType } from "../config";
 
 interface SidebarNavigationProps {
@@ -28,6 +29,8 @@ interface SidebarNavigationProps {
     className?: string;
     /** Whether to round the account card avatar. */
     avatarRounded?: boolean;
+    /** When provided, the search field renders as a button that calls this (e.g. to open a command menu). */
+    onSearchClick?: () => void;
 }
 
 export const SidebarNavigationSimple = ({
@@ -38,6 +41,7 @@ export const SidebarNavigationSimple = ({
     showAccountCard = true,
     hideBorder = false,
     className,
+    onSearchClick,
 }: SidebarNavigationProps) => {
     const MAIN_SIDEBAR_WIDTH = 280;
 
@@ -57,11 +61,20 @@ export const SidebarNavigationSimple = ({
             <div className="flex flex-col gap-5 px-4 lg:px-5">
                 <TfLogo variant="color" className="w-auto h-6" />
 
-                {/* Mobile search input */}
-                <Input size="md" aria-label="Search" placeholder="Search" icon={SearchLg} className="md:hidden" />
+                {onSearchClick ? (
+                    <>
+                        <NavSearchButton onClick={onSearchClick} className="md:hidden" />
+                        <NavSearchButton onClick={onSearchClick} showShortcut className="max-md:hidden" />
+                    </>
+                ) : (
+                    <>
+                        {/* Mobile search input */}
+                        <Input size="md" aria-label="Search" placeholder="Search" icon={SearchLg} className="md:hidden" />
 
-                {/* Desktop search input */}
-                <Input shortcut size="sm" aria-label="Search" placeholder="Search" icon={SearchLg} className="max-md:hidden" />
+                        {/* Desktop search input */}
+                        <Input shortcut size="sm" aria-label="Search" placeholder="Search" icon={SearchLg} className="max-md:hidden" />
+                    </>
+                )}
             </div>
 
             <NavList activeUrl={activeUrl} items={items} />
