@@ -1,0 +1,51 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Introduction" />
+
+<p style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#667085", margin: "0 0 6px" }}>
+  Tenfore
+</p>
+
+# Buck Design System
+
+<p style={{ fontSize: 20, lineHeight: 1.55, color: "#475467", maxWidth: 680, margin: "6px 0 0" }}>
+  Tenfore's component library and design foundations — built on Untitled UI, Tailwind CSS v4, and
+  React Aria, and documented end-to-end here in Storybook.
+</p>
+
+<p style={{ fontSize: 14, color: "#98a2b3", margin: "18px 0 0" }}>
+  Foundations &nbsp;·&nbsp; Components &nbsp;·&nbsp; Sign in / Sign up &nbsp;·&nbsp; WCAG AA
+</p>
+
+## What this is
+
+This Storybook is the single source of truth for the **Buck Design System** — the tokens, primitives,
+and component library that new Tenfore product screens are built from. It shares its color palette and
+typography with the Fox design system, on the same Untitled UI + Tailwind v4 + React Aria foundation.
+
+## The map
+
+| Category | What's inside |
+| --- | --- |
+| **Foundations** | Design tokens & primitives — Colors, Typography, Spacing, Radius, Border, Effect Styles, Icons, and Logos. |
+| **Components** | The full kit — Actions, Forms, Feedback & Status, Layout & Structure, Media & Visuals, and Navigation. |
+| **Sign in / Sign up** | Authentication flows — Log in, Sign up, Forgot password, Verification. |
+
+## How it's built
+
+- **React 19** + **TypeScript** throughout
+- **Tailwind CSS v4** with a semantic, light/dark-aware token system (`src/styles/theme.css`, `palette.css`)
+- **React Aria Components** as the accessibility foundation (imported as `Aria*`)
+- **Storybook 10** (`@storybook/nextjs-vite`) for documentation and visual testing
+
+### Conventions
+
+- Files are **kebab-case**; React Aria imports are prefixed **`Aria*`**.
+- Style with **semantic tokens** (`text-secondary`, `bg-primary`) — never literal color classes.
+
+---
+
+<p style={{ fontSize: 13, color: "#667085" }}>
+  Tip: use the sidebar to browse, or press <kbd>/</kbd> to search. Most stories have a <strong>Controls</strong> tab
+  to tweak props live, and a <strong>Docs</strong> tab for usage.
+</p>
