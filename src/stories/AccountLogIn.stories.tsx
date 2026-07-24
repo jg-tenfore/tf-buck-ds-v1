@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { AuthSimple } from "./account-auth-simple";
 
 /**
- * Simple log-in page for the Sagamore member portal — an elevated Untitled UI
+ * Simple log-in page for the Sagamore member portal — an elevated Tenfore Golf
  * card with email + password, a green sign-in CTA, and the Google / Apple icon
  * social group.
  */
