@@ -22,30 +22,34 @@ export type NavAccountType = {
     email: string;
     /** Avatar image URL. */
     avatar: string;
+    /** Initials to show when no avatar image is available. */
+    initials?: string;
     /** Online status of the account holder. This is used to display the online status indicator. */
     status: "online" | "offline";
 };
 
 const placeholderAccounts: NavAccountType[] = [
     {
-        id: "caitlyn",
-        name: "Caitlyn King",
-        email: "caitlyn@untitledui.com",
-        avatar: "https://www.untitledui.com/images/avatars/caitlyn-king?fm=webp&q=80",
+        id: "justin",
+        name: "Justin Girard",
+        email: "justin.girard@tenfore.golf",
+        avatar: "",
+        initials: "JG",
         status: "online",
     },
     {
-        id: "sienna",
-        name: "Sienna Hewitt",
-        email: "sienna@untitledui.com",
-        avatar: "https://www.untitledui.com/images/avatars/transparent/sienna-hewitt?bg=%23E0E0E0",
+        id: "marcus",
+        name: "Marcus Bennett",
+        email: "marcus.bennett@tenfore.golf",
+        avatar: "",
+        initials: "MB",
         status: "online",
     },
 ];
 
 export const NavAccountMenu = ({
     className,
-    selectedAccountId = "olivia",
+    selectedAccountId = "justin",
     ...dialogProps
 }: AriaDialogProps & { className?: string; accounts?: NavAccountType[]; selectedAccountId?: string }) => {
     const focusManager = useFocusManager();
@@ -102,7 +106,7 @@ export const NavAccountMenu = ({
                                     account.id === selectedAccountId && "bg-primary_hover",
                                 )}
                             >
-                                <AvatarLabelGroup status="online" size="md" src={account.avatar} title={account.name} subtitle={account.email} />
+                                <AvatarLabelGroup status="online" size="md" src={account.avatar} initials={account.initials} title={account.name} subtitle={account.email} />
 
                                 <RadioButtonBase isSelected={account.id === selectedAccountId} className="absolute top-2 right-2" />
                             </button>
@@ -156,7 +160,7 @@ const NavAccountCardMenuItem = ({
 
 export const NavAccountCard = ({
     popoverPlacement,
-    selectedAccountId = "caitlyn",
+    selectedAccountId = "justin",
     items = placeholderAccounts,
     avatarRounded,
 }: {
@@ -180,6 +184,7 @@ export const NavAccountCard = ({
             <AvatarLabelGroup
                 size="md"
                 src={selectedAccount.avatar}
+                initials={selectedAccount.initials}
                 title={selectedAccount.name}
                 subtitle={selectedAccount.email}
                 status={selectedAccount.status}

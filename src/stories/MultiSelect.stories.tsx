@@ -49,7 +49,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Portrait avatars borrowed from the Untitled UI roster for the avatar variant.
+// Portrait avatars borrowed from the Tenfore Golf roster for the avatar variant.
 const PARTNER_AVATARS = [
     "https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80",
     "https://www.untitledui.com/images/avatars/phoenix-baker?fm=webp&q=80",

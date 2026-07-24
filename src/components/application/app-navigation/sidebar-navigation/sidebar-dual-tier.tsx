@@ -11,6 +11,7 @@ import { MobileNavigationHeader } from "../base-components/mobile-header";
 import { NavAccountCard, type NavAccountType } from "../base-components/nav-account-card";
 import { NavItemBase } from "../base-components/nav-item";
 import { NavList } from "../base-components/nav-list";
+import { NavSearchButton } from "../base-components/nav-search-button";
 import type { NavItemType } from "../config";
 
 interface SidebarNavigationDualTierProps {
@@ -28,6 +29,8 @@ interface SidebarNavigationDualTierProps {
     selectedAccountId?: string;
     /** The items of the nav account card. */
     accountItems?: NavAccountType[];
+    /** When provided, the search field renders as a button that calls this (e.g. to open a command menu). */
+    onSearchClick?: () => void;
 }
 
 export const SidebarNavigationDualTier = ({
@@ -38,6 +41,7 @@ export const SidebarNavigationDualTier = ({
     featureCard,
     selectedAccountId,
     accountItems,
+    onSearchClick,
 }: SidebarNavigationDualTierProps) => {
     const activeItem = [...items, ...footerItems].find((item) => item.href === activeUrl || item.items?.some((subItem) => subItem.href === activeUrl));
     const [currentItem, setCurrentItem] = useState(activeItem || items[1]);
@@ -64,18 +68,29 @@ export const SidebarNavigationDualTier = ({
                 <div className="flex flex-col gap-5 px-4 lg:px-5">
                     <TfLogo variant="color" className="w-auto h-6" />
 
-                    {/* Mobile search input */}
-                    <Input size="md" aria-label="Search" placeholder="Search" icon={SearchLg} className="md:hidden" />
+                    {onSearchClick ? (
+                        <>
+                            {/* Mobile search trigger */}
+                            <NavSearchButton onClick={onSearchClick} className="md:hidden" />
+                            {/* Desktop search trigger */}
+                            <NavSearchButton onClick={onSearchClick} showShortcut className="max-md:hidden" />
+                        </>
+                    ) : (
+                        <>
+                            {/* Mobile search input */}
+                            <Input size="md" aria-label="Search" placeholder="Search" icon={SearchLg} className="md:hidden" />
 
-                    {/* Desktop search input */}
-                    <Input shortcut size="sm" aria-label="Search" placeholder="Search" icon={SearchLg} className="max-md:hidden" />
+                            {/* Desktop search input */}
+                            <Input shortcut size="sm" aria-label="Search" placeholder="Search" icon={SearchLg} className="max-md:hidden" />
+                        </>
+                    )}
                 </div>
 
                 <NavList activeUrl={activeUrl} items={items} className="lg:hidden" />
 
                 <ul className="mt-5 hidden flex-col px-4 lg:flex">
                     {items.map((item) => (
-                        <li key={item.label + item.href} className="py-px">
+                        <li key={item.label + item.href} className="py-px" onMouseEnter={() => setCurrentItem(item)}>
                             <NavItemBase
                                 current={currentItem.href === item.href}
                                 href={item.href}

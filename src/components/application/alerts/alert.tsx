@@ -34,7 +34,7 @@ export interface AlertProps {
 }
 
 /**
- * The native Untitled UI alert: a white card with a subtle ring and shadow, a
+ * The native Tenfore Golf alert: a white card with a subtle ring and shadow, a
  * colored featured icon conveying intent, a semibold title, supporting text,
  * optional inline actions, and a dismiss button.
  */

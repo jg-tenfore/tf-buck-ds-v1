@@ -28,7 +28,7 @@ const SocialGroup = () => (
 );
 
 /**
- * Simple Sagamore auth card, styled on the Untitled UI sign-up-simple
+ * Simple Sagamore auth card, styled on the Tenfore Golf sign-up-simple
  * component: an elevated white card on a subtle gray page, a Sign up / Log in
  * segmented toggle, logo + heading, the form with a green primary CTA, and the
  * Google / Apple social group. Semantic tokens only.
