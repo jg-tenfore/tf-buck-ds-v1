@@ -91,7 +91,7 @@ export const AllOrders: Story = {
             />
             <div className="flex flex-col gap-5 p-6 lg:p-8">
                 {/* Metrics row — today's totals */}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     <MetricCard title="# Orders" value="128" change={12} icon={Clipboard} trendData={[{ value: 84 }, { value: 96 }, { value: 91 }, { value: 108 }, { value: 118 }, { value: 128 }]} />
                     <MetricCard title="Total Sales" value="$14,820" change={8} icon={CurrencyDollar} trendData={[{ value: 9 }, { value: 11 }, { value: 10 }, { value: 13 }, { value: 14 }, { value: 14.8 }]} />
                     <MetricCard title="Payments" value="$13,940" change={7} icon={CreditCard01} trendData={[{ value: 8 }, { value: 10 }, { value: 11 }, { value: 12 }, { value: 13 }, { value: 13.9 }]} />
