@@ -14,10 +14,11 @@ const config: StorybookConfig = {
         { from: "../images/creditCards", to: "/card-images" },
         { from: "../images/events", to: "/events-images" },
     ],
-    // When building for GitHub Pages the site is served from a repo subpath, so
-    // the production bundle needs that base. Dev stays at root.
+    // GitHub Pages serves from a repo subpath (/tf-buck-ds-v1/), so the Pages
+    // production bundle needs that base. Netlify serves from the domain root, so
+    // skip the base there (Netlify sets NETLIFY=true during builds). Dev stays at root.
     viteFinal: async (viteConfig, { configType }) => {
-        if (configType === "PRODUCTION") {
+        if (configType === "PRODUCTION" && !process.env.NETLIFY) {
             viteConfig.base = "/tf-buck-ds-v1/";
         }
         return viteConfig;

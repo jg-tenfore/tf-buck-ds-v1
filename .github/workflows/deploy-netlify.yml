@@ -1,0 +1,42 @@
+name: Deploy Storybook to Netlify
+
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+# One Netlify deploy at a time; let an in-progress run finish.
+concurrency:
+    group: netlify-deploy
+    cancel-in-progress: false
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build Storybook
+              # NETLIFY=true makes .storybook/main.ts skip the /tf-buck-ds-v1/ base
+              # path (Netlify serves from the domain root, unlike GitHub Pages).
+              run: npm run build-storybook
+              env:
+                  NETLIFY: "true"
+
+            - name: Deploy to Netlify
+              # Upload the prebuilt static output directly (--no-build), which
+              # avoids Netlify's auto-detected Next.js build plugin entirely.
+              run: npx --yes netlify-cli@27 deploy --prod --no-build --dir=storybook-static
+              env:
+                  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+                  NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
