@@ -44,3 +44,6 @@ next-env.d.ts
 
 # local reference material (screenshots, design refs)
 /references
+
+# Local Netlify folder
+.netlify

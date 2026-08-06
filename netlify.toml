@@ -1,0 +1,10 @@
+# Netlify build configuration for the Buck Storybook.
+# The GitHub Pages workflow still deploys to jg-tenfore.github.io/tf-buck-ds-v1/;
+# Netlify serves the same Storybook at the site root.
+
+[build]
+  command = "npm run build-storybook"
+  publish = "storybook-static"
+
+[build.environment]
+  NODE_VERSION = "22"
