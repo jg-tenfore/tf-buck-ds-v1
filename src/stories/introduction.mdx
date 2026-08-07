@@ -9,7 +9,7 @@ import { Meta } from "@storybook/addon-docs/blocks";
 # Buck Design System
 
 <p style={{ fontSize: 20, lineHeight: 1.55, color: "#475467", maxWidth: 680, margin: "6px 0 0" }}>
-  Tenfore's component library and design foundations — built on Untitled UI, Tailwind CSS v4, and
+  Tenfore's component library and design foundations — built on Tailwind CSS v4 and
   React Aria, and documented end-to-end here in Storybook.
 </p>
 
@@ -17,11 +17,44 @@ import { Meta } from "@storybook/addon-docs/blocks";
   Foundations &nbsp;·&nbsp; Components &nbsp;·&nbsp; Sign in / Sign up &nbsp;·&nbsp; WCAG AA
 </p>
 
+## ▶ Interactive prototype
+
+<a href="http://localhost:6019" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+  <div style={{ border: "1px solid #eaecf0", borderRadius: 16, padding: "22px 24px", margin: "20px 0 4px", background: "linear-gradient(180deg,#fcfcfd,#f9fafb)" }}>
+    <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#16803c", margin: 0 }}>
+      Standalone app · Runs on its own
+    </p>
+    <p style={{ fontSize: 18, fontWeight: 650, color: "#101828", margin: "8px 0 4px" }}>
+      Open the Tenfore App prototype&nbsp;→
+    </p>
+    <p style={{ fontSize: 14, lineHeight: 1.55, color: "#475467", margin: 0, maxWidth: 640 }}>
+      Every App Screen stitched together behind the real Global Nav. Click any sidebar item — or press
+      <kbd style={{ margin: "0 4px", padding: "1px 6px", border: "1px solid #d0d5dd", borderRadius: 6, fontSize: 12 }}>⌘K</kbd>
+      — and the screen swaps in place, just like the live product. It runs <strong>outside Storybook</strong> as a
+      dedicated app, so it stays fast and self-contained.
+    </p>
+    <p style={{ fontSize: 13, fontWeight: 600, color: "#16803c", margin: "12px 0 0" }}>
+      localhost:6019 &nbsp;·&nbsp; opens in a new tab
+    </p>
+  </div>
+</a>
+
+The interactive prototype is a working, self-contained walkthrough of the back-office. It renders the
+dual-tier Global Nav once and drives navigation entirely client-side. It reuses the *exact* same screen
+components documented here under **App Screens**, so the prototype and the component library never drift
+apart. Any nav destination that isn't designed yet shows a clear "not built" placeholder instead of dead-ending.
+
+**How to run it** — it lives in its own local, separate from this Storybook:
+
+- Run <code>npm run app</code>, then open <a href="http://localhost:6019" target="_blank" rel="noreferrer"><strong>http://localhost:6019</strong></a> (Storybook stays on 6018).
+- Hover a top-level section to reveal its sub-items, then click to navigate.
+- Press <kbd>⌘K</kbd> / <kbd>Ctrl-K</kbd> anywhere to jump to any screen by name.
+
 ## What this is
 
 This Storybook is the single source of truth for the **Buck Design System** — the tokens, primitives,
 and component library that new Tenfore product screens are built from. It shares its color palette and
-typography with the Fox design system, on the same Untitled UI + Tailwind v4 + React Aria foundation.
+typography with the Fox design system, on the same Tailwind v4 + React Aria foundation.
 
 ## The map
 

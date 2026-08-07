@@ -33,7 +33,7 @@ export const DropdownAvatar = () => {
                         src="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80"
                         status="online"
                         title="Olivia Rhye"
-                        subtitle="olivia@untitledui.com"
+                        subtitle="olivia@tenfore.golf"
                     />
                 </div>
                 <Dropdown.Menu>

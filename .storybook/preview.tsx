@@ -1,8 +1,8 @@
 import type { Preview } from "@storybook/nextjs-vite";
 import { RouterProvider } from "react-aria-components";
 
-// Load the full Untitled UI + Tailwind v4 pipeline (theme.css carries the Buck
-// palette, ported from the Fox design system) so every story renders on-brand.
+// Load the full Buck design-system + Tailwind v4 pipeline (theme.css carries the
+// Buck palette, ported from the Fox design system) so every story renders on-brand.
 import "../src/styles/globals.css";
 
 const preview: Preview = {
@@ -14,6 +14,7 @@ const preview: Preview = {
                 order: [
                     "Introduction",
                     "Foundations",
+                    "Explorations",
                     "Components",
                     ["Actions", "Forms", "Feedback & Status", "Layout & Structure", "Charts & Data", "Media & Visuals", "Navigation"],
                     "App Chrome",

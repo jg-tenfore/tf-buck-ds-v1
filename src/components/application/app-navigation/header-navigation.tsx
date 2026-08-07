@@ -150,7 +150,7 @@ export const HeaderNavigationBase = ({
                             >
                                 Settings
                             </NavItemBase>
-                            <NavItemBase type="link" href="https://www.untitledui.com/" icon={Settings01}>
+                            <NavItemBase type="link" href="https://tenfore.golf/" icon={Settings01}>
                                 Open in browser
                             </NavItemBase>
                         </div>

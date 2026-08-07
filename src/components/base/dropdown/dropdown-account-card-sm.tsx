@@ -34,7 +34,7 @@ export const DropdownAccountCardSM = () => {
             <Dropdown.Popover className="w-60">
                 <div className="flex flex-col border-b border-secondary px-4 py-3">
                     <p className="text-sm font-semibold text-primary">PRO account</p>
-                    <p className="text-sm text-tertiary">olivia@untitledui.com</p>
+                    <p className="text-sm text-tertiary">olivia@tenfore.golf</p>
                 </div>
                 <Dropdown.Menu>
                     <Dropdown.Item icon={User01} addon="⌘K->P">

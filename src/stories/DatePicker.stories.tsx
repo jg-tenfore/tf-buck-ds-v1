@@ -93,6 +93,28 @@ export const RangePicker: RangeStory = {
     },
 };
 
+/**
+ * Range Picker with presets — the popover carries a left rail of quick ranges
+ * (Today, Yesterday, This / Last week, This / Last month, This / Last year, All
+ * time) plus in-calendar "Last week / month / year" shortcuts. Opened by default
+ * here so the presets are visible; the rail shows on wider screens (lg+).
+ */
+export const RangePickerWithPresets: RangeStory = {
+    render: (args) => (
+        <div className="min-h-[560px]">
+            <DateRangePicker {...args} />
+        </div>
+    ),
+    args: {
+        size: "sm",
+        defaultOpen: true,
+        defaultValue: {
+            start: teeDate,
+            end: teeDate.add({ days: 2 }),
+        },
+    },
+};
+
 /** A disabled range — the back-nine getaway is fully booked. */
 export const RangeDisabled: RangeStory = {
     render: (args) => <DateRangePicker {...args} />,

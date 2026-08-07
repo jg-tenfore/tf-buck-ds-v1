@@ -12,14 +12,14 @@ const accounts = [
     {
         id: "caitlyn",
         name: "Caitlyn King",
-        email: "caitlyn@untitledui.com",
+        email: "caitlyn@tenfore.golf",
         avatar: "https://www.untitledui.com/images/avatars/caitlyn-king?fm=webp&q=80",
         status: "online",
     },
     {
         id: "sienna",
         name: "Sienna Hewitt",
-        email: "sienna@untitledui.com",
+        email: "sienna@tenfore.golf",
         avatar: "https://www.untitledui.com/images/avatars/transparent/sienna-hewitt?bg=%23E0E0E0",
         status: "online",
     },

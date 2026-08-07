@@ -7,7 +7,9 @@
         "build": "next build",
         "start": "next start",
         "storybook": "storybook dev -p 6018",
-        "build-storybook": "storybook build"
+        "build-storybook": "storybook build",
+        "app": "vite --config vite.app.config.ts",
+        "build-app": "vite build --config vite.app.config.ts"
     },
     "dependencies": {
         "@tailwindcss/postcss": "^4.2.2",
@@ -40,10 +42,12 @@
         "@storybook/addon-a11y": "^10.5.4",
         "@storybook/addon-docs": "^10.5.4",
         "@storybook/nextjs-vite": "^10.5.4",
+        "@tailwindcss/vite": "^4.3.3",
         "@trivago/prettier-plugin-sort-imports": "^6.0.2",
         "@types/node": "^25.5.0",
         "@types/react": "^19.2.14",
         "@types/react-dom": "^19.2.3",
+        "@vitejs/plugin-react": "^6.0.5",
         "postcss": "^8.5.8",
         "postcss-loader": "^8.2.1",
         "prettier": "^3.8.1",

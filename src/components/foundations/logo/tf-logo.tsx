@@ -13,7 +13,7 @@ export type TfLogoVariant = "color" | "black" | "white";
 export interface TfLogoProps extends SVGProps<SVGSVGElement> {
     /**
      * Colour treatment:
-     * - `color` (default): green leaf mark (#339C5D) with black lettering.
+     * - `color` (default): green leaf mark (#3EA563) with black lettering.
      * - `black`: solid black, for light backgrounds.
      * - `white`: solid white, for dark backgrounds.
      */
@@ -26,7 +26,7 @@ export interface TfLogoProps extends SVGProps<SVGSVGElement> {
  */
 export const TfLogo = ({ variant = "color", ...props }: TfLogoProps) => {
     const wordmarkFill = variant === "white" ? "white" : "black";
-    const markFill = variant === "color" ? "#339C5D" : variant === "white" ? "white" : "black";
+    const markFill = variant === "color" ? "#3EA563" : variant === "white" ? "white" : "black";
 
     return (
         <svg viewBox="0 0 200 54" fill="none" role="img" aria-label="Tenfore" xmlns="http://www.w3.org/2000/svg" {...props}>

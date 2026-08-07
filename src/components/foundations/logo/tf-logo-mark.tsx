@@ -8,7 +8,7 @@ const MARK_PATH =
 export interface TfLogoMarkProps extends SVGProps<SVGSVGElement> {
     /**
      * Colour treatment:
-     * - `color` (default): green leaf (#339C5D).
+     * - `color` (default): green leaf (#3EA563).
      * - `black`: solid black, for light backgrounds.
      * - `white`: solid white, for dark backgrounds.
      */
@@ -20,7 +20,7 @@ export interface TfLogoMarkProps extends SVGProps<SVGSVGElement> {
  * favicons). For the full wordmark use `TfLogo`.
  */
 export const TfLogoMark = ({ variant = "color", ...props }: TfLogoMarkProps) => {
-    const fill = variant === "color" ? "#339C5D" : variant === "white" ? "white" : "black";
+    const fill = variant === "color" ? "#3EA563" : variant === "white" ? "white" : "black";
 
     return (
         <svg viewBox="0 0 64 60" fill="none" role="img" aria-label="Tenfore" xmlns="http://www.w3.org/2000/svg" {...props}>

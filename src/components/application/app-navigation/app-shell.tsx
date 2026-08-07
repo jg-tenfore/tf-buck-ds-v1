@@ -1,7 +1,8 @@
 "use client";
 
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useContext, useEffect, useState } from "react";
 import { CommandMenu } from "@/components/application/command-menu/command-menu";
+import { PrototypeContext } from "@/components/application/prototype/prototype-context";
 import { SidebarNavigationDualTier } from "./sidebar-navigation/sidebar-dual-tier";
 import { TENFORE_COMMAND_GROUPS, TENFORE_NAV_ITEMS } from "./tenfore-nav-data";
 
@@ -16,6 +17,7 @@ import { TENFORE_COMMAND_GROUPS, TENFORE_NAV_ITEMS } from "./tenfore-nav-data";
  * </AppShell>
  */
 export const AppShell = ({ activeUrl, children }: { activeUrl?: string; children: ReactNode }) => {
+    const isNested = useContext(PrototypeContext);
     const [isCommandOpen, setIsCommandOpen] = useState(false);
     const [active, setActive] = useState(activeUrl);
 
@@ -29,6 +31,13 @@ export const AppShell = ({ activeUrl, children }: { activeUrl?: string; children
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
     }, []);
+
+    // Inside the clickable prototype, the app already renders one shared shell
+    // (sidebar + command menu). Collapse to just the screen content so we don't
+    // draw a second sidebar. Standalone stories fall through to the full shell.
+    if (isNested) {
+        return <>{children}</>;
+    }
 
     return (
         <div className="flex min-h-screen bg-secondary">

@@ -47,9 +47,52 @@ export const TableRowActionsDropdown = () => (
     </Dropdown.Root>
 );
 
-const TableContext = createContext<{ size: "sm" | "md" }>({ size: "md" });
+/**
+ * Row density. `md` (default) and `sm` are the standard Untitled UI sizes; `xs`
+ * through `4xs` are progressively tighter modes for dense numeric tables
+ * (reports, ledgers, spreadsheets) where you want as many rows in view as
+ * possible. `3xs`/`4xs` also drop to `text-xs` to shrink the rows further.
+ */
+export type TableSize = "4xs" | "3xs" | "2xs" | "xs" | "sm" | "md";
 
-const TableCardRoot = ({ children, className, size = "md", ...props }: HTMLAttributes<HTMLDivElement> & { size?: "sm" | "md" }) => {
+// Per-size styling. Kept as lookup maps (instead of ternaries) so every density
+// tier stays in sync across the header, rows, cells, and selection column.
+const tableRowHeight: Record<TableSize, string> = { "4xs": "h-6", "3xs": "h-7", "2xs": "h-9", xs: "h-11", sm: "h-14", md: "h-18" };
+const tableHeaderHeight: Record<TableSize, string> = { "4xs": "h-6", "3xs": "h-6", "2xs": "h-7", xs: "h-8", sm: "h-9", md: "h-11" };
+const tableCellPadding: Record<TableSize, string> = {
+    "4xs": "px-2.5 py-0.5",
+    "3xs": "px-3 py-1",
+    "2xs": "px-3 py-1.5",
+    xs: "px-4 py-2",
+    sm: "px-5 py-3",
+    md: "px-6 py-4",
+};
+// Cell text size — the tightest tiers shrink to text-xs to pack rows in.
+const tableCellText: Record<TableSize, string> = { "4xs": "text-xs", "3xs": "text-xs", "2xs": "text-sm", xs: "text-sm", sm: "text-sm", md: "text-sm" };
+const tableCardHeaderPadding: Record<TableSize, string> = {
+    "4xs": "py-2 md:px-2.5",
+    "3xs": "py-2 md:px-3",
+    "2xs": "py-2.5 md:px-3",
+    xs: "py-3 md:px-4",
+    sm: "py-4 md:px-5",
+    md: "py-5 md:px-6",
+};
+const tableSelectColWidth: Record<TableSize, string> = {
+    "4xs": "w-6 md:pl-2.5",
+    "3xs": "w-7 md:pl-3",
+    "2xs": "w-7 md:pl-3",
+    xs: "w-8 md:pl-4",
+    sm: "w-9 md:pl-5",
+    md: "w-11 md:pl-6",
+};
+const tableSelectCellPad: Record<TableSize, string> = { "4xs": "md:pl-2.5", "3xs": "md:pl-3", "2xs": "md:pl-3", xs: "md:pl-4", sm: "md:pl-5", md: "md:pl-6" };
+
+// Default is intentionally empty (no size) so a standalone <Table size="…"> is
+// honored: TableRoot only inherits from context when a wrapping TableCard.Root
+// actually set one. A concrete default here would override every Table's size.
+const TableContext = createContext<{ size?: TableSize }>({});
+
+const TableCardRoot = ({ children, className, size = "md", ...props }: HTMLAttributes<HTMLDivElement> & { size?: TableSize }) => {
     return (
         <TableContext.Provider value={{ size }}>
             <div {...props} className={cx("overflow-hidden rounded-xl bg-primary shadow-xs ring-1 ring-secondary", className)}>
@@ -73,13 +116,13 @@ interface TableCardHeaderProps {
 }
 
 const TableCardHeader = ({ title, badge, description, contentTrailing, className }: TableCardHeaderProps) => {
-    const { size } = useContext(TableContext);
+    const { size = "md" } = useContext(TableContext);
 
     return (
         <div
             className={cx(
                 "relative flex flex-col items-start gap-4 border-b border-secondary bg-primary px-4 md:flex-row",
-                size === "sm" ? "py-4 md:px-5" : "py-5 md:px-6",
+                tableCardHeaderPadding[size],
                 className,
             )}
         >
@@ -104,7 +147,7 @@ const TableCardHeader = ({ title, badge, description, contentTrailing, className
 };
 
 interface TableRootProps extends AriaTableProps, Omit<ComponentPropsWithRef<"table">, "className" | "slot" | "style"> {
-    size?: "sm" | "md";
+    size?: TableSize;
 }
 
 const TableRoot = ({ className, size = "md", ...props }: TableRootProps) => {
@@ -123,14 +166,14 @@ TableRoot.displayName = "Table";
 interface TableHeaderProps<T extends object>
     extends AriaTableHeaderProps<T>, Omit<ComponentPropsWithRef<"thead">, "children" | "className" | "slot" | "style"> {
     bordered?: boolean;
-    size?: "sm" | "md";
+    size?: TableSize;
 }
 
 const TableHeader = <T extends object>({ columns, children, bordered = true, className, size: sizeProp, ...props }: TableHeaderProps<T>) => {
     const context = useContext(TableContext);
     const { selectionBehavior, selectionMode } = useTableOptions();
 
-    const size = sizeProp ?? context.size;
+    const size = sizeProp ?? context.size ?? "md";
 
     return (
         <AriaTableHeader
@@ -138,7 +181,7 @@ const TableHeader = <T extends object>({ columns, children, bordered = true, cla
             className={(state) =>
                 cx(
                     "relative bg-secondary",
-                    size === "sm" ? "h-9" : "h-11",
+                    tableHeaderHeight[size],
 
                     // Row border—using an "after" pseudo-element to avoid the border taking up space.
                     bordered &&
@@ -149,7 +192,7 @@ const TableHeader = <T extends object>({ columns, children, bordered = true, cla
             }
         >
             {selectionBehavior === "toggle" && (
-                <AriaColumn className={cx("relative py-2 pr-0 pl-4", size === "sm" ? "w-9 md:pl-5" : "w-11 md:pl-6")}>
+                <AriaColumn className={cx("relative py-2 pr-0 pl-4", tableSelectColWidth[size])}>
                     {selectionMode === "multiple" && (
                         <div className="flex items-start">
                             <Checkbox slot="selection" size="md" />
@@ -215,14 +258,14 @@ TableHead.displayName = "TableHead";
 interface TableRowProps<T extends object>
     extends AriaRowProps<T>, Omit<ComponentPropsWithRef<"tr">, "children" | "className" | "onClick" | "slot" | "style" | "id"> {
     highlightSelectedRow?: boolean;
-    size?: "sm" | "md";
+    size?: TableSize;
 }
 
 const TableRow = <T extends object>({ columns, children, className, highlightSelectedRow = true, size: sizeProp, ...props }: TableRowProps<T>) => {
     const context = useContext(TableContext);
     const { selectionBehavior } = useTableOptions();
 
-    const size = sizeProp ?? context.size;
+    const size = sizeProp ?? context.size ?? "md";
 
     return (
         <AriaRow
@@ -230,7 +273,7 @@ const TableRow = <T extends object>({ columns, children, className, highlightSel
             className={(state) =>
                 cx(
                     "relative outline-focus-ring transition-colors after:pointer-events-none hover:bg-secondary focus-visible:outline-2 focus-visible:-outline-offset-2",
-                    size === "sm" ? "h-14" : "h-18",
+                    tableRowHeight[size],
                     highlightSelectedRow && "selected:bg-secondary",
 
                     // Row border—using an "after" pseudo-element to avoid the border taking up space.
@@ -241,7 +284,7 @@ const TableRow = <T extends object>({ columns, children, className, highlightSel
             }
         >
             {selectionBehavior === "toggle" && (
-                <AriaCell className={cx("relative py-2 pr-0 pl-4", size === "sm" ? "md:pl-5" : "md:pl-6")}>
+                <AriaCell className={cx("relative py-2 pr-0 pl-4", tableSelectCellPad[size])}>
                     <div className="flex items-end">
                         <Checkbox slot="selection" size="md" />
                     </div>
@@ -256,23 +299,23 @@ TableRow.displayName = "TableRow";
 
 interface TableCellProps extends AriaCellProps, Omit<TdHTMLAttributes<HTMLTableCellElement>, "children" | "className" | "style" | "id"> {
     ref?: Ref<HTMLTableCellElement>;
-    size?: "sm" | "md";
+    size?: TableSize;
 }
 
 const TableCell = ({ className, children, size: sizeProp, ...props }: TableCellProps) => {
     const context = useContext(TableContext);
     const { selectionBehavior } = useTableOptions();
 
-    const size = sizeProp ?? context.size;
+    const size = sizeProp ?? context.size ?? "md";
 
     return (
         <AriaCell
             {...props}
             className={(state) =>
                 cx(
-                    "relative text-sm text-tertiary outline-focus-ring focus-visible:z-1 focus-visible:outline-2 focus-visible:-outline-offset-2",
-                    size === "sm" && "px-5 py-3",
-                    size === "md" && "px-6 py-4",
+                    "relative text-tertiary outline-focus-ring focus-visible:z-1 focus-visible:outline-2 focus-visible:-outline-offset-2",
+                    tableCellText[size],
+                    tableCellPadding[size],
 
                     selectionBehavior === "toggle" && "nth-2:pl-3",
 

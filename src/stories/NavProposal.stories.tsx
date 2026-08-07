@@ -195,7 +195,7 @@ export const Default: Story = {
     ),
 };
 
-/** The proposed grouping as a real nav: the 7 areas in the Untitled UI Simple sidebar. */
+/** The proposed grouping as a real nav: the 7 areas in the Simple sidebar. */
 const PROPOSED_NAV: NavItemType[] = [
     { label: "Home", href: "/home", icon: Home02 },
     {
@@ -291,7 +291,7 @@ const ProposedNavWithCommandMenu = () => {
                 <div className="max-w-md text-center">
                     <h1 className="text-display-xs font-semibold text-primary">Proposed navigation</h1>
                     <p className="mt-2 text-md text-tertiary">
-                        The 7 proposed groups in the Untitled UI Simple sidebar. Expand a group to see its sections; Settings &amp; Support sit in the footer.
+                        The 7 proposed groups in the Simple sidebar. Expand a group to see its sections; Settings &amp; Support sit in the footer.
                         Compare with the current dual-tier nav in <span className="font-medium text-secondary">App Chrome / Global Nav</span>.
                     </p>
                 </div>

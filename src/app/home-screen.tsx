@@ -3,7 +3,7 @@
 import { BookOpen01, Check, Copy01, Cube01, HelpCircle } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { ButtonUtility } from "@/components/base/buttons/button-utility";
-import { UntitledLogoMinimal } from "@/components/foundations/logo/untitledui-logo-minimal";
+import { TfLogo } from "@/components/foundations/logo/tf-logo";
 import { useClipboard } from "@/hooks/use-clipboard";
 
 export const HomeScreen = () => {
@@ -12,8 +12,8 @@ export const HomeScreen = () => {
     return (
         <div className="flex h-dvh flex-col">
             <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-4 md:px-8">
-                <div className="relative flex size-28 items-center justify-center">
-                    <UntitledLogoMinimal className="size-10" />
+                <div className="relative flex h-28 items-center justify-center">
+                    <TfLogo className="h-9 w-auto" />
                 </div>
 
                 <h1 className="max-w-3xl text-center text-display-sm font-semibold text-primary">Tenfore Golf Next.js starter kit</h1>
@@ -23,7 +23,7 @@ export const HomeScreen = () => {
                 </p>
 
                 <div className="relative mt-6 flex h-10 items-center rounded-lg border border-secondary bg-secondary">
-                    <code className="px-3 font-mono text-secondary">npx untitledui@latest add</code>
+                    <code className="px-3 font-mono text-secondary">npm run storybook</code>
 
                     <hr className="h-10 w-px bg-border-secondary" />
 
@@ -33,13 +33,13 @@ export const HomeScreen = () => {
                         tooltip="Copy"
                         className="mx-1"
                         icon={clipboard.copied ? Check : Copy01}
-                        onClick={() => clipboard.copy("npx untitledui@latest add")}
+                        onClick={() => clipboard.copy("npm run storybook")}
                     />
                 </div>
 
                 <div className="mt-6 flex items-center gap-3">
                     <Button
-                        href="https://www.untitledui.com/react/docs/introduction"
+                        href="https://tf-buck-ds-v1.netlify.app/"
                         target="_blank"
                         rel="noopener noreferrer"
                         color="link-color"
@@ -50,7 +50,7 @@ export const HomeScreen = () => {
                     </Button>
                     <div className="h-px w-4 bg-brand-solid" />
                     <Button
-                        href="https://www.untitledui.com/react/resources/icons"
+                        href="https://tf-buck-ds-v1.netlify.app/?path=/story/foundations-icons--all-icons"
                         target="_blank"
                         rel="noopener noreferrer"
                         color="link-color"
@@ -61,7 +61,7 @@ export const HomeScreen = () => {
                     </Button>
                     <div className="h-px w-4 bg-brand-solid" />
                     <Button
-                        href="https://github.com/untitleduico/react/issues"
+                        href="https://github.com/jg-tenfore/tf-buck-ds-v1/issues"
                         target="_blank"
                         rel="noopener noreferrer"
                         color="link-color"
