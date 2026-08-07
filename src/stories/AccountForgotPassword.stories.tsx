@@ -6,7 +6,7 @@ import { FeaturedIcon } from "@/components/foundations/featured-icon/featured-ic
 
 /**
  * Full password-reset PAGES for the Sagamore member booking account. Each story
- * is a centered Untitled-UI-style layout with a `FeaturedIcon` at the top, built
+ * is a centered Buck-style layout with a `FeaturedIcon` at the top, built
  * from existing base components. Monochromatic, so featured icons stay `gray`
  * except the final success screen. Voice: a member resetting their booking login.
  */

@@ -9,7 +9,7 @@ import { cx } from "@/utils/cx";
 import { AvatarLabelGroup } from "../avatar/avatar-label-group";
 
 export const DropdownAccountCardMD = () => {
-    const [selectedAccount, setSelectedAccount] = useState<Selection>(new Set(["untitledui"]));
+    const [selectedAccount, setSelectedAccount] = useState<Selection>(new Set(["tenfore"]));
     const [selectedTheme, setSelectedTheme] = useState<Selection>(new Set(["light-mode"]));
 
     return (
@@ -27,7 +27,7 @@ export const DropdownAccountCardMD = () => {
                     src="https://www.untitledui.com/images/avatars/olivia-rhye?fm=webp&q=80"
                     status="online"
                     title="Olivia Rhye"
-                    subtitle="olivia@untitledui.com"
+                    subtitle="olivia@tenfore.golf"
                 />
 
                 <div className="absolute top-2 right-2 flex size-7 items-center justify-center rounded-md">
@@ -70,7 +70,7 @@ export const DropdownAccountCardMD = () => {
                     <Dropdown.Section selectionMode="single" selectedKeys={selectedAccount} onSelectionChange={setSelectedAccount}>
                         <Dropdown.SectionHeader className="px-4 pt-1.5 pb-0.5 text-xs font-semibold text-brand-secondary">Company</Dropdown.SectionHeader>
 
-                        <Dropdown.Item id="untitledui">Tenfore Golf</Dropdown.Item>
+                        <Dropdown.Item id="tenfore">Tenfore Golf</Dropdown.Item>
                         <Dropdown.Item id="sisyphus">Sisyphus Ventures</Dropdown.Item>
                     </Dropdown.Section>
 

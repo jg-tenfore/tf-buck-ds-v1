@@ -9,7 +9,7 @@ import { Dropdown } from "@/components/base/dropdown/dropdown";
 import { InputBase } from "../input/input";
 
 export const DropdownSearchAdvanced = () => {
-    const [selectedUsers, setSelectedUsers] = useState<Selection>(new Set(["untitledui", "shutterframe"]));
+    const [selectedUsers, setSelectedUsers] = useState<Selection>(new Set(["tenfore", "shutterframe"]));
     let { contains } = useFilter({ sensitivity: "base" });
 
     return (
@@ -30,7 +30,7 @@ export const DropdownSearchAdvanced = () => {
                     </SearchField>
                     <Dropdown.Menu selectionMode="multiple" selectedKeys={selectedUsers} onSelectionChange={setSelectedUsers}>
                         <SubmenuTrigger>
-                            <Dropdown.Item id="untitledui" textValue="Olivia Rhye" selectionIndicator="checkbox">
+                            <Dropdown.Item id="tenfore" textValue="Olivia Rhye" selectionIndicator="checkbox">
                                 Tenfore Golf
                             </Dropdown.Item>
                             <Dropdown.Popover placement="right top" offset={-6} className="w-50">

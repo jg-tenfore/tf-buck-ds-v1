@@ -40,10 +40,29 @@ const HIGH_RES_PHOTOS = new Set([
     "images_Sagamore-SPRING_Header-Slider-Images_spring-22.webp",
 ]);
 
-// Lazy glob: we only read the matched file paths (keys), never import the assets.
-const modules = (import.meta as unknown as { glob: (pattern: string) => Record<string, unknown> }).glob(
-    "../../../../images/sagamore/*.{jpg,jpeg,png,webp,avif}",
-);
+// File names in `images/sagamore/` (served at `/sagamore-images/…` by both
+// Storybook's staticDirs and the Next app's public/ symlink). Kept as a static
+// list — not a Vite `import.meta.glob` — so this module works in Storybook
+// (Vite) and the standalone Next.js app (Turbopack) alike. Add a new image to
+// the folder and to this list to surface it.
+const SAGAMORE_FILES = [
+    "348s.jpg",
+    "42752.jpg",
+    "5_14_23_LRO_Lynnfield_Magazine_Sagamore_Golf_Course_17-1-scaled.jpg",
+    "Golf-Day-scaled.jpg",
+    "SAGAMORE-SPRING-19.jpg",
+    "Sagamore_ninth_2-1024x652.jpg",
+    "dish-burger.avif",
+    "dish-oysters.jpg",
+    "dish-steak.avif",
+    "download.webp",
+    "golf-club-dining-room.webp",
+    "images_SGI-INC_header-slideshow_home-slide-spring-27.webp",
+    "images_Sagamore-Hampton_images_sagamore-hampton-photo-gallery_SAGAMORE-HAMPTON_-78.webp",
+    "images_Sagamore-SPRING_Header-Slider-Images_spring-22.webp",
+    "images_Sagamore-SPRING_images_photo-gallery-sagamore-SPRING_SAGAMORE_SPRING-22.webp",
+    "sagamore-logo.jpeg",
+];
 
 const categorize = (name: string): SagamoreAssetCategory => {
     const n = name.toLowerCase();
@@ -53,11 +72,8 @@ const categorize = (name: string): SagamoreAssetCategory => {
 };
 
 /** Every indexed Sagamore image, sorted by file name. */
-export const sagamoreAssets: SagamoreAsset[] = Object.keys(modules)
-    .map((path) => {
-        const name = path.split("/").pop() ?? path;
-        return { name, src: `${SAGAMORE_BASE}/${name}`, category: categorize(name), isHighRes: HIGH_RES_PHOTOS.has(name) };
-    })
+export const sagamoreAssets: SagamoreAsset[] = SAGAMORE_FILES
+    .map((name) => ({ name, src: `${SAGAMORE_BASE}/${name}`, category: categorize(name), isHighRes: HIGH_RES_PHOTOS.has(name) }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
 /**

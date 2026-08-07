@@ -139,7 +139,7 @@ const calculateScale = (desiredWidth: number, originalWidth: number, originalHei
 };
 
 export const CreditCard = ({
-    company = "Untitled.",
+    company = "Tenfore.",
     cardNumber = "1234 1234 1234 1234",
     cardHolder = "OLIVIA RHYE",
     cardExpiration = "06/28",

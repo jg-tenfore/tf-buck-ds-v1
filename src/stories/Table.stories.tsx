@@ -24,8 +24,8 @@ const meta = {
     argTypes: {
         size: {
             control: "radio",
-            options: ["sm", "md"],
-            description: "Row density for the tee sheet.",
+            options: ["4xs", "3xs", "2xs", "xs", "sm", "md"],
+            description: "Row density — md/sm are standard; xs → 4xs are progressively denser for numeric tables.",
         },
         selectionMode: {
             control: "radio",
@@ -253,7 +253,7 @@ export const WithCardWrapper: Story = {
 };
 
 // ---------------------------------------------------------------------------
-// Additional variations (Untitled UI table patterns)
+// Additional variations (Buck table patterns)
 // ---------------------------------------------------------------------------
 
 type MemberStatus = "Active" | "Past due" | "Cancelled";
@@ -411,5 +411,119 @@ export const WithPagination: Story = {
                 </Button>
             </div>
         </TableCard.Root>
+    ),
+};
+
+// A dense, numbers-only dataset — daily revenue by category at Sagamore — so the
+// row density is easy to judge on real tabular figures (right-aligned, tabular-nums).
+interface DayStat {
+    id: string;
+    date: string;
+    rounds: number;
+    green: string;
+    cart: string;
+    range: string;
+    fnb: string;
+    shop: string;
+    total: string;
+}
+
+const dayStats: DayStat[] = [
+    { id: "1", date: "Jun 1", rounds: 142, green: "$6,390", cart: "$1,704", range: "$384", fnb: "$2,110", shop: "$1,240", total: "$11,828" },
+    { id: "2", date: "Jun 2", rounds: 128, green: "$5,760", cart: "$1,536", range: "$420", fnb: "$1,980", shop: "$980", total: "$10,676" },
+    { id: "3", date: "Jun 3", rounds: 156, green: "$7,020", cart: "$1,872", range: "$512", fnb: "$2,640", shop: "$1,520", total: "$13,564" },
+    { id: "4", date: "Jun 4", rounds: 173, green: "$7,785", cart: "$2,076", range: "$588", fnb: "$3,120", shop: "$1,840", total: "$15,409" },
+    { id: "5", date: "Jun 5", rounds: 165, green: "$7,425", cart: "$1,980", range: "$544", fnb: "$2,880", shop: "$1,610", total: "$14,439" },
+    { id: "6", date: "Jun 6", rounds: 98, green: "$4,410", cart: "$1,176", range: "$288", fnb: "$1,440", shop: "$720", total: "$8,034" },
+    { id: "7", date: "Jun 7", rounds: 84, green: "$3,780", cart: "$1,008", range: "$240", fnb: "$1,160", shop: "$560", total: "$6,748" },
+    { id: "8", date: "Jun 8", rounds: 149, green: "$6,705", cart: "$1,788", range: "$432", fnb: "$2,260", shop: "$1,330", total: "$12,515" },
+    { id: "9", date: "Jun 9", rounds: 137, green: "$6,165", cart: "$1,644", range: "$396", fnb: "$2,040", shop: "$1,150", total: "$11,395" },
+    { id: "10", date: "Jun 10", rounds: 168, green: "$7,560", cart: "$2,016", range: "$560", fnb: "$2,920", shop: "$1,680", total: "$14,736" },
+    { id: "11", date: "Jun 11", rounds: 181, green: "$8,145", cart: "$2,172", range: "$604", fnb: "$3,260", shop: "$1,920", total: "$16,101" },
+    { id: "12", date: "Jun 12", rounds: 159, green: "$7,155", cart: "$1,908", range: "$528", fnb: "$2,760", shop: "$1,490", total: "$13,841" },
+    { id: "13", date: "Jun 13", rounds: 112, green: "$5,040", cart: "$1,344", range: "$336", fnb: "$1,680", shop: "$860", total: "$9,260" },
+    { id: "14", date: "Jun 14", rounds: 145, green: "$6,525", cart: "$1,740", range: "$408", fnb: "$2,180", shop: "$1,270", total: "$12,123" },
+];
+
+const NumericHead = () => (
+    <Table.Header>
+        <Table.Head label="Date" isRowHeader className="w-24" />
+        <Table.Head label="Rounds" className="text-right" />
+        <Table.Head label="Green fees" className="text-right" />
+        <Table.Head label="Carts" className="text-right" />
+        <Table.Head label="Range" className="text-right" />
+        <Table.Head label="F&B" className="text-right" />
+        <Table.Head label="Pro shop" className="text-right" />
+        <Table.Head label="Total" className="text-right" />
+    </Table.Header>
+);
+
+const NumericRows = ({ items = dayStats }: { items?: DayStat[] }) => (
+    <Table.Body items={items}>
+        {(row) => (
+            <Table.Row id={row.id}>
+                <Table.Cell className="font-medium whitespace-nowrap text-primary">{row.date}</Table.Cell>
+                <Table.Cell className="text-right tabular-nums text-secondary">{row.rounds}</Table.Cell>
+                <Table.Cell className="text-right tabular-nums text-secondary">{row.green}</Table.Cell>
+                <Table.Cell className="text-right tabular-nums text-secondary">{row.cart}</Table.Cell>
+                <Table.Cell className="text-right tabular-nums text-secondary">{row.range}</Table.Cell>
+                <Table.Cell className="text-right tabular-nums text-secondary">{row.fnb}</Table.Cell>
+                <Table.Cell className="text-right tabular-nums text-secondary">{row.shop}</Table.Cell>
+                <Table.Cell className="text-right font-medium tabular-nums text-primary">{row.total}</Table.Cell>
+            </Table.Row>
+        )}
+    </Table.Body>
+);
+
+/**
+ * Compact rows — a dense, numbers-only revenue table. Defaults to the tightest
+ * `size="4xs"` (**24px** rows, `text-xs`), but flip `size` in the Controls tab
+ * through `4xs → 3xs → 2xs → xs → sm → md` to feel each density. Set `size` once
+ * on the `Table` and the header, rows, and cells all inherit it.
+ */
+export const CompactRows: Story = {
+    args: { "aria-label": "Daily revenue (compact)", size: "4xs" },
+    render: (args) => (
+        <Table {...args}>
+            <NumericHead />
+            <NumericRows items={dayStats.slice(0, 5)} />
+        </Table>
+    ),
+};
+
+// Every density mode, tightest → roomiest, each labeled with its row height.
+const DENSITY_MODES: { size: "4xs" | "3xs" | "2xs" | "xs" | "sm" | "md"; label: string; height: string; note?: string }[] = [
+    { size: "4xs", label: "4xs", height: "24px", note: "text-xs" },
+    { size: "3xs", label: "3xs", height: "28px", note: "text-xs" },
+    { size: "2xs", label: "2xs", height: "36px" },
+    { size: "xs", label: "xs", height: "44px" },
+    { size: "sm", label: "sm", height: "56px" },
+    { size: "md", label: "md", height: "72px", note: "default" },
+];
+
+/**
+ * Every density mode side by side on the same dense numeric dataset — 5 rows per
+ * mode — so you can eyeball the difference before rolling it out. From the
+ * tightest `4xs` (24px) up to the default `md` (72px).
+ */
+export const DensityComparison: Story = {
+    parameters: { controls: { disable: true } },
+    render: () => (
+        <div className="flex flex-col gap-5">
+            {DENSITY_MODES.map((mode) => (
+                <div key={mode.size} className="flex flex-col gap-1.5">
+                    <p className="text-sm font-semibold text-primary">
+                        size=&quot;{mode.label}&quot;{" "}
+                        <span className="font-normal text-tertiary">
+                            · {mode.height} rows{mode.note ? ` (${mode.note})` : ""}
+                        </span>
+                    </p>
+                    <Table aria-label={`Daily revenue ${mode.label}`} size={mode.size}>
+                        <NumericHead />
+                        <NumericRows items={dayStats.slice(0, 3)} />
+                    </Table>
+                </div>
+            ))}
+        </div>
     ),
 };

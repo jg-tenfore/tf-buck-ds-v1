@@ -1,0 +1,9 @@
+/* Standalone-app stylesheet.
+ *
+ * Re-uses the shared design-system CSS, but the Vite root here is ./standalone,
+ * so Tailwind v4's automatic content-detection would only scan this folder and
+ * miss all the component/screen sources one level up. `@source` points the
+ * scanner at ../src so every utility class actually gets generated. */
+@import "../src/styles/globals.css";
+
+@source "../src";

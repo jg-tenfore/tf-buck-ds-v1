@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import * as UntitledIcons from "@untitledui/icons";
+import * as IconLibrary from "@untitledui/icons";
 
 type IconComponent = React.FC<{ className?: string }>;
 
-/** Collect every export from @untitledui/icons that is a React component. */
-const ALL_ICONS: { name: string; Icon: IconComponent }[] = Object.entries(UntitledIcons)
+/** Collect every export from the icon library that is a React component. */
+const ALL_ICONS: { name: string; Icon: IconComponent }[] = Object.entries(IconLibrary)
     .filter(([name, value]) => typeof value === "function" && /^[A-Z]/.test(name))
     .map(([name, value]) => ({ name, Icon: value as IconComponent }))
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -15,7 +15,7 @@ interface IconGalleryProps {
 }
 
 /**
- * Renders the complete @untitledui/icons set in a responsive grid, optionally
+ * Renders the complete icon library in a responsive grid, optionally
  * filtered by a case-insensitive substring of the export name. Monochromatic
  * "Sagamore" theme — every glyph in greyscale.
  */
@@ -57,7 +57,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** The full grid — every icon in the @untitledui/icons set. */
+/** The full grid — every icon in the icon library. */
 export const AllIcons: Story = {
     args: { query: "" },
 };

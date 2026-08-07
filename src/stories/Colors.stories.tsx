@@ -1,12 +1,15 @@
+import { useEffect, useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 /**
- * The Sagamore color foundations, rendered straight from the live CSS variables.
- * The theme is monochromatic: the brand ramp is a neutral greyscale (brand-600 is
- * near-black), while the semantic error/warning/success tokens stay red/yellow/green.
+ * # Foundations · Color
  *
- * Every swatch reads its real `--color-*` variable inline so what you see is exactly
- * what ships, in both light and dark mode.
+ * The Tenfore Golf color system. Two brand primaries — **green** and **navy** — a
+ * **gray** neutral, and **red / amber / green** semantics, each authored as a full
+ * 50–950 ramp (see the **Palette** story). Semantic **tokens** map those ramps to
+ * roles — text, foreground, background, border — and adapt across light/dark (see
+ * **Tokens**). Every swatch reads its real `--color-*` variable, so what you see is
+ * exactly what ships. Sourced from the brand palette (references/080626).
  */
 const meta = {
     title: "Foundations/Colors",
@@ -16,9 +19,75 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const TokenLabel = ({ token }: { token: string }) => <span className="text-xs text-tertiary font-mono break-all">{token}</span>;
+/* -------------------------------------------------------------------------- */
+/* Layout                                                                     */
+/* -------------------------------------------------------------------------- */
 
-/** A single fill swatch: a color block reading the CSS variable, the token name, and an optional usage note. */
+const Page = ({ children }: { children: React.ReactNode }) => <div className="flex flex-col gap-10 bg-primary p-6 text-primary lg:p-8">{children}</div>;
+
+const Section = ({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) => (
+    <section className="flex flex-col gap-4">
+        <div className="flex flex-col gap-0.5">
+            <h3 className="text-sm font-semibold text-primary">{title}</h3>
+            {subtitle && <p className="text-xs text-tertiary">{subtitle}</p>}
+        </div>
+        {children}
+    </section>
+);
+
+/* -------------------------------------------------------------------------- */
+/* Ramps (Palette)                                                            */
+/* -------------------------------------------------------------------------- */
+
+const RAMP_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
+
+/** Convert a computed "rgb(r, g, b)" (or rgba) string to #rrggbb; passes other formats through. */
+const toHex = (rgb: string): string => {
+    const m = rgb.match(/\d+/g);
+    if (!m || m.length < 3) return rgb;
+    return "#" + m.slice(0, 3).map((n) => Number(n).toString(16).padStart(2, "0")).join("");
+};
+
+/** One ramp swatch — reads its own resolved color at runtime so the hex is always accurate. */
+const RampCell = ({ family, step }: { family: string; step: number }) => {
+    const ref = useRef<HTMLDivElement>(null);
+    const [hex, setHex] = useState("");
+
+    useEffect(() => {
+        if (ref.current) setHex(toHex(getComputedStyle(ref.current).backgroundColor));
+    }, []);
+
+    return (
+        <div className="flex min-w-0 flex-col gap-1">
+            <div ref={ref} className="h-14 rounded-md ring-1 ring-inset ring-black/10" style={{ background: `var(--color-${family}-${step})` }} />
+            <span className="text-[11px] font-semibold text-secondary">{step}</span>
+            <span className="font-mono text-[10px] text-tertiary uppercase">{hex}</span>
+        </div>
+    );
+};
+
+/** A labeled 50–950 ramp for one color family. */
+const Ramp = ({ family, label, note }: { family: string; label: string; note?: string }) => (
+    <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-0.5">
+            <p className="text-sm font-medium text-primary">{label}</p>
+            {note && <p className="text-xs text-tertiary">{note}</p>}
+        </div>
+        <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-11">
+            {RAMP_STEPS.map((s) => (
+                <RampCell key={s} family={family} step={s} />
+            ))}
+        </div>
+    </div>
+);
+
+/* -------------------------------------------------------------------------- */
+/* Token swatches (Tokens)                                                    */
+/* -------------------------------------------------------------------------- */
+
+const TokenLabel = ({ token }: { token: string }) => <span className="font-mono text-xs break-all text-tertiary">{token}</span>;
+
+/** A fill swatch: a color block reading the CSS variable, its token name, and an optional usage note. */
 const Swatch = ({ token, note }: { token: string; note?: string }) => (
     <div className="flex flex-col gap-1.5">
         <div className="h-16 w-full rounded-lg border border-secondary" style={{ background: `var(${token})` }} />
@@ -27,7 +96,7 @@ const Swatch = ({ token, note }: { token: string; note?: string }) => (
     </div>
 );
 
-/** A text-token swatch: an "Aa" rendered with the token color on a white card, not a filled block. */
+/** A text-token swatch: an "Aa" rendered in the token color on a white card. */
 const TextSwatch = ({ token, note }: { token: string; note?: string }) => (
     <div className="flex flex-col gap-1.5">
         <div className="flex h-16 w-full items-center justify-center rounded-lg border border-secondary bg-primary">
@@ -40,7 +109,7 @@ const TextSwatch = ({ token, note }: { token: string; note?: string }) => (
     </div>
 );
 
-/** A border-token swatch: a card outlined with the token color (inline border so the var resolves). */
+/** A border-token swatch: a card outlined with the token color. */
 const BorderSwatch = ({ token, note }: { token: string; note?: string }) => (
     <div className="flex flex-col gap-1.5">
         <div className="h-16 w-full rounded-lg bg-primary" style={{ border: `2px solid var(${token})` }} />
@@ -49,33 +118,13 @@ const BorderSwatch = ({ token, note }: { token: string; note?: string }) => (
     </div>
 );
 
-const SwatchGrid = ({ children }: { children: React.ReactNode }) => (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-3">{children}</div>
-);
-
-const GroupHeading = ({ children }: { children: React.ReactNode }) => (
-    <h3 className="text-sm font-semibold text-secondary">{children}</h3>
-);
+const SwatchGrid = ({ children }: { children: React.ReactNode }) => <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-3">{children}</div>;
 
 type Item = { token: string; note?: string };
 
 const BASE: Item[] = [
     { token: "--color-white", note: "Always white" },
     { token: "--color-black", note: "Always black" },
-];
-
-const BRAND: Item[] = [
-    { token: "--color-brand-50" },
-    { token: "--color-brand-100" },
-    { token: "--color-brand-200" },
-    { token: "--color-brand-300" },
-    { token: "--color-brand-400" },
-    { token: "--color-brand-500", note: "Base brand" },
-    { token: "--color-brand-600", note: "Primary interactive (near-black)" },
-    { token: "--color-brand-700" },
-    { token: "--color-brand-800" },
-    { token: "--color-brand-900" },
-    { token: "--color-brand-950", note: "Darkest" },
 ];
 
 const TEXT: Item[] = [
@@ -146,131 +195,88 @@ const BORDER: Item[] = [
     { token: "--color-border-error_subtle" },
 ];
 
-const Section = ({ heading, children }: { heading: string; children: React.ReactNode }) => (
-    <section className="space-y-3">
-        <GroupHeading>{heading}</GroupHeading>
-        {children}
-    </section>
-);
+/* -------------------------------------------------------------------------- */
+/* Stories                                                                    */
+/* -------------------------------------------------------------------------- */
 
-const Page = ({ children }: { children: React.ReactNode }) => <div className="bg-primary text-primary p-8 space-y-10">{children}</div>;
-
-const BaseSection = () => (
-    <Section heading="Base">
-        <SwatchGrid>
-            {BASE.map((item) => (
-                <Swatch key={item.token} {...item} />
-            ))}
-        </SwatchGrid>
-    </Section>
-);
-
-const BrandSection = () => (
-    <Section heading="Brand ramp (greyscale)">
-        <SwatchGrid>
-            {BRAND.map((item) => (
-                <Swatch key={item.token} {...item} />
-            ))}
-        </SwatchGrid>
-    </Section>
-);
-
-const TextSection = () => (
-    <Section heading="Text">
-        <SwatchGrid>
-            {TEXT.map((item) => (
-                <TextSwatch key={item.token} {...item} />
-            ))}
-        </SwatchGrid>
-    </Section>
-);
-
-const ForegroundSection = () => (
-    <Section heading="Foreground (fg)">
-        <SwatchGrid>
-            {FOREGROUND.map((item) => (
-                <Swatch key={item.token} {...item} />
-            ))}
-        </SwatchGrid>
-    </Section>
-);
-
-const BackgroundSection = () => (
-    <Section heading="Background (bg)">
-        <SwatchGrid>
-            {BACKGROUND.map((item) => (
-                <Swatch key={item.token} {...item} />
-            ))}
-        </SwatchGrid>
-    </Section>
-);
-
-const BorderSection = () => (
-    <Section heading="Border">
-        <SwatchGrid>
-            {BORDER.map((item) => (
-                <BorderSwatch key={item.token} {...item} />
-            ))}
-        </SwatchGrid>
-    </Section>
-);
-
-/** Base palette plus the monochromatic brand ramp. */
+/**
+ * **Palette** — the raw color ramps. Two brand primaries (green + navy), the gray
+ * neutral, and the red / amber / green semantics, each 50–950 with live hex.
+ */
 export const Brand: Story = {
+    name: "Palette",
     render: () => (
         <Page>
-            <BaseSection />
-            <BrandSection />
+            <Section title="Brand primaries" subtitle="Green and navy — the two Tenfore Golf brand colors.">
+                <div className="flex flex-col gap-6">
+                    <Ramp family="brand" label="Green (brand)" note="Primary brand · #3EA563 @ 500. brand-600 is the interactive shade (WCAG AA on white)." />
+                    <Ramp family="navy" label="Navy" note="Co-primary · #182132 @ 900. Deep navies for headers, heroes, and dark surfaces." />
+                </div>
+            </Section>
+
+            <Section title="Neutral" subtitle="The UI workhorse — text, surfaces, borders, dividers.">
+                <Ramp family="gray" label="Gray" />
+            </Section>
+
+            <Section title="Semantic" subtitle="Reserved for status — error, warning, success.">
+                <div className="flex flex-col gap-6">
+                    <Ramp family="red" label="Error (red)" />
+                    <Ramp family="amber" label="Warning (amber)" />
+                    <Ramp family="green" label="Success (green)" />
+                </div>
+            </Section>
         </Page>
     ),
 };
 
-/** Text fill tokens, shown as "Aa" in the token color on a white card. */
-export const Text: Story = {
+/**
+ * **Tokens** — the semantic tokens that map the palette to roles. These are what
+ * you style with (`text-primary`, `bg-brand-solid`, `border-secondary`, …); they
+ * adapt automatically across light and dark mode.
+ */
+export const Tokens: Story = {
+    name: "Tokens",
     render: () => (
         <Page>
-            <TextSection />
-        </Page>
-    ),
-};
+            <Section title="Base" subtitle="Absolute values that never change with theme.">
+                <SwatchGrid>
+                    {BASE.map((item) => (
+                        <Swatch key={item.token} {...item} />
+                    ))}
+                </SwatchGrid>
+            </Section>
 
-/** Non-text foreground tokens such as icon fills. */
-export const Foreground: Story = {
-    render: () => (
-        <Page>
-            <ForegroundSection />
-        </Page>
-    ),
-};
+            <Section title="Text" subtitle="Text fill tokens — shown as “Aa” in the token color.">
+                <SwatchGrid>
+                    {TEXT.map((item) => (
+                        <TextSwatch key={item.token} {...item} />
+                    ))}
+                </SwatchGrid>
+            </Section>
 
-/** Background fill tokens across neutral, brand, and semantic states. */
-export const Background: Story = {
-    render: () => (
-        <Page>
-            <BackgroundSection />
-        </Page>
-    ),
-};
+            <Section title="Foreground (fg)" subtitle="Non-text foreground such as icon fills.">
+                <SwatchGrid>
+                    {FOREGROUND.map((item) => (
+                        <Swatch key={item.token} {...item} />
+                    ))}
+                </SwatchGrid>
+            </Section>
 
-/** Border / stroke tokens, drawn as outlined cards. */
-export const Border: Story = {
-    render: () => (
-        <Page>
-            <BorderSection />
-        </Page>
-    ),
-};
+            <Section title="Background (bg)" subtitle="Fill tokens across neutral, brand, and semantic states.">
+                <SwatchGrid>
+                    {BACKGROUND.map((item) => (
+                        <Swatch key={item.token} {...item} />
+                    ))}
+                </SwatchGrid>
+            </Section>
 
-/** The complete token reference: every group on one page. */
-export const AllColors: Story = {
-    render: () => (
-        <Page>
-            <BaseSection />
-            <BrandSection />
-            <TextSection />
-            <ForegroundSection />
-            <BackgroundSection />
-            <BorderSection />
+            <Section title="Border" subtitle="Stroke tokens, drawn as outlined cards.">
+                <SwatchGrid>
+                    {BORDER.map((item) => (
+                        <BorderSwatch key={item.token} {...item} />
+                    ))}
+                </SwatchGrid>
+            </Section>
         </Page>
     ),
 };

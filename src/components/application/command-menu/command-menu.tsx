@@ -51,7 +51,7 @@ interface CommandMenuProps {
 /**
  * A ⌘K-style command menu built on React Aria's `Autocomplete` — a search field
  * that filters a grouped `ListBox` in real time, inside a dismissable modal.
- * Styled with Untitled UI semantic tokens. Pair it with a trigger (e.g. the
+ * Styled with Buck semantic tokens. Pair it with a trigger (e.g. the
  * sidebar search button) that flips `isOpen`.
  */
 export const CommandMenu = ({ isOpen, onOpenChange, groups, onSelect, placeholder = "Search…" }: CommandMenuProps) => {
