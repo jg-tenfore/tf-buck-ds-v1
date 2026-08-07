@@ -19,10 +19,10 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 ## ▶ Interactive prototype
 
-<a href="http://localhost:6019" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+<a href="https://tf-buck-prototype.netlify.app" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
   <div style={{ border: "1px solid #eaecf0", borderRadius: 16, padding: "22px 24px", margin: "20px 0 4px", background: "linear-gradient(180deg,#fcfcfd,#f9fafb)" }}>
     <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#16803c", margin: 0 }}>
-      Standalone app · Runs on its own
+      Standalone app · Live
     </p>
     <p style={{ fontSize: 18, fontWeight: 650, color: "#101828", margin: "8px 0 4px" }}>
       Open the Tenfore App prototype&nbsp;→
@@ -34,7 +34,7 @@ import { Meta } from "@storybook/addon-docs/blocks";
       dedicated app, so it stays fast and self-contained.
     </p>
     <p style={{ fontSize: 13, fontWeight: 600, color: "#16803c", margin: "12px 0 0" }}>
-      localhost:6019 &nbsp;·&nbsp; opens in a new tab
+      tf-buck-prototype.netlify.app &nbsp;·&nbsp; opens in a new tab
     </p>
   </div>
 </a>
@@ -44,11 +44,11 @@ dual-tier Global Nav once and drives navigation entirely client-side. It reuses 
 components documented here under **App Screens**, so the prototype and the component library never drift
 apart. Any nav destination that isn't designed yet shows a clear "not built" placeholder instead of dead-ending.
 
-**How to run it** — it lives in its own local, separate from this Storybook:
+**How to open it** — it lives on its own site, separate from this Storybook:
 
-- Run <code>npm run app</code>, then open <a href="http://localhost:6019" target="_blank" rel="noreferrer"><strong>http://localhost:6019</strong></a> (Storybook stays on 6018).
-- Hover a top-level section to reveal its sub-items, then click to navigate.
-- Press <kbd>⌘K</kbd> / <kbd>Ctrl-K</kbd> anywhere to jump to any screen by name.
+- Live app: <a href="https://tf-buck-prototype.netlify.app" target="_blank" rel="noreferrer"><strong>tf-buck-prototype.netlify.app</strong></a> (auto-deploys on every push to <code>main</code>).
+- Run it locally with <code>npm run app</code> (serves on port 6019; Storybook stays on 6018).
+- Hover a top-level section to reveal its sub-items, then click to navigate; press <kbd>⌘K</kbd> / <kbd>Ctrl-K</kbd> to jump to any screen by name.
 
 ## What this is
 
