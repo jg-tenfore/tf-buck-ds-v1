@@ -1,0 +1,56 @@
+name: Deploy Storybook to GitHub Pages
+
+# Builds Storybook and publishes it to GitHub Pages at
+# https://jg-tenfore.github.io/tf-buck-ds-v1/. This runs alongside the Netlify
+# deploys — NETLIFY is intentionally NOT set here, so .storybook/main.ts applies
+# the /tf-buck-ds-v1/ subpath base that Pages serves from.
+
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+
+# Allow one Pages deployment at a time.
+concurrency:
+    group: pages
+    cancel-in-progress: false
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build Storybook (Pages base /tf-buck-ds-v1/)
+              run: npm run build-storybook
+
+            - name: Upload Pages artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: storybook-static
+
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
