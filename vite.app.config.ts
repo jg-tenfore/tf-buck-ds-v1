@@ -1,7 +1,19 @@
+import { writeFileSync } from "node:fs";
 import { fileURLToPath, URL } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
+
+const OUT_DIR = fileURLToPath(new URL("./dist-app", import.meta.url));
+
+/** Write a Netlify SPA fallback so deep links (e.g. /orders/all) and refresh work on the static host. */
+const spaRedirects = (): Plugin => ({
+    name: "spa-redirects",
+    apply: "build",
+    closeBundle() {
+        writeFileSync(`${OUT_DIR}/_redirects`, "/*    /index.html   200\n");
+    },
+});
 
 /**
  * Standalone Tenfore app — the clickable prototype running as its OWN local,
@@ -22,11 +34,16 @@ export default defineConfig({
     root: fileURLToPath(new URL("./standalone", import.meta.url)),
     // Reuse the project's public/ (carries the image symlinks: /sagamore-images, …).
     publicDir: fileURLToPath(new URL("./public", import.meta.url)),
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), spaRedirects()],
     resolve: {
         alias: {
             "@": fileURLToPath(new URL("./src", import.meta.url)),
         },
+    },
+    build: {
+        // Emit outside the standalone root so it doesn't clash with dev.
+        outDir: OUT_DIR,
+        emptyOutDir: true,
     },
     server: {
         port: 6019,
