@@ -42,6 +42,7 @@ const preview: Preview = {
                     ],
                     "Sign in ∕ Sign up",
                     ["Sign up", "Log in", "Forgot password", "Verification"],
+                    "Prototypes",
                 ],
             },
         },
