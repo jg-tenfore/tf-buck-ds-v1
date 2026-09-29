@@ -9,7 +9,9 @@
         "storybook": "storybook dev -p 6018",
         "build-storybook": "storybook build",
         "app": "vite --config vite.app.config.ts",
-        "build-app": "vite build --config vite.app.config.ts"
+        "build-app": "vite build --config vite.app.config.ts",
+        "proto:course-settings": "vite --config vite.buck-v1-old.config.ts",
+        "build-proto:course-settings": "vite build --config vite.buck-v1-old.config.ts"
     },
     "dependencies": {
         "@tailwindcss/postcss": "^4.2.2",

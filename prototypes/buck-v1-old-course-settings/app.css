@@ -1,0 +1,5 @@
+/* Shared design-system CSS. The Vite root is this folder, so point Tailwind's
+ * scanner at ../../src so every utility used by the components is generated. */
+@import "../../src/styles/globals.css";
+
+@source "../../src";
