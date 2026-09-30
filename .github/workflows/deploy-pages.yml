@@ -39,6 +39,11 @@ jobs:
             - name: Build Storybook (Pages base /tf-buck-ds-v1/)
               run: npm run build-storybook
 
+            - name: Build prototypes into the site (/tf-buck-ds-v1/app/, /tf-buck-ds-v1/course-settings/)
+              # The standalone prototypes ship inside the same Pages artifact, so every
+              # demo is reachable from GitHub Pages.
+              run: npm run build-prototypes:pages
+
             - name: Upload Pages artifact
               uses: actions/upload-pages-artifact@v3
               with:

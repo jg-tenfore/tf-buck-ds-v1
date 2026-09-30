@@ -2,10 +2,11 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { RouterProvider } from "react-aria-components";
-import { LoadingIndicator } from "@/components/application/loading-indicator/loading-indicator";
-import { CommandMenu } from "@/components/application/command-menu/command-menu";
 import { SidebarNavigationDualTier } from "@/components/application/app-navigation/sidebar-navigation/sidebar-dual-tier";
 import { TENFORE_COMMAND_GROUPS, TENFORE_NAV_ITEMS } from "@/components/application/app-navigation/tenfore-nav-data";
+import { CommandMenu } from "@/components/application/command-menu/command-menu";
+import { LoadingIndicator } from "@/components/application/loading-indicator/loading-indicator";
+import { toAppPath, toBrowserPath } from "@/utils/app-base";
 import { MissingScreen } from "./missing-screen";
 import { PrototypeContext } from "./prototype-context";
 import { DEFAULT_URL, SCREEN_REGISTRY } from "./screen-registry";
@@ -26,7 +27,7 @@ const resolveUrl = (href: string): string => {
 /** The current screen URL taken from the browser's address bar (for deeplinks + refresh). */
 const urlFromLocation = (): string => {
     if (typeof window === "undefined") return DEFAULT_URL;
-    const path = window.location.pathname;
+    const path = toAppPath(window.location.pathname);
     return path && path !== "/" ? path : DEFAULT_URL;
 };
 
@@ -52,8 +53,8 @@ export const PrototypeApp = ({ initialUrl }: { initialUrl?: string }) => {
         setIsCommandOpen(false);
         // Push the new screen into the address bar so it's deep-linkable and
         // back/forward works — just like navigating a real app.
-        if (typeof window !== "undefined" && window.location.pathname !== url) {
-            window.history.pushState({}, "", url);
+        if (typeof window !== "undefined" && toAppPath(window.location.pathname) !== url) {
+            window.history.pushState({}, "", toBrowserPath(url));
         }
         // Reset scroll so each screen starts at the top, like a real page load.
         if (typeof window !== "undefined") window.scrollTo({ top: 0 });
@@ -62,8 +63,8 @@ export const PrototypeApp = ({ initialUrl }: { initialUrl?: string }) => {
     // On first mount, normalize the address bar to the resolved screen (e.g. a
     // deeplink to "/golf" becomes "/golf/tee-sheet/daily") without adding history.
     useEffect(() => {
-        if (typeof window !== "undefined" && window.location.pathname !== active) {
-            window.history.replaceState({}, "", active);
+        if (typeof window !== "undefined" && toAppPath(window.location.pathname) !== active) {
+            window.history.replaceState({}, "", toBrowserPath(active) + window.location.search);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

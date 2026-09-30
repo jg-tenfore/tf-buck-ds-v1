@@ -33,6 +33,10 @@ jobs:
               env:
                   NETLIFY: "true"
 
+            - name: Build prototypes into the site (/app/, /course-settings/)
+              # Backup hosting for the prototypes, alongside the Netlify Storybook.
+              run: npm run build-prototypes:netlify
+
             - name: Deploy to Netlify
               # Upload the prebuilt static output directly (--no-build), which
               # avoids Netlify's auto-detected Next.js build plugin entirely.

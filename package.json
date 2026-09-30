@@ -11,7 +11,9 @@
         "app": "vite --config vite.app.config.ts",
         "build-app": "vite build --config vite.app.config.ts",
         "proto:course-settings": "vite --config vite.buck-v1-old.config.ts",
-        "build-proto:course-settings": "vite build --config vite.buck-v1-old.config.ts"
+        "build-proto:course-settings": "vite build --config vite.buck-v1-old.config.ts",
+        "build-prototypes:pages": "APP_BASE=/tf-buck-ds-v1/app/ APP_OUT_DIR=storybook-static/app npm run build-app && APP_BASE=/tf-buck-ds-v1/course-settings/ APP_OUT_DIR=storybook-static/course-settings npm run build-proto:course-settings",
+        "build-prototypes:netlify": "APP_BASE=/app/ APP_OUT_DIR=storybook-static/app npm run build-app && APP_BASE=/course-settings/ APP_OUT_DIR=storybook-static/course-settings npm run build-proto:course-settings"
     },
     "dependencies": {
         "@tailwindcss/postcss": "^4.2.2",

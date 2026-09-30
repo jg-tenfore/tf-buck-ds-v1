@@ -1,17 +1,27 @@
-import { writeFileSync } from "node:fs";
-import { fileURLToPath, URL } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig, type Plugin } from "vite";
+import { writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { URL, fileURLToPath } from "node:url";
+import { type Plugin, defineConfig } from "vite";
+import { routePages, routesFromSource } from "./vite-route-pages";
 
-const OUT_DIR = fileURLToPath(new URL("./dist-app", import.meta.url));
+/**
+ * Where the app is served from. Default: its own site root (tf-buck-prototype.netlify.app,
+ * `npm run app`). CI also builds it into the Storybook sites under a sub-path:
+ *   APP_BASE=/tf-buck-ds-v1/app/  APP_OUT_DIR=storybook-static/app   (GitHub Pages)
+ *   APP_BASE=/app/                APP_OUT_DIR=storybook-static/app   (Netlify backup)
+ */
+const BASE = process.env.APP_BASE ?? "/";
+const OUT_DIR = process.env.APP_OUT_DIR ? resolve(process.env.APP_OUT_DIR) : fileURLToPath(new URL("./dist-app", import.meta.url));
 
 /** Write a Netlify SPA fallback so deep links (e.g. /orders/all) and refresh work on the static host. */
 const spaRedirects = (): Plugin => ({
     name: "spa-redirects",
     apply: "build",
     closeBundle() {
-        writeFileSync(`${OUT_DIR}/_redirects`, "/*    /index.html   200\n");
+        // Only meaningful on the app's own Netlify site (served from the root).
+        if (BASE === "/") writeFileSync(`${OUT_DIR}/_redirects`, "/*    /index.html   200\n");
     },
 });
 
@@ -34,7 +44,16 @@ export default defineConfig({
     root: fileURLToPath(new URL("./standalone", import.meta.url)),
     // Reuse the project's public/ (carries the image symlinks: /sagamore-images, …).
     publicDir: fileURLToPath(new URL("./public", import.meta.url)),
-    plugins: [react(), tailwindcss(), spaRedirects()],
+    base: BASE,
+    plugins: [
+        react(),
+        tailwindcss(),
+        spaRedirects(),
+        // Real pages for every screen route, so deep links work on GitHub Pages.
+        routePages(
+            routesFromSource("src/components/application/prototype/screen-registry.tsx", "src/components/application/app-navigation/tenfore-nav-data.tsx"),
+        ),
+    ],
     resolve: {
         alias: {
             "@": fileURLToPath(new URL("./src", import.meta.url)),

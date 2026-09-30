@@ -1,3 +1,5 @@
+import { staticAsset } from "@/utils/static-asset";
+
 /**
  * Content for the "Buck V1 Old — Course Settings" prototype.
  *
@@ -6,12 +8,8 @@
  * prototype is a faithful foundation to build new concepts on top of.
  */
 
-/**
- * URL for a file in public/buck-v1-old/, respecting the build's base path so
- * images also resolve when Storybook is served from a sub-path (GitHub Pages).
- */
-const BASE = ((import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? "/").replace(/\/?$/, "/");
-export const asset = (file: string) => `${BASE}buck-v1-old/${file}`;
+/** URL for a file in public/buck-v1-old/ (base-path aware, see `staticAsset`). */
+export const asset = (file: string) => staticAsset(`buck-v1-old/${file}`);
 
 export const COURSE = {
     name: "The Dunes of Delgado PROD",

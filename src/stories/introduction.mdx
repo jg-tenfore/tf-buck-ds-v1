@@ -43,20 +43,28 @@ export const Grid = ({ children }) => (
 
 export const story = (id) => `./?path=/story/${id}`;
 
+export const PAGES = "https://jg-tenfore.github.io/tf-buck-ds-v1";
+export const NETLIFY = "https://tf-buck-ds-v1.netlify.app";
+
+export const hosted = (path) => [
+  { label: "Open on GitHub Pages", href: `${PAGES}${path}`, external: true },
+  { label: "Backup (Netlify)", href: `${NETLIFY}${path}`, external: true },
+];
+
 ## ▶ Prototypes
 
-Every clickable prototype in this repo. **View in Storybook** works here and on the published Storybook;
-**Run locally** needs the prototype's own dev server running on your machine.
+Every clickable prototype in this repo, hosted on **GitHub Pages** with **Netlify** as a backup — both redeploy
+automatically on every merge to <code>main</code>. **View in Storybook** opens the same screen as a story.
 
 ### Tenfore App
 
 <Grid>
     <Card
-        eyebrow="Standalone app · Live"
+        eyebrow="Standalone app · Hosted"
         title="Tenfore App prototype"
         links={[
-            { label: "Open live app", href: "https://tf-buck-prototype.netlify.app", external: true },
-            { label: "Run locally (npm run app → :6019)", href: "http://localhost:6019", external: true },
+            ...hosted("/app/"),
+            { label: "Standalone site", href: "https://tf-buck-prototype.netlify.app", external: true },
         ]}
     >
         Every App Screen stitched together behind the real Global Nav. Click any sidebar item — or press ⌘K — and the screen swaps in place, just like the live
@@ -68,7 +76,7 @@ Every clickable prototype in this repo. **View in Storybook** works here and on 
 
 The legacy **Golf Course Settings** screen (The Dunes of Delgado PROD), rebuilt on this design system from production
 screenshots, plus four concepts for making its 17 sections and hundreds of settings easier to find and scan.
-Run them locally with <code>npm run proto:course-settings</code> (port 6020).
+Everything is hosted below; to work on it locally, run <code>npm run proto:course-settings</code> (port 6020).
 
 <Grid>
     <Card
@@ -76,8 +84,8 @@ Run them locally with <code>npm run proto:course-settings</code> (port 6020).
         title="Buck V1 Old – Course Settings"
         accent="#475467"
         links={[
+            ...hosted("/course-settings/"),
             { label: "View in Storybook", href: story("prototypes-buck-v1-old-course-settings-original--full-screen") },
-            { label: "Run locally", href: "http://localhost:6020/", external: true },
         ]}
     >
         A faithful rebuild of today's screen — legacy sidebar, 17 accordion sections, every field, toggle and table from production. The "before" that every
@@ -87,8 +95,8 @@ Run them locally with <code>npm run proto:course-settings</code> (port 6020).
         eyebrow="Concept 1"
         title="Re-laid out"
         links={[
+            ...hosted("/course-settings/concept-1-relayout"),
             { label: "View in Storybook", href: story("prototypes-buck-v1-old-course-settings-concepts--relayout") },
-            { label: "Run locally", href: "http://localhost:6020/concept-1-relayout", external: true },
         ]}
     >
         Same settings, redesigned section by section to use less space: payment types as chips with a <em>Manage</em>
@@ -98,8 +106,8 @@ Run them locally with <code>npm run proto:course-settings</code> (port 6020).
         eyebrow="Concept 2"
         title="Dynamic search"
         links={[
+            ...hosted("/course-settings/concept-2-search"),
             { label: "View in Storybook", href: story("prototypes-buck-v1-old-course-settings-concepts--dynamic-search") },
-            { label: "Run locally", href: "http://localhost:6020/concept-2-search", external: true },
         ]}
     >
         A search rail beside a narrower settings column. As you type, unrelated settings dim to 10% (or hide) and matches are highlighted in place. Understands
@@ -109,8 +117,8 @@ Run them locally with <code>npm run proto:course-settings</code> (port 6020).
         eyebrow="Concept 3"
         title="Command menu"
         links={[
+            ...hosted("/course-settings/concept-3-command-menu"),
             { label: "View in Storybook", href: story("prototypes-buck-v1-old-course-settings-concepts--command-menu") },
-            { label: "Run locally", href: "http://localhost:6020/concept-3-command-menu", external: true },
         ]}
     >
         The original screen with one addition: a big search bar above it. Results drop down Google-Admin style — Ask TenFore AI, then Sections, Settings and
@@ -120,8 +128,8 @@ Run them locally with <code>npm run proto:course-settings</code> (port 6020).
         eyebrow="Concept 4"
         title="Re-laid out + search dialog"
         links={[
+            ...hosted("/course-settings/concept-4-search-dialog"),
             { label: "View in Storybook", href: story("prototypes-buck-v1-old-course-settings-concepts--search-dialog") },
-            { label: "Run locally", href: "http://localhost:6020/concept-4-search-dialog", external: true },
         ]}
     >
         Concept 1's layout with Concept 3's search as a dialog. Click the rail search (or press ⌘K), arrow to a result, hit ↵ — it takes you straight to that
