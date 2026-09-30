@@ -13,6 +13,8 @@ const config: StorybookConfig = {
         { from: "../images/store/images", to: "/store-images" },
         { from: "../images/creditCards", to: "/card-images" },
         { from: "../images/events", to: "/events-images" },
+        { from: "../images/flogolf", to: "/flogolf-images" },
+        { from: "../images/kettleHills", to: "/kettle-hills-images" },
     ],
     // GitHub Pages serves from a repo subpath (/tf-buck-ds-v1/), so the Pages
     // production bundle needs that base. Netlify serves from the domain root, so
