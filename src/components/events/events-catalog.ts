@@ -5,6 +5,7 @@
  * and a monthly calendar. Dated across July–August 2026; imagery is the golf photo
  * set served at `events-images/`. Prices/ratings/capacities are synthesized.
  */
+import { staticAsset } from "@/utils/static-asset";
 
 export type EventConcept = "scramble" | "clinic" | "contest" | "charity" | "league";
 
@@ -54,7 +55,7 @@ export const CONCEPTS: { key: EventConcept; label: string }[] = [
     { key: "league", label: "Leagues & Nights" },
 ];
 
-const img = (n: number) => `events-images/event-${n}.png`;
+const img = (n: number) => staticAsset(`events-images/event-${n}.png`);
 
 export const GOLF_EVENTS: GolfEvent[] = [
     // ---- Clinics ---------------------------------------------------------

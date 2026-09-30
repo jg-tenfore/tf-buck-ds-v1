@@ -6,6 +6,7 @@ import { ConceptRelayout } from "@/components/application/buck-v1-old/concept-re
 import { ConceptSearch } from "@/components/application/buck-v1-old/concept-search";
 import { ConceptSearchDialog } from "@/components/application/buck-v1-old/concept-search-dialog";
 import { BuckV1OldCourseSettings } from "@/components/application/buck-v1-old/course-settings-page";
+import { toAppPath } from "@/utils/app-base";
 import "./app.css";
 
 /**
@@ -24,7 +25,7 @@ const ROUTES: Record<string, ComponentType<{ conceptPath?: string }>> = {
     "/concept-4-search-dialog": ConceptSearchDialog,
 };
 
-const path = window.location.pathname.replace(/\/+$/, "") || "/";
+const path = toAppPath(window.location.pathname);
 const Page = ROUTES[path];
 
 const container = document.getElementById("root");

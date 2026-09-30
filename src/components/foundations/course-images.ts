@@ -8,6 +8,7 @@
  * Storybook `staticDirs` mapping (a stable absolute URL that works in dev,
  * static builds, and the sandboxed preview iframe) — never bundled.
  */
+import { staticAsset } from "@/utils/static-asset";
 
 export type CourseAssetCategory = "logo" | "dining" | "photography";
 
@@ -44,7 +45,7 @@ export const buildCourseAssets = (modules: GlobModules, base: string): CourseAss
     Object.keys(modules)
         .map((path) => {
             const name = path.split("/").pop() ?? path;
-            return { name, src: `${base}/${name}`, category: categorize(name), isHighRes: detectHighRes(name) };
+            return { name, src: staticAsset(`${base}/${name}`), category: categorize(name), isHighRes: detectHighRes(name) };
         })
         .sort((a, b) => a.name.localeCompare(b.name));
 

@@ -4,6 +4,7 @@ import type { FC, ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/base/badges/badges";
 import { Button } from "@/components/base/buttons/button";
+import { toBrowserPath } from "@/utils/app-base";
 import { cx } from "@/utils/cx";
 import { COURSE } from "./course-settings-data";
 import { LegacySidebar, LegacyTopBar } from "./legacy-chrome";
@@ -30,7 +31,7 @@ export const ConceptSwitcher = ({ current }: { current: string }) => (
         {CONCEPTS.map((c) => (
             <a
                 key={c.path}
-                href={c.path}
+                href={toBrowserPath(c.path)}
                 aria-current={c.path === current ? "page" : undefined}
                 className={cx(
                     "rounded-full px-3 py-1 text-sm font-medium ring-1 transition duration-100 ease-linear ring-inset",

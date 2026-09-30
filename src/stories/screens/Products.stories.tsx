@@ -17,12 +17,13 @@ import {
     Truck01,
 } from "@untitledui/icons";
 import { AppShell } from "@/components/application/app-navigation/app-shell";
-import { PageHeader } from "@/components/application/screen-kit";
 import { MetricCard } from "@/components/application/metrics/metric-card";
+import { PageHeader } from "@/components/application/screen-kit";
 import { Table, TableCard } from "@/components/application/table/table";
 import { Badge } from "@/components/base/badges/badges";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
+import { staticAsset } from "@/utils/static-asset";
 
 const meta = {
     title: "App Screens/Products",
@@ -32,9 +33,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-
 /** Store product images are served from `/store-images/<category>/<subcategory>/<file>`. */
-const img = (path: string) => `/store-images/${path}`;
+const img = (path: string) => staticAsset(`store-images/${path}`);
 
 type CategoryName = "Men's Apparel" | "Women's Apparel" | "Golf Shoes" | "Golf Balls" | "Accessories";
 
@@ -60,23 +60,193 @@ interface Product {
 
 /** Real Pro Shop catalog data — titles + imagery pulled from the store asset library. */
 const products: Product[] = [
-    { id: "77410", name: "Dri-Fit Men's Good Blade Golf Polo Shirt", category: "Men's Apparel", group: "Apparel", src: img("apparel/mens/2000000054595-59-01_pc-dd5b6a8095.webp"), sku: "2104455887", price: 85, cost: 42, stock: 34 },
-    { id: "77411", name: "Ultimate 365+ Men's 8.5\" Golf Shorts", category: "Men's Apparel", group: "Apparel", src: img("apparel/mens/2000000054136-5-01_pc-bcf5b790db.webp"), sku: "2104455901", price: 80, cost: 38, stock: 21 },
-    { id: "77412", name: "Featherweight Festival Men's Golf Polo", category: "Men's Apparel", group: "Apparel", src: img("apparel/mens/2000000055336-18-01_pc-bd0c08a74e.webp"), sku: "2104456012", price: 90, cost: 44, stock: 7 },
-    { id: "77413", name: "Continental Drift Men's Golf Polo", category: "Men's Apparel", group: "Apparel", src: img("apparel/mens/2000000055380-1-01_pc-64326107b6.webp"), sku: "2104456120", price: 88, cost: 43, stock: 0 },
-    { id: "77420", name: "Moveknit Zip 2.0 Women's Golf Dress", category: "Women's Apparel", group: "Apparel", src: img("apparel/womens/2000000045603-1109-01_pc-aa571058bd.webp"), sku: "2104460031", price: 128, cost: 61, stock: 12 },
-    { id: "77421", name: "Knockout A-Line Women's 16\" Golf Skort", category: "Women's Apparel", group: "Apparel", src: img("apparel/womens/2000000054265-38-01_pc-bd6d26ccfc.webp"), sku: "2104460148", price: 80, cost: 37, stock: 18 },
-    { id: "77422", name: "Victory Dri-Fit Women's Golf Polo", category: "Women's Apparel", group: "Apparel", src: img("apparel/womens/2000000054804-927-01_pc-875e548c54.webp"), sku: "2104460255", price: 75, cost: 35, stock: 5 },
-    { id: "77430", name: "S-Casual Men's Spikeless Golf Shoes", category: "Golf Shoes", group: "Shoes", src: img("shoes/golf-shoes/2000000047011-5-01_pc-faed680eec.webp"), sku: "2104470118", price: 140, cost: 74, stock: 16 },
-    { id: "77431", name: "Fresh Foam Contend v3 Golf Shoes", category: "Golf Shoes", group: "Shoes", src: img("shoes/golf-shoes/2000000055152-39-01_pc-08b315caf1.webp"), sku: "2104470225", price: 130, cost: 68, stock: 9 },
-    { id: "77432", name: "Jordan Grind Men's Spikeless Golf Shoes", category: "Golf Shoes", group: "Shoes", src: img("shoes/golf-shoes/2000000056604-87-01_pc-bec7c35579.webp"), sku: "2104470332", price: 210, cost: 118, stock: 4 },
-    { id: "77440", name: "TP5x MySymbol 2026 Golf Balls", category: "Golf Balls", group: "Golf Balls", src: img("equipment/golf-balls/2000000042256-92-01_pc-73b40dc309.webp"), sku: "2104480119", price: 55, cost: 32, stock: 58 },
-    { id: "77441", name: "Tour Response 2026 Golf Balls", category: "Golf Balls", group: "Golf Balls", src: img("equipment/golf-balls/2000000058262-92-01_pc-7bd37b5e01.webp"), sku: "2104480226", price: 40, cost: 24, stock: 42 },
-    { id: "77442", name: "Pro V1 Georgia Tech Golf Balls", category: "Golf Balls", group: "Golf Balls", src: img("equipment/golf-balls/2000000059503-01_pc-9933da1b38.webp"), sku: "2104480333", price: 55, cost: 33, stock: 26 },
-    { id: "77443", name: "Supersoft USA 250 Golf Balls 2026", category: "Golf Balls", group: "Golf Balls", src: img("equipment/golf-balls/2000000059357-01_pc-1b849979d7.webp"), sku: "2104480440", price: 28, cost: 16, stock: 6 },
-    { id: "77450", name: "Titleist Players Golf Glove", category: "Accessories", group: "Gloves", src: img("equipment/accessories-and-training/0200211000123-01_pc-51c422a3e2.webp"), sku: "2104490117", price: 26, cost: 12, stock: 47 },
-    { id: "77451", name: "Approach S44 Golf GPS Watch", category: "Accessories", group: "Accessories", src: img("equipment/accessories-and-training/2000000050686-117-01_pc-e8807554a6.webp"), sku: "2104490224", price: 400, cost: 268, stock: 3 },
-    { id: "77452", name: "Club Scrub Pro", category: "Accessories", group: "Accessories", src: img("equipment/accessories-and-training/2000000050257-01_pc-070a7c27c5.webp"), sku: "2104490331", price: 15, cost: 6, stock: 0 },
+    {
+        id: "77410",
+        name: "Dri-Fit Men's Good Blade Golf Polo Shirt",
+        category: "Men's Apparel",
+        group: "Apparel",
+        src: img("apparel/mens/2000000054595-59-01_pc-dd5b6a8095.webp"),
+        sku: "2104455887",
+        price: 85,
+        cost: 42,
+        stock: 34,
+    },
+    {
+        id: "77411",
+        name: "Ultimate 365+ Men's 8.5\" Golf Shorts",
+        category: "Men's Apparel",
+        group: "Apparel",
+        src: img("apparel/mens/2000000054136-5-01_pc-bcf5b790db.webp"),
+        sku: "2104455901",
+        price: 80,
+        cost: 38,
+        stock: 21,
+    },
+    {
+        id: "77412",
+        name: "Featherweight Festival Men's Golf Polo",
+        category: "Men's Apparel",
+        group: "Apparel",
+        src: img("apparel/mens/2000000055336-18-01_pc-bd0c08a74e.webp"),
+        sku: "2104456012",
+        price: 90,
+        cost: 44,
+        stock: 7,
+    },
+    {
+        id: "77413",
+        name: "Continental Drift Men's Golf Polo",
+        category: "Men's Apparel",
+        group: "Apparel",
+        src: img("apparel/mens/2000000055380-1-01_pc-64326107b6.webp"),
+        sku: "2104456120",
+        price: 88,
+        cost: 43,
+        stock: 0,
+    },
+    {
+        id: "77420",
+        name: "Moveknit Zip 2.0 Women's Golf Dress",
+        category: "Women's Apparel",
+        group: "Apparel",
+        src: img("apparel/womens/2000000045603-1109-01_pc-aa571058bd.webp"),
+        sku: "2104460031",
+        price: 128,
+        cost: 61,
+        stock: 12,
+    },
+    {
+        id: "77421",
+        name: "Knockout A-Line Women's 16\" Golf Skort",
+        category: "Women's Apparel",
+        group: "Apparel",
+        src: img("apparel/womens/2000000054265-38-01_pc-bd6d26ccfc.webp"),
+        sku: "2104460148",
+        price: 80,
+        cost: 37,
+        stock: 18,
+    },
+    {
+        id: "77422",
+        name: "Victory Dri-Fit Women's Golf Polo",
+        category: "Women's Apparel",
+        group: "Apparel",
+        src: img("apparel/womens/2000000054804-927-01_pc-875e548c54.webp"),
+        sku: "2104460255",
+        price: 75,
+        cost: 35,
+        stock: 5,
+    },
+    {
+        id: "77430",
+        name: "S-Casual Men's Spikeless Golf Shoes",
+        category: "Golf Shoes",
+        group: "Shoes",
+        src: img("shoes/golf-shoes/2000000047011-5-01_pc-faed680eec.webp"),
+        sku: "2104470118",
+        price: 140,
+        cost: 74,
+        stock: 16,
+    },
+    {
+        id: "77431",
+        name: "Fresh Foam Contend v3 Golf Shoes",
+        category: "Golf Shoes",
+        group: "Shoes",
+        src: img("shoes/golf-shoes/2000000055152-39-01_pc-08b315caf1.webp"),
+        sku: "2104470225",
+        price: 130,
+        cost: 68,
+        stock: 9,
+    },
+    {
+        id: "77432",
+        name: "Jordan Grind Men's Spikeless Golf Shoes",
+        category: "Golf Shoes",
+        group: "Shoes",
+        src: img("shoes/golf-shoes/2000000056604-87-01_pc-bec7c35579.webp"),
+        sku: "2104470332",
+        price: 210,
+        cost: 118,
+        stock: 4,
+    },
+    {
+        id: "77440",
+        name: "TP5x MySymbol 2026 Golf Balls",
+        category: "Golf Balls",
+        group: "Golf Balls",
+        src: img("equipment/golf-balls/2000000042256-92-01_pc-73b40dc309.webp"),
+        sku: "2104480119",
+        price: 55,
+        cost: 32,
+        stock: 58,
+    },
+    {
+        id: "77441",
+        name: "Tour Response 2026 Golf Balls",
+        category: "Golf Balls",
+        group: "Golf Balls",
+        src: img("equipment/golf-balls/2000000058262-92-01_pc-7bd37b5e01.webp"),
+        sku: "2104480226",
+        price: 40,
+        cost: 24,
+        stock: 42,
+    },
+    {
+        id: "77442",
+        name: "Pro V1 Georgia Tech Golf Balls",
+        category: "Golf Balls",
+        group: "Golf Balls",
+        src: img("equipment/golf-balls/2000000059503-01_pc-9933da1b38.webp"),
+        sku: "2104480333",
+        price: 55,
+        cost: 33,
+        stock: 26,
+    },
+    {
+        id: "77443",
+        name: "Supersoft USA 250 Golf Balls 2026",
+        category: "Golf Balls",
+        group: "Golf Balls",
+        src: img("equipment/golf-balls/2000000059357-01_pc-1b849979d7.webp"),
+        sku: "2104480440",
+        price: 28,
+        cost: 16,
+        stock: 6,
+    },
+    {
+        id: "77450",
+        name: "Titleist Players Golf Glove",
+        category: "Accessories",
+        group: "Gloves",
+        src: img("equipment/accessories-and-training/0200211000123-01_pc-51c422a3e2.webp"),
+        sku: "2104490117",
+        price: 26,
+        cost: 12,
+        stock: 47,
+    },
+    {
+        id: "77451",
+        name: "Approach S44 Golf GPS Watch",
+        category: "Accessories",
+        group: "Accessories",
+        src: img("equipment/accessories-and-training/2000000050686-117-01_pc-e8807554a6.webp"),
+        sku: "2104490224",
+        price: 400,
+        cost: 268,
+        stock: 3,
+    },
+    {
+        id: "77452",
+        name: "Club Scrub Pro",
+        category: "Accessories",
+        group: "Accessories",
+        src: img("equipment/accessories-and-training/2000000050257-01_pc-070a7c27c5.webp"),
+        sku: "2104490331",
+        price: 15,
+        cost: 6,
+        stock: 0,
+    },
 ];
 
 const usd = (n: number) => `$${n.toFixed(2)}`;
@@ -170,7 +340,10 @@ export const List: Story = {
                 {/* Product grid */}
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {products.map((p) => (
-                        <div key={p.id} className="group flex flex-col overflow-hidden rounded-xl bg-primary ring-1 ring-secondary ring-inset transition duration-100 ease-linear hover:ring-brand">
+                        <div
+                            key={p.id}
+                            className="group flex flex-col overflow-hidden rounded-xl bg-primary ring-1 ring-secondary transition duration-100 ease-linear ring-inset hover:ring-brand"
+                        >
                             <div className="relative aspect-square bg-secondary p-4">
                                 <img src={p.src} alt={p.name} className="size-full object-contain" loading="lazy" />
                                 <div className="absolute top-3 left-3">
@@ -223,14 +396,86 @@ interface ProductGroup {
 }
 
 const groups: ProductGroup[] = [
-    { id: "395", name: "Golf Balls", family: "Pro Shop Merch", sellOnline: true, glCode: "4500", qbClass: "Retail", src: img("equipment/golf-balls/2000000058262-92-01_pc-7bd37b5e01.webp"), products: 64 },
-    { id: "436", name: "Clubs", family: "Pro Shop Merch", sellOnline: true, glCode: "132134", qbClass: "Retail", src: img("shoes/golf-shoes/2000000053981-87-01_pc-59a8c0130f.webp"), products: 38 },
-    { id: "438", name: "Shoes", family: "Pro Shop Merch", sellOnline: true, glCode: "1120", qbClass: "Retail", src: img("shoes/golf-shoes/2000000056604-87-01_pc-bec7c35579.webp"), products: 47 },
-    { id: "439", name: "Accessories", family: "Pro Shop Merch", sellOnline: true, glCode: "112025", qbClass: "Retail", src: img("equipment/accessories-and-training/2000000050686-117-01_pc-e8807554a6.webp"), products: 92 },
-    { id: "440", name: "Men's Apparel", family: "Soft Goods", sellOnline: true, glCode: "1120", qbClass: "Apparel", src: img("apparel/mens/2000000055336-18-01_pc-bd0c08a74e.webp"), products: 156 },
-    { id: "441", name: "Women's Apparel", family: "Soft Goods", sellOnline: true, glCode: "1166", qbClass: "Apparel", src: img("apparel/womens/2000000045603-1109-01_pc-aa571058bd.webp"), products: 118 },
-    { id: "442", name: "Gloves", family: "Soft Goods", sellOnline: true, glCode: "1166", qbClass: "Apparel", src: img("equipment/accessories-and-training/0200211000123-01_pc-51c422a3e2.webp"), products: 24 },
-    { id: "1513", name: "Range Balls", family: "Range", sellOnline: false, glCode: "4500", qbClass: "Range", src: img("equipment/golf-balls/2000000059357-01_pc-1b849979d7.webp"), products: 3 },
+    {
+        id: "395",
+        name: "Golf Balls",
+        family: "Pro Shop Merch",
+        sellOnline: true,
+        glCode: "4500",
+        qbClass: "Retail",
+        src: img("equipment/golf-balls/2000000058262-92-01_pc-7bd37b5e01.webp"),
+        products: 64,
+    },
+    {
+        id: "436",
+        name: "Clubs",
+        family: "Pro Shop Merch",
+        sellOnline: true,
+        glCode: "132134",
+        qbClass: "Retail",
+        src: img("shoes/golf-shoes/2000000053981-87-01_pc-59a8c0130f.webp"),
+        products: 38,
+    },
+    {
+        id: "438",
+        name: "Shoes",
+        family: "Pro Shop Merch",
+        sellOnline: true,
+        glCode: "1120",
+        qbClass: "Retail",
+        src: img("shoes/golf-shoes/2000000056604-87-01_pc-bec7c35579.webp"),
+        products: 47,
+    },
+    {
+        id: "439",
+        name: "Accessories",
+        family: "Pro Shop Merch",
+        sellOnline: true,
+        glCode: "112025",
+        qbClass: "Retail",
+        src: img("equipment/accessories-and-training/2000000050686-117-01_pc-e8807554a6.webp"),
+        products: 92,
+    },
+    {
+        id: "440",
+        name: "Men's Apparel",
+        family: "Soft Goods",
+        sellOnline: true,
+        glCode: "1120",
+        qbClass: "Apparel",
+        src: img("apparel/mens/2000000055336-18-01_pc-bd0c08a74e.webp"),
+        products: 156,
+    },
+    {
+        id: "441",
+        name: "Women's Apparel",
+        family: "Soft Goods",
+        sellOnline: true,
+        glCode: "1166",
+        qbClass: "Apparel",
+        src: img("apparel/womens/2000000045603-1109-01_pc-aa571058bd.webp"),
+        products: 118,
+    },
+    {
+        id: "442",
+        name: "Gloves",
+        family: "Soft Goods",
+        sellOnline: true,
+        glCode: "1166",
+        qbClass: "Apparel",
+        src: img("equipment/accessories-and-training/0200211000123-01_pc-51c422a3e2.webp"),
+        products: 24,
+    },
+    {
+        id: "1513",
+        name: "Range Balls",
+        family: "Range",
+        sellOnline: false,
+        glCode: "4500",
+        qbClass: "Range",
+        src: img("equipment/golf-balls/2000000059357-01_pc-1b849979d7.webp"),
+        products: 3,
+    },
 ];
 
 /** Product Groups — the merchandise categories that organize the catalog, with families and GL mapping. */
@@ -273,7 +518,12 @@ export const Groups: Story = {
                                 <Table.Row id={row.id}>
                                     <Table.Cell>
                                         <div className="flex items-center gap-3">
-                                            <img src={row.src} alt={row.name} className="size-10 rounded-lg bg-secondary object-contain p-1 ring-1 ring-secondary ring-inset" loading="lazy" />
+                                            <img
+                                                src={row.src}
+                                                alt={row.name}
+                                                className="size-10 rounded-lg bg-secondary object-contain p-1 ring-1 ring-secondary ring-inset"
+                                                loading="lazy"
+                                            />
                                             <div>
                                                 <p className="text-sm font-medium text-primary">{row.name}</p>
                                                 <p className="text-xs text-tertiary tabular-nums">ID {row.id}</p>
@@ -285,7 +535,7 @@ export const Groups: Story = {
                                             {row.family}
                                         </Badge>
                                     </Table.Cell>
-                                    <Table.Cell className="text-right tabular-nums text-tertiary">{row.products}</Table.Cell>
+                                    <Table.Cell className="text-right text-tertiary tabular-nums">{row.products}</Table.Cell>
                                     <Table.Cell>
                                         {row.sellOnline ? (
                                             <span className="inline-flex items-center gap-1.5 text-sm text-success-primary">
@@ -299,7 +549,7 @@ export const Groups: Story = {
                                             </span>
                                         )}
                                     </Table.Cell>
-                                    <Table.Cell className="tabular-nums text-tertiary">{row.glCode}</Table.Cell>
+                                    <Table.Cell className="text-tertiary tabular-nums">{row.glCode}</Table.Cell>
                                     <Table.Cell className="text-tertiary">{row.qbClass}</Table.Cell>
                                 </Table.Row>
                             )}
@@ -361,7 +611,12 @@ export const Inventory: Story = {
                                 <Table.Row id={row.id}>
                                     <Table.Cell>
                                         <div className="flex items-center gap-3">
-                                            <img src={row.src} alt={row.name} className="size-10 rounded-lg bg-secondary object-contain p-1 ring-1 ring-secondary ring-inset" loading="lazy" />
+                                            <img
+                                                src={row.src}
+                                                alt={row.name}
+                                                className="size-10 rounded-lg bg-secondary object-contain p-1 ring-1 ring-secondary ring-inset"
+                                                loading="lazy"
+                                            />
                                             <div>
                                                 <p className="text-sm font-medium text-primary">{row.name}</p>
                                                 <p className="text-xs text-tertiary tabular-nums">#{row.id}</p>
@@ -370,8 +625,8 @@ export const Inventory: Story = {
                                     </Table.Cell>
                                     <Table.Cell className="text-tertiary">{row.group}</Table.Cell>
                                     <Table.Cell className="text-right font-medium text-primary tabular-nums">{row.stock}</Table.Cell>
-                                    <Table.Cell className="text-right tabular-nums text-tertiary">10</Table.Cell>
-                                    <Table.Cell className="text-right tabular-nums text-tertiary">{usd(row.price)}</Table.Cell>
+                                    <Table.Cell className="text-right text-tertiary tabular-nums">10</Table.Cell>
+                                    <Table.Cell className="text-right text-tertiary tabular-nums">{usd(row.price)}</Table.Cell>
                                     <Table.Cell>{stockBadge(row.stock)}</Table.Cell>
                                 </Table.Row>
                             )}
@@ -411,14 +666,110 @@ interface Receivable {
 }
 
 const receivables: Receivable[] = [
-    { id: "77440", name: "TP5x MySymbol 2026 Golf Balls", group: "Golf Balls", src: img("equipment/golf-balls/2000000042256-92-01_pc-73b40dc309.webp"), cost: 32, avgCost: 32, price: 55, received: 48, receivedDate: "Jul 18, 2026", sold: 14, current: 58 },
-    { id: "77441", name: "Tour Response 2026 Golf Balls", group: "Golf Balls", src: img("equipment/golf-balls/2000000058262-92-01_pc-7bd37b5e01.webp"), cost: 24, avgCost: 24, price: 40, received: 36, receivedDate: "Jul 18, 2026", sold: 22, current: 42 },
-    { id: "77410", name: "Dri-Fit Men's Good Blade Golf Polo", group: "Apparel", src: img("apparel/mens/2000000054595-59-01_pc-dd5b6a8095.webp"), cost: 42, avgCost: 42, price: 85, received: 24, receivedDate: "Jul 9, 2026", sold: 8, current: 34 },
-    { id: "77420", name: "Moveknit Zip 2.0 Women's Golf Dress", group: "Apparel", src: img("apparel/womens/2000000045603-1109-01_pc-aa571058bd.webp"), cost: 61, avgCost: 61, price: 128, received: 18, receivedDate: "Jul 9, 2026", sold: 6, current: 12 },
-    { id: "77430", name: "S-Casual Men's Spikeless Golf Shoes", group: "Shoes", src: img("shoes/golf-shoes/2000000047011-5-01_pc-faed680eec.webp"), cost: 74, avgCost: 74, price: 140, received: 12, receivedDate: "Jun 30, 2026", sold: 4, current: 16 },
-    { id: "77432", name: "Jordan Grind Men's Spikeless Golf Shoes", group: "Shoes", src: img("shoes/golf-shoes/2000000056604-87-01_pc-bec7c35579.webp"), cost: 118, avgCost: 118, price: 210, received: 8, receivedDate: "Jun 30, 2026", sold: 4, current: 4 },
-    { id: "77450", name: "Titleist Players Golf Glove", group: "Gloves", src: img("equipment/accessories-and-training/0200211000123-01_pc-51c422a3e2.webp"), cost: 12, avgCost: 12, price: 26, received: 60, receivedDate: "Jun 25, 2026", sold: 13, current: 47 },
-    { id: "77451", name: "Approach S44 Golf GPS Watch", group: "Accessories", src: img("equipment/accessories-and-training/2000000050686-117-01_pc-e8807554a6.webp"), cost: 268, avgCost: 268, price: 400, received: 6, receivedDate: "Jun 12, 2026", sold: 3, current: 3 },
+    {
+        id: "77440",
+        name: "TP5x MySymbol 2026 Golf Balls",
+        group: "Golf Balls",
+        src: img("equipment/golf-balls/2000000042256-92-01_pc-73b40dc309.webp"),
+        cost: 32,
+        avgCost: 32,
+        price: 55,
+        received: 48,
+        receivedDate: "Jul 18, 2026",
+        sold: 14,
+        current: 58,
+    },
+    {
+        id: "77441",
+        name: "Tour Response 2026 Golf Balls",
+        group: "Golf Balls",
+        src: img("equipment/golf-balls/2000000058262-92-01_pc-7bd37b5e01.webp"),
+        cost: 24,
+        avgCost: 24,
+        price: 40,
+        received: 36,
+        receivedDate: "Jul 18, 2026",
+        sold: 22,
+        current: 42,
+    },
+    {
+        id: "77410",
+        name: "Dri-Fit Men's Good Blade Golf Polo",
+        group: "Apparel",
+        src: img("apparel/mens/2000000054595-59-01_pc-dd5b6a8095.webp"),
+        cost: 42,
+        avgCost: 42,
+        price: 85,
+        received: 24,
+        receivedDate: "Jul 9, 2026",
+        sold: 8,
+        current: 34,
+    },
+    {
+        id: "77420",
+        name: "Moveknit Zip 2.0 Women's Golf Dress",
+        group: "Apparel",
+        src: img("apparel/womens/2000000045603-1109-01_pc-aa571058bd.webp"),
+        cost: 61,
+        avgCost: 61,
+        price: 128,
+        received: 18,
+        receivedDate: "Jul 9, 2026",
+        sold: 6,
+        current: 12,
+    },
+    {
+        id: "77430",
+        name: "S-Casual Men's Spikeless Golf Shoes",
+        group: "Shoes",
+        src: img("shoes/golf-shoes/2000000047011-5-01_pc-faed680eec.webp"),
+        cost: 74,
+        avgCost: 74,
+        price: 140,
+        received: 12,
+        receivedDate: "Jun 30, 2026",
+        sold: 4,
+        current: 16,
+    },
+    {
+        id: "77432",
+        name: "Jordan Grind Men's Spikeless Golf Shoes",
+        group: "Shoes",
+        src: img("shoes/golf-shoes/2000000056604-87-01_pc-bec7c35579.webp"),
+        cost: 118,
+        avgCost: 118,
+        price: 210,
+        received: 8,
+        receivedDate: "Jun 30, 2026",
+        sold: 4,
+        current: 4,
+    },
+    {
+        id: "77450",
+        name: "Titleist Players Golf Glove",
+        group: "Gloves",
+        src: img("equipment/accessories-and-training/0200211000123-01_pc-51c422a3e2.webp"),
+        cost: 12,
+        avgCost: 12,
+        price: 26,
+        received: 60,
+        receivedDate: "Jun 25, 2026",
+        sold: 13,
+        current: 47,
+    },
+    {
+        id: "77451",
+        name: "Approach S44 Golf GPS Watch",
+        group: "Accessories",
+        src: img("equipment/accessories-and-training/2000000050686-117-01_pc-e8807554a6.webp"),
+        cost: 268,
+        avgCost: 268,
+        price: 400,
+        received: 6,
+        receivedDate: "Jun 12, 2026",
+        sold: 3,
+        current: 3,
+    },
 ];
 
 /** Inventory Receivables — cost, receiving history, and current stock per product. */
@@ -478,7 +829,12 @@ export const Receivables: Story = {
                                 <Table.Row id={row.id}>
                                     <Table.Cell>
                                         <div className="flex items-center gap-3">
-                                            <img src={row.src} alt={row.name} className="size-9 rounded-md bg-secondary object-contain p-1 ring-1 ring-secondary ring-inset" loading="lazy" />
+                                            <img
+                                                src={row.src}
+                                                alt={row.name}
+                                                className="size-9 rounded-md bg-secondary object-contain p-1 ring-1 ring-secondary ring-inset"
+                                                loading="lazy"
+                                            />
                                             <div>
                                                 <p className="text-sm font-medium text-primary">{row.name}</p>
                                                 <p className="text-xs text-tertiary tabular-nums">#{row.id}</p>
@@ -486,9 +842,9 @@ export const Receivables: Story = {
                                         </div>
                                     </Table.Cell>
                                     <Table.Cell className="text-tertiary">{row.group}</Table.Cell>
-                                    <Table.Cell className="text-right tabular-nums text-tertiary">{usd(row.cost)}</Table.Cell>
-                                    <Table.Cell className="text-right tabular-nums text-tertiary">{usd(row.avgCost)}</Table.Cell>
-                                    <Table.Cell className="text-right tabular-nums text-tertiary">{usd(row.price)}</Table.Cell>
+                                    <Table.Cell className="text-right text-tertiary tabular-nums">{usd(row.cost)}</Table.Cell>
+                                    <Table.Cell className="text-right text-tertiary tabular-nums">{usd(row.avgCost)}</Table.Cell>
+                                    <Table.Cell className="text-right text-tertiary tabular-nums">{usd(row.price)}</Table.Cell>
                                     <Table.Cell>
                                         {row.received > 0 ? (
                                             <div className="flex flex-col">
@@ -499,9 +855,15 @@ export const Receivables: Story = {
                                             <span className="text-tertiary">—</span>
                                         )}
                                     </Table.Cell>
-                                    <Table.Cell className="text-right tabular-nums text-tertiary">{row.sold}</Table.Cell>
+                                    <Table.Cell className="text-right text-tertiary tabular-nums">{row.sold}</Table.Cell>
                                     <Table.Cell className="text-right">
-                                        <span className={row.current === 0 ? "font-medium text-error-primary tabular-nums" : "font-medium text-primary tabular-nums"}>{row.current}</span>
+                                        <span
+                                            className={
+                                                row.current === 0 ? "font-medium text-error-primary tabular-nums" : "font-medium text-primary tabular-nums"
+                                            }
+                                        >
+                                            {row.current}
+                                        </span>
                                     </Table.Cell>
                                 </Table.Row>
                             )}

@@ -8,6 +8,7 @@
  * stable absolute URL works in dev and static builds and inside Storybook's
  * sandboxed preview iframe — unlike bundled `import.meta.url` asset URLs.
  */
+import { staticAsset } from "@/utils/static-asset";
 
 /**
  * Public base path — must match the `staticDirs` mapping in .storybook/main.ts.
@@ -72,9 +73,12 @@ const categorize = (name: string): SagamoreAssetCategory => {
 };
 
 /** Every indexed Sagamore image, sorted by file name. */
-export const sagamoreAssets: SagamoreAsset[] = SAGAMORE_FILES
-    .map((name) => ({ name, src: `${SAGAMORE_BASE}/${name}`, category: categorize(name), isHighRes: HIGH_RES_PHOTOS.has(name) }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+export const sagamoreAssets: SagamoreAsset[] = SAGAMORE_FILES.map((name) => ({
+    name,
+    src: staticAsset(`${SAGAMORE_BASE}/${name}`),
+    category: categorize(name),
+    isHighRes: HIGH_RES_PHOTOS.has(name),
+})).sort((a, b) => a.name.localeCompare(b.name));
 
 /**
  * Images for a category. Photography returns ONLY the high-resolution shots
