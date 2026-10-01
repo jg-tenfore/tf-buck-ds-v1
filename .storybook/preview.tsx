@@ -1,6 +1,5 @@
 import type { Preview } from "@storybook/nextjs-vite";
 import { RouterProvider } from "react-aria-components";
-
 // Load the full Buck design-system + Tailwind v4 pipeline (theme.css carries the
 // Buck palette, ported from the Fox design system) so every story renders on-brand.
 import "../src/styles/globals.css";
@@ -42,6 +41,27 @@ const preview: Preview = {
                     ],
                     "Sign in ∕ Sign up",
                     ["Sign up", "Log in", "Forgot password", "Verification"],
+                    "Migration V2",
+                    [
+                        "Global Nav",
+                        "1 Credits › Punch Cards",
+                        "2 Credits › Credit Books",
+                        "3 Charges › Charges",
+                        "4 Charges › Payments",
+                        "5 Charges › History",
+                        "6 Revenue › Combined Report",
+                        "7 Revenue › Combined Revenue",
+                    ],
+                    "Migration V2 Ideas",
+                    [
+                        "1 Credits › Punch Cards",
+                        "2 Credits › Credit Books",
+                        "3 Charges › Charges",
+                        "4 Charges › Payments",
+                        "5 Charges › History",
+                        "6 Revenue › Combined Report",
+                        "7 Revenue › Combined Revenue",
+                    ],
                     "Prototypes",
                 ],
             },
