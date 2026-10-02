@@ -4,9 +4,9 @@ import * as Tabbed from "@/components/application/migration-v2/ideas/ideas-tabbe
 import { CombinedReportScreen } from "@/components/application/migration-v2/screens-revenue";
 
 /**
- * A period with no sales or payments.
+ * September 2026, derived from the Combined Revenue data (references/100226).
  *
- * The same edge case three ways — the screen as it works today, then two
+ * The same report three ways — the screen as it works today, then two
  * proposals that only re-arrange what exists (no new fields or features).
  */
 const meta = {

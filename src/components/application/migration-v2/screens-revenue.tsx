@@ -7,9 +7,10 @@ import { Button } from "@/components/base/buttons/button";
 import { Label } from "@/components/base/input/label";
 import { Toggle } from "@/components/base/toggle/toggle";
 import { cx } from "@/utils/cx";
-import { COMBINED_REPORT_SECTIONS, REVENUE_SECTIONS } from "./data";
+import { COMBINED_REPORT_SECTIONS, REVENUE_SECTIONS, money } from "./data";
 import { DateField, ExportButton, LinkText, ScreenShell, TableCard, Td, Th, clickableRow } from "./kit";
 import { NAV_IDS } from "./nav-tree";
+import { REPORT_PAYMENTS, REPORT_TOTALS, REVENUE_PERIOD, reportAmount, revenueTable } from "./revenue-data";
 
 /* ========================================================================== */
 /*  6 · Revenue › Combined Report                                             */
@@ -19,14 +20,14 @@ import { NAV_IDS } from "./nav-tree";
 export const CombinedReportScreen = ({ onOpenRow }: { onOpenRow?: (index: number) => void } = {}) => (
     <ScreenShell
         nav={{ activeId: NAV_IDS.combinedReport, initialQuery: "combin" }}
-        course="bushwood"
+        course="dunes"
         title="Combined Report"
         description="Sales by category and payments by type, side by side, for one date range."
     >
         <div className="flex items-end justify-between gap-4">
             <div className="flex items-end gap-4">
-                <DateField label="Start Date" value="Oct 1, 2026" className="w-48" />
-                <DateField label="End Date" value="Oct 1, 2026" className="w-48" />
+                <DateField label="Start Date" value={REVENUE_PERIOD.from} className="w-48" />
+                <DateField label="End Date" value={REVENUE_PERIOD.to} className="w-48" />
                 <Button size="md" iconLeading={SearchLg}>
                     Run Report
                 </Button>
@@ -44,21 +45,27 @@ export const CombinedReportScreen = ({ onOpenRow }: { onOpenRow?: (index: number
                 {COMBINED_REPORT_SECTIONS.map((s, i) => (
                     <tr key={s} {...clickableRow(onOpenRow ? () => onOpenRow(i) : undefined)}>
                         <Td>{onOpenRow ? <LinkText onClick={() => onOpenRow(i)}>{s}</LinkText> : s}</Td>
-                        <Td className="text-right tabular-nums">$0.00</Td>
+                        <Td className="text-right tabular-nums">{money(reportAmount(s))}</Td>
                     </tr>
                 ))}
                 <tr>
                     <Td className="bg-secondary font-semibold">Total Sales</Td>
-                    <Td className="bg-secondary text-right font-semibold tabular-nums">$0.00</Td>
+                    <Td className="bg-secondary text-right font-semibold tabular-nums">{money(REPORT_TOTALS.sales(COMBINED_REPORT_SECTIONS))}</Td>
                 </tr>
                 <tr>
                     <Th colSpan={2} className="border-t border-secondary">
                         Payment Types
                     </Th>
                 </tr>
+                {REPORT_PAYMENTS.map((p) => (
+                    <tr key={p.label}>
+                        <Td>{p.label}</Td>
+                        <Td className="text-right tabular-nums">{money(p.amount)}</Td>
+                    </tr>
+                ))}
                 <tr>
                     <Td className="bg-secondary font-semibold">Total Payments</Td>
-                    <Td className="bg-secondary text-right font-semibold tabular-nums">$0.00</Td>
+                    <Td className="bg-secondary text-right font-semibold tabular-nums">{money(REPORT_TOTALS.payments)}</Td>
                 </tr>
             </tbody>
         </TableCard>
@@ -90,14 +97,14 @@ export const CombinedRevenueScreen = ({ initiallyCollapsed = false, onOpenRow }:
     return (
         <ScreenShell
             nav={{ activeId: NAV_IDS.combinedRevenue, initialQuery: "combin" }}
-            course="bushwood"
+            course="dunes"
             title="Combined Revenue"
             description="Every revenue line for the period, reconciled against money in."
         >
             <div className="flex flex-wrap items-end justify-between gap-4">
                 <div className="flex flex-wrap items-end gap-4">
-                    <DateField label="From" value="Oct 1, 2026" className="w-44" />
-                    <DateField label="To" value="Oct 1, 2026" className="w-44" />
+                    <DateField label="From" value={REVENUE_PERIOD.from} className="w-44" />
+                    <DateField label="To" value={REVENUE_PERIOD.to} className="w-44" />
                     <div className="flex flex-col gap-1.5">
                         <Label>Group Products By</Label>
                         <ButtonGroup
@@ -131,7 +138,7 @@ export const CombinedRevenueScreen = ({ initiallyCollapsed = false, onOpenRow }:
                 {REVENUE_SECTIONS.map((s, i) => {
                     const isOpen = open.has(s.id);
                     const title = s.id === "product-sales" ? `Product Sales by ${groupBy === "product" ? "Product" : "Group"}` : s.title;
-                    const columns = s.id === "product-sales" && groupBy === "group" ? s.columns.filter((c) => c !== "Product") : s.columns;
+                    const { columns, rows, total, amount } = revenueTable(s, groupBy === "group");
                     return (
                         <section key={s.id}>
                             <button
@@ -149,7 +156,7 @@ export const CombinedRevenueScreen = ({ initiallyCollapsed = false, onOpenRow }:
                                 >
                                     {title}
                                 </span>
-                                <span className="text-md font-semibold text-primary tabular-nums">$0.00</span>
+                                <span className="text-md font-semibold text-primary tabular-nums">{money(amount)}</span>
                             </button>
                             {isOpen && (
                                 <div className="flex flex-col gap-2 px-5 pb-5">
@@ -164,26 +171,30 @@ export const CombinedRevenueScreen = ({ initiallyCollapsed = false, onOpenRow }:
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {s.rows ? (
+                                            {rows.length ? (
                                                 <>
-                                                    {s.rows.map((r) => (
+                                                    {rows.map((row, r) => (
                                                         <tr key={r}>
-                                                            <Td>{r}</Td>
-                                                            <Td className="text-right tabular-nums">
-                                                                {s.linkAmounts ? (
-                                                                    <span className="cursor-pointer text-brand-secondary underline decoration-dotted underline-offset-4">
-                                                                        $0.00
-                                                                    </span>
-                                                                ) : (
-                                                                    "$0.00"
-                                                                )}
-                                                            </Td>
+                                                            {row.map((cell, c) => (
+                                                                <Td key={c} className={c > 0 ? "text-right tabular-nums" : undefined}>
+                                                                    {s.linkAmounts && c === row.length - 1 ? (
+                                                                        <span className="cursor-pointer text-brand-secondary underline decoration-dotted underline-offset-4">
+                                                                            {cell}
+                                                                        </span>
+                                                                    ) : (
+                                                                        cell
+                                                                    )}
+                                                                </Td>
+                                                            ))}
                                                         </tr>
                                                     ))}
-                                                    {s.totalRow && (
+                                                    {total && (
                                                         <tr>
-                                                            <Td className="bg-secondary font-semibold">Total</Td>
-                                                            <Td className="bg-secondary text-right font-semibold tabular-nums">$0.00</Td>
+                                                            {total.map((cell, c) => (
+                                                                <Td key={c} className={cx("bg-secondary font-semibold", c > 0 && "text-right tabular-nums")}>
+                                                                    {cell}
+                                                                </Td>
+                                                            ))}
                                                         </tr>
                                                     )}
                                                 </>
@@ -207,15 +218,20 @@ export const CombinedRevenueScreen = ({ initiallyCollapsed = false, onOpenRow }:
             <div className="flex justify-end">
                 <dl className="flex w-full max-w-md flex-col gap-3 rounded-xl bg-primary p-5 shadow-xs ring-1 ring-secondary">
                     <dt className="text-xs font-semibold tracking-[0.14em] text-tertiary uppercase">Money In</dt>
-                    {["Money In (excluding events)", "Money In (events closed this period)"].map((k) => (
+                    {(
+                        [
+                            ["Money In (excluding events)", REVENUE_PERIOD.moneyIn.excludingEvents],
+                            ["Money In (events closed this period)", REVENUE_PERIOD.moneyIn.events],
+                        ] as const
+                    ).map(([k, v]) => (
                         <div key={k} className="flex justify-between text-md text-secondary">
                             <span>{k}</span>
-                            <span className="font-semibold text-primary tabular-nums">$0.00</span>
+                            <span className="font-semibold text-primary tabular-nums">{money(v)}</span>
                         </div>
                     ))}
                     <div className="flex justify-between border-t border-secondary pt-3 text-lg font-semibold text-primary">
                         <span>Total Money In</span>
-                        <span className="tabular-nums">$0.00</span>
+                        <span className="tabular-nums">{money(REVENUE_PERIOD.moneyIn.excludingEvents + REVENUE_PERIOD.moneyIn.events)}</span>
                     </div>
                 </dl>
             </div>

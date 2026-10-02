@@ -47,6 +47,7 @@ import {
     money,
 } from "../data";
 import { DateField } from "../kit";
+import { REPORT_PARTS, REVENUE_PERIOD, reportAmount, revenueTable } from "../revenue-data";
 import { ChargeHistoryScreen, ChargesScreen, PaymentsScreen } from "../screens-charges";
 import { CreditBooksScreen, PunchCardsScreen } from "../screens-credits";
 import { CombinedReportScreen, CombinedRevenueScreen } from "../screens-revenue";
@@ -671,14 +672,22 @@ export const reportLinePage = (line: string): PanelPage => {
         title: line,
         body: (nav) => (
             <>
-                <Hero value="$0.00" label="Oct 1, 2026" />
+                <Hero value={money(reportAmount(line))} label={REVENUE_PERIOD.label} />
                 <Callout tone="info">{info.includes}</Callout>
                 <PanelGroup title="Breakdown">
-                    <PanelRow label="No sales in this period" muted static />
+                    {REPORT_PARTS[line].map((p) => (
+                        <PanelRow key={p.label} label={p.label} value={money(p.amount)} static />
+                    ))}
+                    <PanelRow label="Total" value={money(reportAmount(line))} static />
                 </PanelGroup>
                 <PanelGroup title="Period">
-                    <PanelRow icon={Calendar} label="Start date" value="Oct 1, 2026" onClick={() => nav.push(editPage("Start date", "Oct 1, 2026"))} />
-                    <PanelRow icon={Calendar} label="End date" value="Oct 1, 2026" onClick={() => nav.push(editPage("End date", "Oct 1, 2026"))} />
+                    <PanelRow
+                        icon={Calendar}
+                        label="Start date"
+                        value={REVENUE_PERIOD.from}
+                        onClick={() => nav.push(editPage("Start date", REVENUE_PERIOD.from))}
+                    />
+                    <PanelRow icon={Calendar} label="End date" value={REVENUE_PERIOD.to} onClick={() => nav.push(editPage("End date", REVENUE_PERIOD.to))} />
                 </PanelGroup>
                 <PanelGroup title="See it in detail">
                     {info.related.map((r) => (
@@ -721,68 +730,71 @@ export const SECTION_GROUP: Record<string, string> = {
     adjustments: "Informational",
 };
 
-export const revenueSectionPage = (s: RevenueSection): PanelPage => ({
-    title: s.title,
-    body: (nav) => (
-        <>
-            <Hero
-                value="$0.00"
-                label="Oct 1, 2026"
-                badge={
-                    <Badge type="pill-color" size="sm" color="gray">
-                        {SECTION_GROUP[s.id]}
-                    </Badge>
-                }
-            />
-            <PanelGroup title="Breakdown">
-                {s.rows ? (
-                    <>
-                        {s.rows.map((r) => (
-                            <PanelRow
-                                key={r}
-                                label={r}
-                                value="$0.00"
-                                muted
-                                onClick={() =>
-                                    nav.push(
-                                        detailPage(r, [
-                                            ["Amount", "$0.00"],
-                                            ["Period", "Oct 1, 2026"],
-                                            ["Section", s.title],
-                                        ]),
-                                    )
-                                }
-                            />
-                        ))}
-                        {s.totalRow && <PanelRow label="Total" value="$0.00" static />}
-                    </>
-                ) : (
-                    <PanelRow label={s.empty ?? "Nothing in this period"} muted static />
-                )}
-            </PanelGroup>
-            {s.footnote && <Callout tone="info">{s.footnote}</Callout>}
-            <PanelGroup title="Columns in this breakdown">
-                <div className="flex flex-wrap gap-1.5 py-2">
-                    {s.columns.map((c) => (
-                        <Badge key={c} type="color" size="sm" color="gray">
-                            {c}
+export const revenueSectionPage = (s: RevenueSection): PanelPage => {
+    const t = revenueTable(s);
+    const last = t.columns.length - 1;
+    return {
+        title: s.title,
+        body: (nav) => (
+            <>
+                <Hero
+                    value={money(t.amount)}
+                    label={REVENUE_PERIOD.label}
+                    badge={
+                        <Badge type="pill-color" size="sm" color="gray">
+                            {SECTION_GROUP[s.id]}
                         </Badge>
-                    ))}
-                </div>
-            </PanelGroup>
-            <PanelGroup title="Filters">
-                <PanelRow icon={Calendar} label="Period" value="Oct 1 – Oct 1, 2026" onClick={() => nav.push(editPage("From", "Oct 1, 2026"))} />
-                <PanelRow label="Group products by" value="Product" static />
-                <PanelRow label="All courses" value="Off" static />
-            </PanelGroup>
-        </>
-    ),
-    footer: () => (
-        <Button color="secondary" size="md" iconLeading={Download01} className="w-full">
-            Export
-        </Button>
-    ),
-});
+                    }
+                />
+                <PanelGroup title="Breakdown">
+                    {t.rows.length ? (
+                        <>
+                            {t.rows.map((row, i) => (
+                                <PanelRow
+                                    key={i}
+                                    label={row[0]}
+                                    value={row[last]}
+                                    onClick={() =>
+                                        nav.push(
+                                            detailPage(row[0], [
+                                                ["Amount", row[last]],
+                                                ["Period", REVENUE_PERIOD.label],
+                                                ["Section", s.title],
+                                            ]),
+                                        )
+                                    }
+                                />
+                            ))}
+                            {t.total && <PanelRow label="Total" value={t.total[last]} static />}
+                        </>
+                    ) : (
+                        <PanelRow label={s.empty ?? "Nothing in this period"} muted static />
+                    )}
+                </PanelGroup>
+                {s.footnote && <Callout tone="info">{s.footnote}</Callout>}
+                <PanelGroup title="Columns in this breakdown">
+                    <div className="flex flex-wrap gap-1.5 py-2">
+                        {s.columns.map((c) => (
+                            <Badge key={c} type="color" size="sm" color="gray">
+                                {c}
+                            </Badge>
+                        ))}
+                    </div>
+                </PanelGroup>
+                <PanelGroup title="Filters">
+                    <PanelRow icon={Calendar} label="Period" value={REVENUE_PERIOD.label} onClick={() => nav.push(editPage("From", REVENUE_PERIOD.from))} />
+                    <PanelRow label="Group products by" value="Product" static />
+                    <PanelRow label="All courses" value="Off" static />
+                </PanelGroup>
+            </>
+        ),
+        footer: () => (
+            <Button color="secondary" size="md" iconLeading={Download01} className="w-full">
+                Export
+            </Button>
+        ),
+    };
+};
 
 export const CombinedRevenueIdea1 = () => (
     <PanelFlow screen={(open) => <CombinedRevenueScreen initiallyCollapsed onOpenRow={open} />} rows={REVENUE_SECTIONS} root={revenueSectionPage} />
