@@ -275,7 +275,7 @@ export const HistoryIdea3 = () => (
 export const CombinedReportIdea3 = () => (
     <TabbedIdea
         nav={{ activeId: NAV_IDS.combinedReport, initialQuery: "combin" }}
-        course="bushwood"
+        course="dunes"
         title="Combined Report"
         description="Sales by category and payments by type, side by side, for one date range."
         listLabel="Combined Report"
@@ -291,7 +291,7 @@ export const CombinedReportIdea3 = () => (
 export const CombinedRevenueIdea3 = () => (
     <TabbedIdea
         nav={{ activeId: NAV_IDS.combinedRevenue, initialQuery: "combin" }}
-        course="bushwood"
+        course="dunes"
         title="Combined Revenue"
         description="Every revenue line for the period, reconciled against money in."
         listLabel="Combined Revenue"

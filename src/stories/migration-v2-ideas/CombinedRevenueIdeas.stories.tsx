@@ -4,7 +4,7 @@ import * as Tabbed from "@/components/application/migration-v2/ideas/ideas-tabbe
 import { CombinedRevenueScreen } from "@/components/application/migration-v2/screens-revenue";
 
 /**
- * An empty period across 15 sections.
+ * September 2026 across 15 sections (references/100226).
  *
  * The same edge case three ways — the screen as it works today, then two
  * proposals that only re-arrange what exists (no new fields or features).
@@ -30,7 +30,7 @@ export const Idea1: Story = {
     render: () => <RevenueIdeas.CombinedRevenueIdea1 />,
 };
 
-/** Idea 2 · Record page. Starts on today's table — click a name to load its page; the back arrow returns to the table. One summary of all 15 sections instead of 15 empty tables; filters and Money In in the rail. */
+/** Idea 2 · Record page. Starts on today's table — click a name to load its page; the back arrow returns to the table. One summary of all 15 sections instead of 15 long tables; filters and Money In in the rail. */
 export const Idea2: Story = {
     name: "3. Idea 2",
     render: () => <RevenueIdeas.CombinedRevenueIdea2 />,

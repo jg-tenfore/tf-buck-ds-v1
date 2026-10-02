@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { CombinedReportScreen } from "@/components/application/migration-v2/screens-revenue";
 
-/** Reports › Revenue › Combined Report (references/100126/6-revenue-combinedReport). */
+/** Reports › Revenue › Combined Report (design: references/100126/6-revenue-combinedReport; data: derived from references/100226). */
 const meta = {
     title: "Migration V2/6 Revenue › Combined Report",
     id: "migration-v2-combined-report",
@@ -12,5 +12,5 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** A day with no sales or payments — every line $0.00. */
-export const EmptyPeriod: Story = { name: "Empty period" };
+/** September 2026: sales by category and payments by type, derived from the Combined Revenue data. */
+export const EmptyPeriod: Story = { name: "September" };
