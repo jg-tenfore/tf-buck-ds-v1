@@ -1,0 +1,15 @@
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { combination } from "@/components/application/punch-cards-v2/data";
+import { PunchCardBuilder } from "@/components/application/punch-cards-v2/punch-card-page";
+
+/** Hypothetical 7 · Golf & Range Bundle. The concept screenshot: green fees, range buckets, simulator hours and a clinic. Fully interactive: edit, add or remove items. */
+const meta = {
+    title: "Prototypes/Punch Cards V2/Combo 7 · Golf & Range Bundle",
+    id: "prototypes-punch-cards-v2-combo-7",
+    parameters: { layout: "fullscreen" },
+} satisfies Meta;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const BuiltCard: Story = { name: "Built card", render: () => <PunchCardBuilder initial={combination("bundle").card} /> };

@@ -1,0 +1,15 @@
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { combination } from "@/components/application/punch-cards-v2/data";
+import { PunchCardBuilder } from "@/components/application/punch-cards-v2/punch-card-page";
+
+/** Hypothetical 3 · Simulator Hours. A single activity: 10 one-hour simulator bay sessions. Fully interactive: edit, add or remove items. */
+const meta = {
+    title: "Prototypes/Punch Cards V2/Combo 3 · Simulator Hours",
+    id: "prototypes-punch-cards-v2-combo-3",
+    parameters: { layout: "fullscreen" },
+} satisfies Meta;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const BuiltCard: Story = { name: "Built card", render: () => <PunchCardBuilder initial={combination("simulator").card} /> };
