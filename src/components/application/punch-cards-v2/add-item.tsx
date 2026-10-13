@@ -11,7 +11,6 @@ import {
     Radio as AriaRadio,
     RadioGroup as AriaRadioGroup,
 } from "react-aria-components";
-import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import { Button } from "@/components/base/buttons/button";
 import { InputNumber } from "@/components/base/input/input-number";
 import { Label } from "@/components/base/input/label";
@@ -22,7 +21,6 @@ import type { ItemKind, PunchItem } from "./data";
 import {
     ACTIVITY_TYPES,
     CLINICS,
-    DURATION_PRESETS,
     INSTRUCTORS,
     ITEM_KINDS,
     PRODUCTS,
@@ -44,8 +42,6 @@ export type ItemDraft = {
     target: string;
     duration: number;
     query: string;
-    /** "Custom" picked in the duration presets (activities, lessons). */
-    customDuration?: boolean;
 };
 
 export const EMPTY_DRAFT: ItemDraft = { punches: 10, target: "", duration: 60, query: "" };
@@ -57,12 +53,11 @@ export const draftFrom = (item: PunchItem): ItemDraft => ({
     target: item.target,
     duration: item.duration ?? 60,
     query: item.kind === "product" ? item.target.split(" ")[0].toLowerCase() : "",
-    customDuration: hasDuration(item.kind) && !DURATION_PRESETS[item.kind]!.includes(item.duration ?? 60),
 });
 
 /** Switch the draft to a kind, keeping punches but resetting what it covers. */
 export const withKind = (draft: ItemDraft, kind: ItemKind): ItemDraft =>
-    draft.kind === kind ? draft : { ...draft, kind, target: defaultTarget[kind], query: "", duration: 60, customDuration: false };
+    draft.kind === kind ? draft : { ...draft, kind, target: defaultTarget[kind], query: "", duration: 60 };
 
 export const draftIsComplete = (draft: ItemDraft) =>
     Boolean(draft.kind && draft.punches > 0 && draft.target && (!hasDuration(draft.kind) || draft.duration > 0));
@@ -186,59 +181,53 @@ const ProductSearch = ({ draft, onDraft }: { draft: ItemDraft; onDraft: (patch: 
     );
 };
 
-/** Quick-pick lengths (30 / 60 / 90 / 120 min) plus Custom, which reveals a minutes field. */
-const DurationPresets = ({ label, draft, onDraft }: { label: string; draft: ItemDraft; onDraft: (patch: Partial<ItemDraft>) => void }) => {
-    const presets = DURATION_PRESETS[draft.kind!]!;
-    const custom = draft.customDuration || !presets.includes(draft.duration);
-    return (
-        <div className="flex flex-col gap-1.5">
-            <Label>{label}</Label>
-            <div className="flex flex-wrap items-center gap-3">
-                <ButtonGroup
-                    size="sm"
-                    aria-label={label}
-                    selectedKeys={new Set([custom ? "custom" : String(draft.duration)])}
-                    onSelectionChange={(keys) => {
-                        const [key] = [...keys];
-                        if (!key) return;
-                        if (key === "custom") onDraft({ customDuration: true });
-                        else onDraft({ duration: Number(key), customDuration: false });
-                    }}
-                >
-                    {presets.map((m) => (
-                        <ButtonGroupItem key={m} id={String(m)}>
-                            {m} min
-                        </ButtonGroupItem>
-                    ))}
-                    <ButtonGroupItem id="custom">Custom</ButtonGroupItem>
-                </ButtonGroup>
-                {custom && (
-                    <InputNumber
-                        aria-label="Custom length in minutes"
-                        size="sm"
-                        minValue={5}
-                        maxValue={480}
-                        step={5}
-                        value={draft.duration}
-                        onChange={(n) => onDraft({ duration: Number.isNaN(n) ? 60 : n })}
-                        formatOptions={{ style: "unit", unit: "minute", unitDisplay: "long" }}
-                        wrapperClassName="w-36"
-                    />
-                )}
-            </div>
+/** Minutes per punch for activities and lessons: a plain number box, any length. */
+const DurationInput = ({ label, value, onChange }: { label: string; value: number; onChange: (minutes: number) => void }) => (
+    <div className="flex flex-col gap-1.5">
+        <Label>{label}</Label>
+        <div className="flex items-center gap-2">
+            <InputNumber
+                aria-label={`${label} in minutes`}
+                size="sm"
+                minValue={1}
+                maxValue={720}
+                value={value}
+                onChange={(n) => onChange(Number.isNaN(n) ? 60 : n)}
+                wrapperClassName="w-24"
+            />
+            <span className="text-sm text-tertiary">minutes</span>
         </div>
-    );
-};
+    </div>
+);
 
-const SetPunches = ({
+/** The chosen kind as a header row, with an optional Change action. */
+export const KindHeader = ({ kind, onChange }: { kind: ItemKind; onChange?: () => void }) => (
+    <div className="flex items-center gap-3 rounded-xl bg-secondary p-3 ring-1 ring-secondary ring-inset">
+        <ItemTypeTile kind={kind} solid />
+        <span className="flex flex-1 flex-col">
+            <span className="text-xs font-semibold tracking-wider text-tertiary uppercase">Item type</span>
+            <span className="text-sm font-semibold text-primary">{kindMeta(kind).label}</span>
+        </span>
+        {onChange && (
+            <Button color="link-color" size="sm" onClick={onChange}>
+                Change
+            </Button>
+        )}
+    </div>
+);
+
+/**
+ * Everything step 2 asks for one kind: what it covers (type, product,
+ * instructor…), minutes per punch where it applies, punches, and the
+ * "This card will include…" summary. Shared by every concept.
+ */
+export const ItemFields = ({
     draft,
     onDraft,
-    onChangeType,
     merge,
 }: {
     draft: ItemDraft;
     onDraft: (patch: Partial<ItemDraft>) => void;
-    onChangeType: () => void;
     /** The line on the card this would merge into, if it's already there. */
     merge?: PunchItem;
 }) => {
@@ -247,17 +236,6 @@ const SetPunches = ({
     const options = (list: string[]) => list.map((v) => ({ value: v, label: v }));
     return (
         <div className="flex flex-col gap-5">
-            <div className="flex items-center gap-3 rounded-xl bg-secondary p-3 ring-1 ring-secondary ring-inset">
-                <ItemTypeTile kind={kind} solid />
-                <span className="flex flex-1 flex-col">
-                    <span className="text-xs font-semibold tracking-wider text-tertiary uppercase">Item type</span>
-                    <span className="text-sm font-semibold text-primary">{meta.label}</span>
-                </span>
-                <Button color="link-color" size="sm" onClick={onChangeType}>
-                    Change
-                </Button>
-            </div>
-
             {kind === "transportation" && (
                 <NativeSelect
                     label="Transportation type"
@@ -282,8 +260,23 @@ const SetPunches = ({
                 <NativeSelect label="Instructor" value={draft.target} onChange={(e) => onDraft({ target: e.target.value })} options={options(INSTRUCTORS)} />
             )}
 
-            {hasDuration(kind) && <DurationPresets label={kind === "lesson" ? "Lesson length" : "Duration per punch"} draft={draft} onDraft={onDraft} />}
-            <Punches value={draft.punches} onChange={(punches) => onDraft({ punches })} hint={meta.rule} />
+            {hasDuration(kind) ? (
+                <div className="flex flex-col gap-1.5">
+                    <div className="flex flex-wrap items-start gap-6">
+                        <DurationInput
+                            label={kind === "lesson" ? "Lesson length" : "Duration per punch"}
+                            value={draft.duration}
+                            onChange={(duration) => onDraft({ duration })}
+                        />
+                        <div>
+                            <Punches value={draft.punches} onChange={(punches) => onDraft({ punches })} />
+                        </div>
+                    </div>
+                    <p className="text-sm text-tertiary">{meta.rule}</p>
+                </div>
+            ) : (
+                <Punches value={draft.punches} onChange={(punches) => onDraft({ punches })} hint={meta.rule} />
+            )}
 
             <p className="rounded-lg bg-secondary px-4 py-3 text-sm text-secondary">
                 {draftIsComplete(draft) ? (
@@ -303,6 +296,27 @@ const SetPunches = ({
         </div>
     );
 };
+
+const SetPunches = ({
+    draft,
+    onDraft,
+    onChangeType,
+    merge,
+}: {
+    draft: ItemDraft;
+    onDraft: (patch: Partial<ItemDraft>) => void;
+    onChangeType: () => void;
+    merge?: PunchItem;
+}) => (
+    <div className="flex flex-col gap-5">
+        <KindHeader kind={draft.kind!} onChange={onChangeType} />
+        <ItemFields draft={draft} onDraft={onDraft} merge={merge} />
+    </div>
+);
+
+/** The card line a draft would merge into: same kind, target and length, other than the item being edited. */
+export const mergeTarget = (draft: ItemDraft, items: PunchItem[], editingId?: string) =>
+    draft.kind ? items.find((i) => i.id !== editingId && sameItem(i, { ...draft, kind: draft.kind! })) : undefined;
 
 /* -------------------------------------------------------------------------- */
 /*  Dialog                                                                    */
@@ -326,7 +340,7 @@ export interface AddItemPanelProps {
 /** The Add Item dialog box itself: header, the current step, footer. Rendered inline in stories, in a modal in the flow. */
 export const AddItemPanel = ({ step, draft, editing, existing = [], editingId, onDraft, onStep, onCancel, onSave, className }: AddItemPanelProps) => {
     const patch = (p: Partial<ItemDraft>) => onDraft({ ...draft, ...p });
-    const merge = draft.kind ? existing.find((i) => i.id !== editingId && sameItem(i, { ...draft, kind: draft.kind! })) : undefined;
+    const merge = mergeTarget(draft, existing, editingId);
     return (
         <div className={cx("flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-xl bg-primary shadow-xl ring-1 ring-secondary_alt", className)}>
             <div className="flex items-start justify-between gap-4 border-b border-secondary px-6 py-4">

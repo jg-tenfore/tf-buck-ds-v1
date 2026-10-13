@@ -49,7 +49,7 @@ export const ProductUnpicked: Story = {
     render: () => <AddItemPanelDemo step="details" draft={{ kind: "product", punches: 10, target: "", duration: 60, query: "" }} />,
 };
 
-/** Activity: type, duration per punch, then punches. */
+/** Activity: type, minutes per punch (an input box), then punches. */
 export const Activity: Story = {
     name: "2. Activity",
     render: () => <AddItemPanelDemo step="details" draft={{ kind: "activity", punches: 5, target: "Simulator Bays", duration: 60, query: "" }} />,
@@ -61,15 +61,13 @@ export const Clinic: Story = {
     render: () => <AddItemPanelDemo step="details" draft={{ kind: "clinic", punches: 1, target: "Any clinic", duration: 60, query: "" }} />,
 };
 
-/** Activity with a length that isn't a preset: Custom reveals a minutes field. */
+/** Any length works: type the minutes per punch, e.g. a 45-minute class. */
 export const ActivityCustom: Story = {
-    name: "2. Activity · custom length",
-    render: () => (
-        <AddItemPanelDemo step="details" draft={{ kind: "activity", punches: 8, target: "Fitness Classes", duration: 45, query: "", customDuration: true }} />
-    ),
+    name: "2. Activity · 45-minute class",
+    render: () => <AddItemPanelDemo step="details" draft={{ kind: "activity", punches: 8, target: "Fitness Classes", duration: 45, query: "" }} />,
 };
 
-/** Lesson: any pro or a specific one, a 30 / 60 minute length (or Custom), then punches. */
+/** Lesson: any pro or a specific one, the lesson length in minutes, then punches. */
 export const Lesson: Story = {
     name: "2. Lesson",
     render: () => <AddItemPanelDemo step="details" draft={{ kind: "lesson", punches: 5, target: "Sam Ortega", duration: 30, query: "" }} />,

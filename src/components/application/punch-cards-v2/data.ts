@@ -106,9 +106,9 @@ export const SECOND_TAX_RATES = [
 
 export const COURSES = ["Bushwood Country Club", "Orange County Convention Center", "Schule Oaks", "The Big Loop International"];
 
-/** Kinds whose punches are worth a length of time, and their quick-pick lengths in minutes. */
-export const DURATION_PRESETS: Partial<Record<ItemKind, number[]>> = { activity: [30, 60, 90, 120], lesson: [30, 60] };
-export const hasDuration = (kind?: ItemKind) => Boolean(kind && DURATION_PRESETS[kind]);
+/** Kinds whose punches are worth a length of time (minutes per punch). */
+const DURATION_KINDS: ItemKind[] = ["activity", "lesson"];
+export const hasDuration = (kind?: ItemKind) => Boolean(kind && DURATION_KINDS.includes(kind));
 
 /* ------------------------------------------------------------------ */
 /*  Item display                                                       */
