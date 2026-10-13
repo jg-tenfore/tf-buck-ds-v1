@@ -3,13 +3,13 @@ import { combination } from "@/components/application/punch-cards-v2/data";
 import { PunchCardBuilder } from "@/components/application/punch-cards-v2/punch-card-page";
 
 /**
- * The whole flow working together, in today's back-office chrome with
+ * Concept A · Modal (the concept screenshots). The whole flow working together, in today's back-office chrome with
  * Products › Punch Cards active. Add Item → choose a kind → set it up →
  * Save Item adds it to the card; pencil edits, trash removes. Save Punch Card
  * unlocks with a title, a price, at least one item and one course.
  */
 const meta = {
-    title: "Prototypes/Punch Cards V2/3 Full Flow",
+    title: "Prototypes/Punch Cards V2/3A Full Flow · Modal",
     id: "prototypes-punch-cards-v2-full-flow",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
