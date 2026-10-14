@@ -228,35 +228,45 @@ export const PricingCard = ({
 /* -------------------------------------------------------------------------- */
 
 /** When unused punches stop working: never, N days after purchase, or on a date. */
-export const ExpirationCard = ({ value, onChange }: { value: Expiration; onChange?: (value: Expiration) => void }) => (
+export const ExpirationCard = ({ value, onChange, wide }: { value: Expiration; onChange?: (value: Expiration) => void; wide?: boolean }) => (
     <SectionCard title="Expiration" description="When unused punches on this card stop working.">
-        <RadioGroup aria-label="Expiration" size="md" value={value.mode} onChange={(mode) => onChange?.({ ...value, mode: mode as Expiration["mode"] })}>
-            <RadioButton value="never" label="Never expires" size="md" />
-            <RadioButton value="days" label="After a number of days" hint="Counted from the day it's purchased." size="md" />
-            {value.mode === "days" && (
-                <InputNumber
-                    aria-label="Days after purchase"
-                    size="sm"
-                    minValue={1}
-                    maxValue={3650}
-                    value={value.days}
-                    onChange={(days) => onChange?.({ ...value, days: Number.isNaN(days) ? 365 : days })}
-                    formatOptions={{ style: "unit", unit: "day", unitDisplay: "long" }}
-                    className="pl-8"
-                    wrapperClassName="w-40"
-                />
-            )}
-            <RadioButton value="date" label="On a date" hint="Every card sold expires on the same day." size="md" />
-            {value.mode === "date" && (
-                <Input
-                    aria-label="Expiration date"
-                    placeholder="MM/DD/YYYY"
-                    value={value.date}
-                    onChange={(date) => onChange?.({ ...value, date })}
-                    className="pl-8"
-                    wrapperClassName="w-44"
-                />
-            )}
+        <RadioGroup
+            aria-label="Expiration"
+            size="md"
+            value={value.mode}
+            onChange={(mode) => onChange?.({ ...value, mode: mode as Expiration["mode"] })}
+            className={wide ? "grid items-start gap-6 lg:grid-cols-3" : undefined}
+        >
+            <RadioButton value="never" label="Never expires" hint="Punches stay good until they're used." size="md" />
+            <div className="flex flex-col gap-3">
+                <RadioButton value="days" label="After a number of days" hint="Counted from the day it's purchased." size="md" />
+                {value.mode === "days" && (
+                    <InputNumber
+                        aria-label="Days after purchase"
+                        size="sm"
+                        minValue={1}
+                        maxValue={3650}
+                        value={value.days}
+                        onChange={(days) => onChange?.({ ...value, days: Number.isNaN(days) ? 365 : days })}
+                        formatOptions={{ style: "unit", unit: "day", unitDisplay: "long" }}
+                        className="pl-8"
+                        wrapperClassName="w-40"
+                    />
+                )}
+            </div>
+            <div className="flex flex-col gap-3">
+                <RadioButton value="date" label="On a date" hint="Every card sold expires on the same day." size="md" />
+                {value.mode === "date" && (
+                    <Input
+                        aria-label="Expiration date"
+                        placeholder="MM/DD/YYYY"
+                        value={value.date}
+                        onChange={(date) => onChange?.({ ...value, date })}
+                        className="pl-8"
+                        wrapperClassName="w-44"
+                    />
+                )}
+            </div>
         </RadioGroup>
     </SectionCard>
 );
@@ -265,9 +275,9 @@ export const ExpirationCard = ({ value, onChange }: { value: Expiration; onChang
 /*  Applicable courses                                                        */
 /* -------------------------------------------------------------------------- */
 
-export const CoursesCard = ({ selected, onChange }: { selected: string[]; onChange?: (courses: string[]) => void }) => (
+export const CoursesCard = ({ selected, onChange, wide }: { selected: string[]; onChange?: (courses: string[]) => void; wide?: boolean }) => (
     <SectionCard title="Applicable Courses" description="Where every item on this card can be redeemed.">
-        <div className="flex flex-col gap-4">
+        <div className={wide ? "grid gap-4 sm:grid-cols-2 xl:grid-cols-4" : "flex flex-col gap-4"}>
             {COURSES.map((course) => (
                 <Checkbox
                     key={course}
