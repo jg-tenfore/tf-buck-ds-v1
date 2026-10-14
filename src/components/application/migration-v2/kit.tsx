@@ -51,9 +51,11 @@ export const ScreenShell = (props: ScreenShellProps) =>
     );
 
 const FullScreenShell = ({ nav, course = "dunes", title, description, action, tabs, header, children }: ScreenShellProps) => (
-    <div className="flex h-screen min-h-[720px] overflow-hidden bg-secondary">
+    // `relative` on both: absolutely positioned bits inside fields (icons, hidden inputs) otherwise
+    // escape these overflow boxes and stretch the document, letting the whole frame scroll away.
+    <div className="relative flex h-screen min-h-[720px] overflow-hidden bg-secondary">
         <GlobalNav {...nav} />
-        <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
+        <div className="relative flex min-w-0 flex-1 flex-col overflow-y-auto">
             <TopBar course={course} />
             {header ?? (
                 <header className="flex items-start justify-between gap-6 border-b border-secondary bg-primary px-8 pt-6 pb-5">
