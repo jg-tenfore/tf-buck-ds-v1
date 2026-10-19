@@ -31,7 +31,7 @@ import {
 type Version = "filters" | "offerings" | "groups";
 const CONCEPTS = {
     filters: {
-        label: "01 · Flexible filters",
+        label: "1a · Flexible filters",
         description: "One customer card per row. Combine offering types and narrow the list without changing your view.",
     },
     offerings: {
@@ -195,7 +195,8 @@ function exportCards(cards: OwnedCard[], kinds: ItemKind[]) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export function PunchCardsTable({ version }: { version: Version }) {
+/** `showSummary={false}` drops the four summary boxes above the table (1b); everything else is unchanged. */
+export function PunchCardsTable({ version, showSummary = true }: { version: Version; showSummary?: boolean }) {
     const [query, setQuery] = useState("");
     const [kinds, setKinds] = useState<ItemKind[]>([]);
     const [segment, setSegment] = useState<Segment>("all");
@@ -213,6 +214,7 @@ export function PunchCardsTable({ version }: { version: Version }) {
     const [page, setPage] = useState(1);
     const [ascending, setAscending] = useState(false);
     const concept = CONCEPTS[version];
+    const conceptLabel = version === "filters" && !showSummary ? "1b · Flexible filters" : concept.label;
 
     // Every result set and statistic is derived from the same customer-card model.
     const scoped = OWNED_CARDS.filter((card) => {
@@ -376,55 +378,57 @@ export function PunchCardsTable({ version }: { version: Version }) {
         >
             <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                 <div className="flex items-center gap-2">
-                    <span className="font-semibold text-brand-secondary">{concept.label}</span>
+                    <span className="font-semibold text-brand-secondary">{conceptLabel}</span>
                     <span className="text-quaternary">/</span>
                     <span className="text-tertiary">{concept.description}</span>
                 </div>
                 <span className="shrink-0 text-quaternary">Sample data · Oct 15, 2026</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-                {[
-                    {
-                        label: "Customer cards",
-                        value: scoped.length,
-                        hint: `${new Set(scoped.filter((card) => card.customer).map((card) => card.customer)).size} customers · all statuses`,
-                        segment: "all" as Segment,
-                    },
-                    {
-                        label: "Ready to use",
-                        value: scoped.filter((card) => inSegment(card, "ready")).length,
-                        hint: "Active cards with a remaining balance",
-                        segment: "ready" as Segment,
-                    },
-                    {
-                        label: "Expiring soon",
-                        value: scoped.filter((card) => inSegment(card, "expiring")).length,
-                        hint: "In the next 30 days",
-                        segment: "expiring" as Segment,
-                    },
-                    {
-                        label: "Not yet used",
-                        value: scoped.filter((card) => inSegment(card, "unused")).length,
-                        hint: "Usable cards with no redemptions",
-                        segment: "unused" as Segment,
-                    },
-                ].map((stat) => (
-                    <button
-                        type="button"
-                        key={stat.label}
-                        onClick={() => changeSegment(stat.segment)}
-                        className="cursor-pointer rounded-xl bg-primary p-4 text-left shadow-xs ring-1 ring-secondary transition hover:ring-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
-                    >
-                        <div className="text-xs font-medium text-tertiary">{stat.label}</div>
-                        <div className="mt-2 flex items-center justify-between">
-                            <span className="text-display-xs font-semibold text-primary tabular-nums">{stat.value}</span>
-                            <ArrowUpRight aria-hidden="true" className="size-4 text-fg-quaternary" />
-                        </div>
-                        <p className="mt-1 text-xs text-tertiary">{stat.hint}</p>
-                    </button>
-                ))}
-            </div>
+            {showSummary && (
+                <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+                    {[
+                        {
+                            label: "Customer cards",
+                            value: scoped.length,
+                            hint: `${new Set(scoped.filter((card) => card.customer).map((card) => card.customer)).size} customers · all statuses`,
+                            segment: "all" as Segment,
+                        },
+                        {
+                            label: "Ready to use",
+                            value: scoped.filter((card) => inSegment(card, "ready")).length,
+                            hint: "Active cards with a remaining balance",
+                            segment: "ready" as Segment,
+                        },
+                        {
+                            label: "Expiring soon",
+                            value: scoped.filter((card) => inSegment(card, "expiring")).length,
+                            hint: "In the next 30 days",
+                            segment: "expiring" as Segment,
+                        },
+                        {
+                            label: "Not yet used",
+                            value: scoped.filter((card) => inSegment(card, "unused")).length,
+                            hint: "Usable cards with no redemptions",
+                            segment: "unused" as Segment,
+                        },
+                    ].map((stat) => (
+                        <button
+                            type="button"
+                            key={stat.label}
+                            onClick={() => changeSegment(stat.segment)}
+                            className="cursor-pointer rounded-xl bg-primary p-4 text-left shadow-xs ring-1 ring-secondary transition hover:ring-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
+                        >
+                            <div className="text-xs font-medium text-tertiary">{stat.label}</div>
+                            <div className="mt-2 flex items-center justify-between">
+                                <span className="text-display-xs font-semibold text-primary tabular-nums">{stat.value}</span>
+                                <ArrowUpRight aria-hidden="true" className="size-4 text-fg-quaternary" />
+                            </div>
+                            <p className="mt-1 text-xs text-tertiary">{stat.hint}</p>
+                        </button>
+                    ))}
+                </div>
+            )}
 
             {version === "offerings" && (
                 <div className="flex flex-wrap items-center gap-1 rounded-xl bg-primary p-1.5 shadow-xs ring-1 ring-secondary" aria-label="Offering workspaces">
