@@ -17,10 +17,10 @@ export const Original: Story = { name: "0 · Original report", render: () => <Pu
 /** 1a · Reference-inspired filter chips. Offering types use OR; status, course, membership, purchase period and search narrow the result together. */
 export const FlexibleFilters: Story = { name: "1a · Flexible filters", render: () => <PunchCardsTable version="filters" /> };
 
-/** 1b · Same as 1a without the four summary boxes, so the filters and table start higher on the page. Status filtering stays in Filters. */
+/** 1b · Same as 1a without the summary boxes or the caption line above the table, so the table starts right under the page header. Status filtering stays in Filters. */
 export const FlexibleFiltersNoSummary: Story = {
     name: "1b · Flexible filters, no summary boxes",
-    render: () => <PunchCardsTable version="filters" showSummary={false} />,
+    render: () => <PunchCardsTable version="filters" showSummary={false} showIntro={false} />,
 };
 
 /** Six offering workspaces. Columns switch to the relevant product, activity duration, clinic or instructor; mixed cards retain their other balances in details. */

@@ -195,8 +195,12 @@ function exportCards(cards: OwnedCard[], kinds: ItemKind[]) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-/** `showSummary={false}` drops the four summary boxes above the table (1b); everything else is unchanged. */
-export function PunchCardsTable({ version, showSummary = true }: { version: Version; showSummary?: boolean }) {
+/**
+ * `showSummary={false}` drops the four summary boxes above the table and
+ * `showIntro={false}` drops the concept caption line (both off for 1b);
+ * everything else is unchanged.
+ */
+export function PunchCardsTable({ version, showSummary = true, showIntro = true }: { version: Version; showSummary?: boolean; showIntro?: boolean }) {
     const [query, setQuery] = useState("");
     const [kinds, setKinds] = useState<ItemKind[]>([]);
     const [segment, setSegment] = useState<Segment>("all");
@@ -214,7 +218,6 @@ export function PunchCardsTable({ version, showSummary = true }: { version: Vers
     const [page, setPage] = useState(1);
     const [ascending, setAscending] = useState(false);
     const concept = CONCEPTS[version];
-    const conceptLabel = version === "filters" && !showSummary ? "1b · Flexible filters" : concept.label;
 
     // Every result set and statistic is derived from the same customer-card model.
     const scoped = OWNED_CARDS.filter((card) => {
@@ -376,14 +379,16 @@ export function PunchCardsTable({ version, showSummary = true }: { version: Vers
                 </header>
             }
         >
-            <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                <div className="flex items-center gap-2">
-                    <span className="font-semibold text-brand-secondary">{conceptLabel}</span>
-                    <span className="text-quaternary">/</span>
-                    <span className="text-tertiary">{concept.description}</span>
+            {showIntro && (
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <div className="flex items-center gap-2">
+                        <span className="font-semibold text-brand-secondary">{concept.label}</span>
+                        <span className="text-quaternary">/</span>
+                        <span className="text-tertiary">{concept.description}</span>
+                    </div>
+                    <span className="shrink-0 text-quaternary">Sample data · Oct 15, 2026</span>
                 </div>
-                <span className="shrink-0 text-quaternary">Sample data · Oct 15, 2026</span>
-            </div>
+            )}
 
             {showSummary && (
                 <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
