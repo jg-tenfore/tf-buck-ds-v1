@@ -92,13 +92,32 @@ const CLOSED: ModalState = { open: false, step: "type", draft: EMPTY_DRAFT };
  * and pricing share a section at the top; items, expiration and courses
  * follow. Adding items uses the same two-step dialog as Concept A.
  */
-export const StackedConceptPage = ({ initial = EMPTY_CARD, initialModal }: { initial?: PunchCard; initialModal?: Partial<ModalState> }) => {
+export const StackedConceptPage = ({
+    initial = EMPTY_CARD,
+    initialModal,
+    title,
+    onBack,
+    onClose,
+    onSaved,
+    onDirtyChange,
+}: {
+    initial?: PunchCard;
+    initialModal?: Partial<ModalState>;
+    /** Page title, e.g. "Edit Punch Card" when opened from the list (default "New Punch Card"). */
+    title?: string;
+    onBack?: () => void;
+    /** Cancel closes the card's tab (Products › Punch Cards). */
+    onClose?: () => void;
+    /** Called with the card when Save Punch Card is pressed. */
+    onSaved?: (card: PunchCard) => void;
+    onDirtyChange?: (dirty: boolean) => void;
+}) => {
     const state = usePunchCard(initial);
     const { card, update } = state;
     const [modal, setModal] = useState<ModalState>({ ...CLOSED, ...initialModal });
 
     return (
-        <PunchCardFrame state={state}>
+        <PunchCardFrame state={state} title={title} onBack={onBack} onClose={onClose} onSaved={onSaved} onDirtyChange={onDirtyChange}>
             <div key={state.resetKey} className="flex flex-col gap-5">
                 <DetailsPricingCard card={card} onChange={update} />
                 <ItemsCard

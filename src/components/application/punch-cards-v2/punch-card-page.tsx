@@ -35,6 +35,7 @@ export const PunchCardBuilder = ({
     onBack,
     onClose,
     onSaved,
+    onDirtyChange,
 }: {
     initial?: PunchCard;
     initialModal?: Partial<ModalState>;
@@ -45,13 +46,14 @@ export const PunchCardBuilder = ({
     onClose?: () => void;
     /** Called with the card when Save Punch Card is pressed. */
     onSaved?: (card: PunchCard) => void;
+    onDirtyChange?: (dirty: boolean) => void;
 }) => {
     const state = usePunchCard(initial);
     const { card, update } = state;
     const [modal, setModal] = useState<ModalState>({ ...CLOSED, ...initialModal });
 
     return (
-        <PunchCardFrame state={state} title={title} onBack={onBack} onClose={onClose} onSaved={onSaved}>
+        <PunchCardFrame state={state} title={title} onBack={onBack} onClose={onClose} onSaved={onSaved} onDirtyChange={onDirtyChange}>
             <PunchCardLayout
                 key={state.resetKey}
                 left={

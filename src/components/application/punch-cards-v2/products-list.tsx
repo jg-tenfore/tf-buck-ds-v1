@@ -11,10 +11,12 @@ import { Button } from "@/components/base/buttons/button";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Input } from "@/components/base/input/input";
 import { cx } from "@/utils/cx";
+import { UnsavedChangesModal } from "../credits-oct-27/kit";
 import type { ItemKind, PunchCard, PunchItem } from "./data";
 import { ALL_ACTIVITIES, ALL_CLINICS, ALL_PRODUCTS, COMBINATIONS, EMPTY_CARD, NEVER_EXPIRES, cardTotals, itemLabel, kindMeta } from "./data";
 import type { ModalState } from "./punch-card-page";
 import { PUNCH_CARDS_NAV_ID, PunchCardBuilder } from "./punch-card-page";
+import { StackedConceptPage } from "./stacked-concept";
 
 /*
  * Page 2 of 2: Products › Punch Cards (Beta) › List, the punch cards created
@@ -418,13 +420,20 @@ type OpenTab = { key: string; rowId?: number; title: string; initial: PunchCard;
 export const PunchCardProducts = ({
     initialKinds,
     initialOpen = [],
+    builder = "modal",
+    confirmClose = false,
 }: {
     initialKinds?: ItemKind[];
+    /** Layout inside a card's tab: builder 3A (two columns, default) or 3D (stacked, one full-width column). */
+    builder?: "modal" | "stacked";
+    /** Credits - OCT 27: closing a tab (or Cancel) with unsaved changes asks first. */
+    confirmClose?: boolean;
     /** Tabs to start with: a catalog card by id, or a new card when id is left out; the last one is active. */
     initialOpen?: { id?: number; modal?: Partial<ModalState> }[];
 }) => {
     const drafts = useRef(0);
     const [rows, setRows] = useState(CATALOG);
+    const Builder = builder === "stacked" ? StackedConceptPage : PunchCardBuilder;
     const tabFor = (row: CatalogCard | null, modal?: Partial<ModalState>): OpenTab =>
         row
             ? { key: `card-${row.id}`, rowId: row.id, title: row.card.title, initial: { ...row.card, fees: row.fees }, modal }
@@ -439,9 +448,19 @@ export const PunchCardProducts = ({
         setTabs((all) => [...all, tab]);
         setActive(tab.key);
     };
-    const close = (key: string) => {
+    const [dirty, setDirty] = useState<string[]>([]);
+    const [pending, setPending] = useState<string | null>(null);
+    const forceClose = (key: string) => {
         setTabs((all) => all.filter((t) => t.key !== key));
-        if (active === key) setActive("list");
+        setDirty((keys) => keys.filter((k) => k !== key));
+        setActive((current) => (current === key ? "list" : current));
+    };
+    const close = (key: string) => {
+        if (confirmClose && dirty.includes(key)) {
+            setActive(key);
+            return setPending(key);
+        }
+        forceClose(key);
     };
     const saved = (tab: OpenTab, card: PunchCard) => {
         if (tab.rowId !== undefined) {
@@ -483,17 +502,30 @@ export const PunchCardProducts = ({
             {tabs.map((t) => (
                 <div key={t.key} className={cx(t.key !== active && "hidden")}>
                     <EmbeddedShellContext.Provider value>
-                        <PunchCardBuilder
+                        <Builder
                             initial={t.initial}
                             initialModal={t.key === active ? t.modal : undefined}
                             title={t.rowId !== undefined ? "Edit Punch Card" : "New Punch Card"}
                             onBack={() => setActive("list")}
                             onClose={() => close(t.key)}
                             onSaved={(card) => saved(t, card)}
+                            onDirtyChange={(d) =>
+                                setDirty((keys) => (d === keys.includes(t.key) ? keys : d ? [...keys, t.key] : keys.filter((k) => k !== t.key)))
+                            }
                         />
                     </EmbeddedShellContext.Provider>
                 </div>
             ))}
+            {confirmClose && (
+                <UnsavedChangesModal
+                    isOpen={Boolean(pending)}
+                    onKeepEditing={() => setPending(null)}
+                    onDiscard={() => {
+                        if (pending) forceClose(pending);
+                        setPending(null);
+                    }}
+                />
+            )}
         </ProductsList>
     );
 };
