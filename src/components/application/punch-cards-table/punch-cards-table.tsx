@@ -62,7 +62,7 @@ function Picker({
     );
 }
 
-function OfferingFilter({ selected, onChange }: { selected: ItemKind[]; onChange: (kinds: ItemKind[]) => void }) {
+export function OfferingFilter({ selected, onChange }: { selected: ItemKind[]; onChange: (kinds: ItemKind[]) => void }) {
     return (
         <AriaDialogTrigger>
             <Button color="secondary" size="md" iconTrailing={ChevronDown}>
@@ -145,6 +145,59 @@ function Balance({ items }: { items: OwnedItem[] }) {
     );
 }
 
+/** One column per offering for 1c, in the order of today's list (Rounds, Transpos) then the new offerings. */
+const OFFERING_COLUMNS: { kind: ItemKind; label: string }[] = [
+    { kind: "green-fee", label: "Rounds" },
+    { kind: "transportation", label: "Transport" },
+    { kind: "activity", label: "Activities" },
+    { kind: "clinic", label: "Clinics" },
+    { kind: "product", label: "Products" },
+    { kind: "lesson", label: "Lessons" },
+];
+
+/** "Any green fee" / "Any cart fee" say nothing under a Rounds or Transportation balance; specific targets do. */
+const detailOf = (item: OwnedItem) =>
+    item.kind === "green-fee" || item.kind === "transportation"
+        ? item.target.startsWith("Any ")
+            ? null
+            : item.target
+        : item.duration
+          ? `${item.target.split(" · ")[0]} · ${item.duration} min`
+          : item.target;
+
+/** One offering's balance in its own column: remaining / awarded with a bar, per included item. */
+function KindBalance({ items }: { items: OwnedItem[] }) {
+    if (!items.length) return <span className="text-quaternary">—</span>;
+    return (
+        <div className="flex min-w-16 flex-col gap-2">
+            {items.map((item, i) => {
+                const detail = detailOf(item);
+                return (
+                    <div key={i}>
+                        <div className="text-xs font-medium whitespace-nowrap text-primary tabular-nums">
+                            {remaining(item)} / {item.awarded}
+                        </div>
+                        <div
+                            role="meter"
+                            aria-label={`${item.target} remaining`}
+                            aria-valuenow={remaining(item)}
+                            aria-valuemin={0}
+                            aria-valuemax={item.awarded}
+                            className="mt-1 h-1 w-full overflow-hidden rounded-full bg-quaternary"
+                        >
+                            <div
+                                className={cx("h-full rounded-full", remaining(item) ? "bg-brand-solid" : "bg-disabled")}
+                                style={{ width: `${(remaining(item) / item.awarded) * 100}%` }}
+                            />
+                        </div>
+                        {detail && <div className="mt-1 max-w-24 text-xs leading-snug text-tertiary">{detail}</div>}
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
 function exportCards(cards: OwnedCard[], kinds: ItemKind[]) {
     const header = [
         "Customer card ID",
@@ -200,7 +253,18 @@ function exportCards(cards: OwnedCard[], kinds: ItemKind[]) {
  * `showIntro={false}` drops the concept caption line (both off for 1b);
  * everything else is unchanged.
  */
-export function PunchCardsTable({ version, showSummary = true, showIntro = true }: { version: Version; showSummary?: boolean; showIntro?: boolean }) {
+export function PunchCardsTable({
+    version,
+    showSummary = true,
+    showIntro = true,
+    offeringColumns = false,
+}: {
+    version: Version;
+    showSummary?: boolean;
+    showIntro?: boolean;
+    /** 1c: one remaining / awarded column per offering instead of Offering types + a combined balance column. */
+    offeringColumns?: boolean;
+}) {
     const [query, setQuery] = useState("");
     const [kinds, setKinds] = useState<ItemKind[]>([]);
     const [segment, setSegment] = useState<Segment>("all");
@@ -217,6 +281,7 @@ export function PunchCardsTable({ version, showSummary = true, showIntro = true 
     const [collapsed, setCollapsed] = useState<string[]>([]);
     const [page, setPage] = useState(1);
     const [ascending, setAscending] = useState(false);
+    const [hiddenKinds, setHiddenKinds] = useState<ItemKind[]>([]);
     const concept = CONCEPTS[version];
 
     // Every result set and statistic is derived from the same customer-card model.
@@ -277,7 +342,9 @@ export function PunchCardsTable({ version, showSummary = true, showIntro = true 
     };
     const groupKeys = [...new Set(results.map((card) => (groupBy === "product" ? card.title : (card.customer ?? "Unassigned customer"))))];
     const displayedItems = (card: OwnedCard) => card.items.filter((item) => !kinds.length || kinds.includes(item.kind));
-    const columnCount = 6 + Number(showPurchase) + Number(showPrice);
+    // Filtering by offering type narrows 1c to those offerings' columns; Columns can hide any of them.
+    const kindColumns = OFFERING_COLUMNS.filter((c) => (!kinds.length || kinds.includes(c.kind)) && !hiddenKinds.includes(c.kind));
+    const columnCount = (offeringColumns ? 4 + kindColumns.length : 6) + Number(showPurchase) + Number(showPrice);
 
     const renderRow = (card: OwnedCard) => (
         <tr key={card.id} className={cx("group transition-colors hover:bg-primary_hover", selected.includes(card.id) && "bg-brand-primary_alt")}>
@@ -288,7 +355,7 @@ export function PunchCardsTable({ version, showSummary = true, showIntro = true 
                     onChange={(checked) => setSelected((previous) => (checked ? [...previous, card.id] : previous.filter((id) => id !== card.id)))}
                 />
             </Td>
-            <Td className="min-w-48">
+            <Td className={offeringColumns ? "min-w-36" : "min-w-48"}>
                 <button type="button" onClick={() => setDetail(card)} className="cursor-pointer text-left font-semibold text-brand-secondary hover:underline">
                     {card.customer ?? "Unassigned customer"}
                 </button>
@@ -296,7 +363,7 @@ export function PunchCardsTable({ version, showSummary = true, showIntro = true 
                     {card.member ? "Member" : card.customer ? "Guest" : "Customer missing"} <span className="px-1">·</span> {card.id}
                 </div>
             </Td>
-            <Td className="min-w-52">
+            <Td className={offeringColumns ? "min-w-40" : "min-w-52"}>
                 <button
                     type="button"
                     onClick={() => setDetail(card)}
@@ -306,32 +373,46 @@ export function PunchCardsTable({ version, showSummary = true, showIntro = true 
                 </button>
                 <div className="mt-1 text-xs text-tertiary">{card.course}</div>
             </Td>
-            <Td>
-                {focusKind ? (
-                    <div className="flex max-w-52 flex-col gap-2">
-                        {displayedItems(card).map((item, i) => (
-                            <div key={i}>
-                                <div className="text-sm text-secondary">{item.target}</div>
-                                {item.duration ? (
-                                    <div className="text-xs text-tertiary">
-                                        {item.duration} min per {focusKind === "lesson" ? "lesson" : "session"}
+            {offeringColumns ? (
+                kindColumns.map((c) => (
+                    <Td key={c.kind} className="px-3">
+                        <KindBalance items={card.items.filter((item) => item.kind === c.kind)} />
+                    </Td>
+                ))
+            ) : (
+                <>
+                    <Td>
+                        {focusKind ? (
+                            <div className="flex max-w-52 flex-col gap-2">
+                                {displayedItems(card).map((item, i) => (
+                                    <div key={i}>
+                                        <div className="text-sm text-secondary">{item.target}</div>
+                                        {item.duration ? (
+                                            <div className="text-xs text-tertiary">
+                                                {item.duration} min per {focusKind === "lesson" ? "lesson" : "session"}
+                                            </div>
+                                        ) : null}
                                     </div>
-                                ) : null}
+                                ))}
+                                {card.items.some((item) => item.kind !== focusKind) && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setDetail(card)}
+                                        className="cursor-pointer text-left text-xs font-medium text-brand-secondary"
+                                    >
+                                        View other included items <ArrowUpRight aria-hidden="true" className="inline size-3" />
+                                    </button>
+                                )}
                             </div>
-                        ))}
-                        {card.items.some((item) => item.kind !== focusKind) && (
-                            <button type="button" onClick={() => setDetail(card)} className="cursor-pointer text-left text-xs font-medium text-brand-secondary">
-                                View other included items <ArrowUpRight aria-hidden="true" className="inline size-3" />
-                            </button>
+                        ) : (
+                            <OfferingBadges card={card} />
                         )}
-                    </div>
-                ) : (
-                    <OfferingBadges card={card} />
-                )}
-            </Td>
-            <Td>
-                <Balance items={displayedItems(card)} />
-            </Td>
+                    </Td>
+                    <Td>
+                        <Balance items={displayedItems(card)} />
+                    </Td>
+                </>
+            )}
             <Td>
                 <Badge color={STATUS_COLORS[statusOf(card)]} size="sm">
                     {statusOf(card)}
@@ -513,7 +594,22 @@ export function PunchCardsTable({ version, showSummary = true, showIntro = true 
                             </Button>
                             <AriaPopover placement="bottom end" className="z-40 rounded-xl bg-primary p-4 shadow-lg ring-1 ring-secondary">
                                 <AriaDialog aria-label="Visible columns" className="flex flex-col gap-3 outline-hidden">
-                                    <p className="text-sm font-semibold text-primary">Additional columns</p>
+                                    {offeringColumns && (
+                                        <>
+                                            <p className="text-sm font-semibold text-primary">Offering columns</p>
+                                            {OFFERING_COLUMNS.map((c) => (
+                                                <Checkbox
+                                                    key={c.kind}
+                                                    label={c.label}
+                                                    isSelected={!hiddenKinds.includes(c.kind)}
+                                                    onChange={(on) => setHiddenKinds(on ? hiddenKinds.filter((k) => k !== c.kind) : [...hiddenKinds, c.kind])}
+                                                />
+                                            ))}
+                                        </>
+                                    )}
+                                    <p className={cx("text-sm font-semibold text-primary", offeringColumns && "mt-1 border-t border-secondary pt-3")}>
+                                        Additional columns
+                                    </p>
                                     <Checkbox label="Purchase date" isSelected={showPurchase} onChange={setShowPurchase} />
                                     <Checkbox label="Card price (pre-tax)" isSelected={showPrice} onChange={setShowPrice} />
                                     <span className="max-w-52 text-xs text-tertiary">Order IDs and full item details are available by opening a card.</span>
@@ -643,9 +739,19 @@ export function PunchCardsTable({ version, showSummary = true, showIntro = true 
                                     </Th>
                                     <Th>Customer</Th>
                                     <Th>Punch card</Th>
-                                    <Th>{contextualLabel}</Th>
-                                    <Th>Remaining / awarded</Th>
-                                    <Th>Card status / expiration</Th>
+                                    {offeringColumns ? (
+                                        kindColumns.map((c) => (
+                                            <Th key={c.kind} className="px-3">
+                                                {c.label}
+                                            </Th>
+                                        ))
+                                    ) : (
+                                        <>
+                                            <Th>{contextualLabel}</Th>
+                                            <Th>Remaining / awarded</Th>
+                                        </>
+                                    )}
+                                    <Th>{offeringColumns ? "Status / expires" : "Card status / expiration"}</Th>
                                     {showPurchase && <Th>Purchased</Th>}
                                     {showPrice && <Th>Price pre-tax</Th>}
                                 </tr>
@@ -881,7 +987,7 @@ export function PunchCardsTable({ version, showSummary = true, showIntro = true 
     );
 }
 
-function FilterTag({ label, onRemove }: { label: string; onRemove: () => void }) {
+export function FilterTag({ label, onRemove }: { label: string; onRemove: () => void }) {
     return (
         <button
             type="button"
