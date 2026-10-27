@@ -70,11 +70,11 @@ export type PunchItem = {
     duration?: number;
 };
 
-export const TRANSPORTATION_TYPES = ["Any cart fee", "Riding Cart", "Single Rider Cart", "Push Cart"];
-/** Activities, clinics and products can cover the whole category ("All …") or one specific item. */
-export const ALL_ACTIVITIES = "All activities";
-export const ALL_CLINICS = "All clinics";
-export const ALL_PRODUCTS = "All products";
+export const TRANSPORTATION_TYPES = ["Any transportation", "Riding Cart", "Single Rider Cart", "Push Cart"];
+/** Activities, clinics and products can cover the whole category ("Any …", as QA labels it) or one specific item. */
+export const ALL_ACTIVITIES = "Any activity";
+export const ALL_CLINICS = "Any clinic";
+export const ALL_PRODUCTS = "Any product";
 export const ACTIVITY_TYPES = [ALL_ACTIVITIES, "Simulator Bays", "Fitness Classes", "Physical Therapy"];
 export const INSTRUCTORS = ["Any pro", "Jordan Pike · Head Pro", "Sam Ortega", "Riley Chen"];
 export const CLINICS = [ALL_CLINICS, "Junior Golf Clinic", "Short Game Clinic", "Ladies' Night Clinic", "Beginner Golf 101"];
@@ -90,6 +90,7 @@ export const PRODUCTS: Product[] = [
     { name: "Domestic Beer", group: "Beer", location: "19th Hole" },
     { name: "Hot Dog", group: "Grill", location: "Snack Bar" },
     { name: "Logo Golf Balls (Sleeve)", group: "Golf Balls", location: "Golf Shop" },
+    { name: "Tee Socks", group: "Accessories", location: "Golf Shop" },
     { name: "Titleist Pro V1 (Dozen)", group: "Golf Balls", location: "Golf Shop" },
     { name: "Club Rental – 18 Holes", group: "Rental Clubs", location: "Golf Shop" },
     { name: "Locker Rental – Day", group: "Lockers", location: "Clubhouse" },
@@ -130,7 +131,7 @@ export const itemLabel = (item: Pick<PunchItem, "kind" | "target" | "duration">)
 export const sameItem = (a: Pick<PunchItem, "kind" | "target" | "duration">, b: Pick<PunchItem, "kind" | "target" | "duration">) =>
     a.kind === b.kind && a.target === b.target && (!hasDuration(a.kind) || a.duration === b.duration);
 
-/** True when an item covers a whole category ("All activities", "Any pro"…) rather than one specific item. */
+/** True when an item covers a whole category ("Any activity", "Any pro"…) rather than one specific item. */
 export const isAllScope = (target: string) => target.startsWith("All ") || target.startsWith("Any ");
 
 /** "Simulator Bays" → "Simulator Bay", "Fitness Classes" → "Fitness Class". */
@@ -145,7 +146,7 @@ export const itemSummary = (item: Pick<PunchItem, "kind" | "target" | "duration"
         case "green-fee":
             return `${n} Green Fee ${punchesLabel(n)}`;
         case "transportation":
-            return item.target === "Any cart fee" ? `${n} cart fee ${punchesLabel(n)}` : `${n} × ${item.target}`;
+            return item.target === TRANSPORTATION_TYPES[0] ? `${n} transportation ${punchesLabel(n)}` : `${n} × ${item.target}`;
         case "product":
             return item.target === ALL_PRODUCTS
                 ? `${n} ${punchesLabel(n)} for any product`
@@ -165,7 +166,7 @@ export const itemSummary = (item: Pick<PunchItem, "kind" | "target" | "duration"
 
 /** Defaults when an item kind is picked in step 1. */
 export const defaultTarget: Record<ItemKind, string> = {
-    "green-fee": "Any green fee",
+    "green-fee": "Any round",
     transportation: TRANSPORTATION_TYPES[0],
     product: "",
     activity: ACTIVITY_TYPES[0],
@@ -192,15 +193,17 @@ export type PunchCard = {
     items: PunchItem[];
     courses: string[];
     expiration: Expiration;
+    /** Flat fees on the card (from today's Products list); none on new cards. */
+    fees?: number;
 };
 
 export const EMPTY_CARD: PunchCard = { title: "", description: "", price: 0, tax: "sales", tax2: "none", items: [], courses: [], expiration: NEVER_EXPIRES };
 
-export const cardTotals = (card: Pick<PunchCard, "price" | "tax" | "tax2">) => {
+export const cardTotals = (card: Pick<PunchCard, "price" | "tax" | "tax2" | "fees">) => {
     const round = (n: number) => Math.round(n * 100) / 100;
     const tax = round(card.price * (TAX_RATES.find((t) => t.value === card.tax)?.rate ?? 0));
     const tax2 = round(card.price * (SECOND_TAX_RATES.find((t) => t.value === card.tax2)?.rate ?? 0));
-    const fees = 0;
+    const fees = card.fees ?? 0;
     return { tax, tax2, fees, total: round(card.price + tax + tax2 + fees) };
 };
 

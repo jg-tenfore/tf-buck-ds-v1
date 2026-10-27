@@ -4,8 +4,12 @@ import { ALL_SCOPE_CARDS } from "@/components/application/punch-cards-table/data
 import { LisaConcerns } from "@/components/application/punch-cards-table/lisa-concerns";
 import { PunchCardsTable } from "@/components/application/punch-cards-table/punch-cards-table";
 
+/**
+ * Archive: earlier explorations of Reports › Credits › Punch Cards and Lisa's 1c round, kept for reference.
+ * The final design is "1 Customer Punch Cards". Story IDs are fixed, so links shared earlier still work.
+ */
 const meta = {
-    title: "Prototypes/Punch Cards Table",
+    title: "Prototypes/Punch Cards/3 Archive/Customer Punch Cards Explorations",
     id: "prototypes-punch-cards-table",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
@@ -13,51 +17,47 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** The existing report, starting on the customer-card table. Bulk Entry opens the screen from the supplied reference. */
-export const Original: Story = { name: "0 · Original report", render: () => <PunchCardsScreen initialView="list" /> };
-
-/** 1a · Reference-inspired filter chips. Offering types use OR; status, course, membership, purchase period and search narrow the result together. */
-export const FlexibleFilters: Story = { name: "1a · Flexible filters", render: () => <PunchCardsTable version="filters" /> };
-
-/** 1b · Same as 1a without the summary boxes or the caption line above the table, so the table starts right under the page header. Status filtering stays in Filters. */
+/** Agreed direction (Loom, 10/27): flexible filters, no summary boxes, no caption line. Offering types and their balances per card. */
 export const FlexibleFiltersNoSummary: Story = {
-    name: "1b · Flexible filters, no summary boxes",
-    render: () => <PunchCardsTable version="filters" showSummary={false} showIntro={false} />,
+    name: "1b · (final is in 1 Customer Punch Cards)",
+    render: () => <PunchCardsTable version="filters" showSummary={false} showIntro={false} detailTabs cardFilter />,
 };
 
-/**
- * 1c · Lisa Edits - 102726. Built off 1b (no summary boxes, no caption), with one column per offering instead of
- * "Offering types" + a combined balance: Rounds, Transportation, Activities, Clinics, Products, Lessons, each
- * remaining / awarded. Filtering by offering type narrows the columns; Columns can hide any of them.
- */
+/** The existing report, starting on the customer-card table. Bulk Entry opens the screen from the supplied reference. */
+export const Original: Story = { name: "Explore · 0 Original report", render: () => <PunchCardsScreen initialView="list" /> };
+
+/** 1a · Reference-inspired filter chips, with the four summary boxes and caption that 1b removed. */
+export const FlexibleFilters: Story = { name: "Explore · 1a Flexible filters", render: () => <PunchCardsTable version="filters" /> };
+
+/** Six offering workspaces. Columns switch to the relevant product, activity duration, clinic or instructor. */
+export const OfferingWorkspaces: Story = { name: "Explore · 2 Offering workspaces", render: () => <PunchCardsTable version="offerings" /> };
+
+/** Operational segments and collapsible groups by punch-card product or customer. */
+export const PortfolioViews: Story = { name: "Explore · 3 Portfolio views", render: () => <PunchCardsTable version="groups" /> };
+
+/** Lisa's 1c round: 1b with a column per offering. Superseded: the team keeps 1b here, and Lisa's view is the Products › Punch Cards list. */
 export const LisaEdits: Story = {
-    name: "1c · Lisa Edits - 102726",
+    name: "Lisa · 1c Offering columns (superseded)",
     render: () => <PunchCardsTable version="filters" showSummary={false} showIntro={false} offeringColumns />,
 };
 
-/** 1c-A · All vs specific, shown as text: a line names it ("All activities · 60 min" vs "Simulator Bays · 60 min"). For Weston. */
+/** All vs specific, as text ("Any activity · 60 min" vs "Simulator Bays · 60 min"). Weston's pick applies to the Products › Punch Cards list. */
 export const LisaEditsScopeText: Story = {
-    name: "1c-A · All vs specific: text",
+    name: "Lisa · 1c-A All vs specific: text",
     render: () => <PunchCardsTable version="filters" showSummary={false} showIntro={false} offeringColumns scopeDisplay="text" extraCards={ALL_SCOPE_CARDS} />,
 };
 
-/** 1c-B · All vs specific, shown as a tag: an "All" tag beside whole-category balances; specific items are named. For Weston. */
+/** All vs specific, as an "All" tag beside whole-category balances. Weston's pick applies to the Products › Punch Cards list. */
 export const LisaEditsScopeTag: Story = {
-    name: "1c-B · All vs specific: tag",
+    name: "Lisa · 1c-B All vs specific: tag",
     render: () => <PunchCardsTable version="filters" showSummary={false} showIntro={false} offeringColumns scopeDisplay="tag" extraCards={ALL_SCOPE_CARDS} />,
 };
 
-/** 1c-C · All vs specific, compact: an "All" or "Specific" chip under each balance; the full name is in the tooltip. For Weston. */
+/** All vs specific, as a compact "All" / "Specific" chip. Weston's pick applies to the Products › Punch Cards list. */
 export const LisaEditsScopeChip: Story = {
-    name: "1c-C · All vs specific: chip",
+    name: "Lisa · 1c-C All vs specific: chip",
     render: () => <PunchCardsTable version="filters" showSummary={false} showIntro={false} offeringColumns scopeDisplay="chip" extraCards={ALL_SCOPE_CARDS} />,
 };
 
-/** 1c · Lisa's concerns: the missed view, what 1c changes from 1b, and open questions. */
-export const LisaConcernsNotes: Story = { name: "1c · Lisa's concerns", render: () => <LisaConcerns /> };
-
-/** Six offering workspaces. Columns switch to the relevant product, activity duration, clinic or instructor; mixed cards retain their other balances in details. */
-export const OfferingWorkspaces: Story = { name: "2 · Offering workspaces", render: () => <PunchCardsTable version="offerings" /> };
-
-/** Operational segments and collapsible groups. Switch grouping between punch-card product and customer without double-counting mixed cards. */
-export const PortfolioViews: Story = { name: "3 · Portfolio views", render: () => <PunchCardsTable version="groups" /> };
+/** Notes: Lisa's concern, the 10/27 decisions, and where things landed after the Loom. */
+export const LisaConcernsNotes: Story = { name: "Lisa · Notes", render: () => <LisaConcerns /> };

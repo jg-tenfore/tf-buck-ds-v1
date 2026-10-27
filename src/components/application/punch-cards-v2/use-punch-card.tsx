@@ -1,9 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { CheckCircle, XClose } from "@untitledui/icons";
-import { ScreenShell } from "../migration-v2/kit";
+import { EmbeddedShellContext, ScreenShell } from "../migration-v2/kit";
 import type { ItemDraft } from "./add-item";
 import type { PunchCard, PunchItem } from "./data";
 import { hasDuration, sameItem } from "./data";
@@ -76,15 +76,50 @@ export const SavedBanner = ({ state }: { state: PunchCardState }) =>
     ) : null;
 
 /** Today's back-office chrome around a New Punch Card page, with the header's Cancel / Save wired to the card. */
-export const PunchCardFrame = ({ state, children }: { state: PunchCardState; children: ReactNode }) => (
-    <ScreenShell
-        nav={{ activeId: PUNCH_CARDS_NAV_ID, scrollToActive: true }}
-        course="dunes"
-        title="New Punch Card"
-        description=""
-        header={<PageHeader canSave={state.canSave} onSave={() => state.setSaved(true)} onCancel={state.cancel} />}
-    >
-        <SavedBanner state={state} />
-        {children}
-    </ScreenShell>
-);
+export const PunchCardFrame = ({
+    state,
+    title = "New Punch Card",
+    onBack,
+    onClose,
+    onSaved,
+    children,
+}: {
+    state: PunchCardState;
+    title?: string;
+    /** Back to the Products › Punch Cards list (the "‹ Punch Cards" link, and Cancel unless onClose is set). */
+    onBack?: () => void;
+    /** Cancel: close this card (its tab on the Products › Punch Cards page). */
+    onClose?: () => void;
+    /** Save Punch Card: hand the saved card back (the Products list updates its row). */
+    onSaved?: (card: PunchCard) => void;
+    children: ReactNode;
+}) => {
+    const embedded = useContext(EmbeddedShellContext);
+    return (
+        <ScreenShell
+            nav={{ activeId: PUNCH_CARDS_NAV_ID, scrollToActive: true }}
+            course="dunes"
+            title={title}
+            description=""
+            header={
+                <PageHeader
+                    title={title}
+                    embedded={embedded}
+                    canSave={state.canSave}
+                    onSave={() => {
+                        state.setSaved(true);
+                        onSaved?.(state.card);
+                    }}
+                    onBack={onBack}
+                    onCancel={() => {
+                        state.cancel();
+                        (onClose ?? onBack)?.();
+                    }}
+                />
+            }
+        >
+            <SavedBanner state={state} />
+            {children}
+        </ScreenShell>
+    );
+};

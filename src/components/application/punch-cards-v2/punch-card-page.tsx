@@ -19,7 +19,7 @@ export const PunchCardLayout = ({ left, right }: { left: ReactNode; right: React
     </div>
 );
 
-type ModalState = { open: boolean; step: AddItemStep; draft: ItemDraft; editingId?: string };
+export type ModalState = { open: boolean; step: AddItemStep; draft: ItemDraft; editingId?: string };
 const CLOSED: ModalState = { open: false, step: "type", draft: EMPTY_DRAFT };
 
 /**
@@ -28,13 +28,30 @@ const CLOSED: ModalState = { open: false, step: "type", draft: EMPTY_DRAFT };
  * edited or removed, and Save Punch Card unlocks once there's a title, a
  * price, at least one item and one course.
  */
-export const PunchCardBuilder = ({ initial = EMPTY_CARD, initialModal }: { initial?: PunchCard; initialModal?: Partial<ModalState> }) => {
+export const PunchCardBuilder = ({
+    initial = EMPTY_CARD,
+    initialModal,
+    title,
+    onBack,
+    onClose,
+    onSaved,
+}: {
+    initial?: PunchCard;
+    initialModal?: Partial<ModalState>;
+    /** Page title, e.g. "Edit Punch Card" when opened from the list (default "New Punch Card"). */
+    title?: string;
+    onBack?: () => void;
+    /** Cancel closes the card's tab (Products › Punch Cards). */
+    onClose?: () => void;
+    /** Called with the card when Save Punch Card is pressed. */
+    onSaved?: (card: PunchCard) => void;
+}) => {
     const state = usePunchCard(initial);
     const { card, update } = state;
     const [modal, setModal] = useState<ModalState>({ ...CLOSED, ...initialModal });
 
     return (
-        <PunchCardFrame state={state}>
+        <PunchCardFrame state={state} title={title} onBack={onBack} onClose={onClose} onSaved={onSaved}>
             <PunchCardLayout
                 key={state.resetKey}
                 left={

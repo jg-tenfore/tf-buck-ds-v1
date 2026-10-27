@@ -4,7 +4,7 @@ import { PunchCardBuilder } from "@/components/application/punch-cards-v2/punch-
 
 /** Hypothetical 1 · Golf & Cart. Rounds + cart fees: today's punch card, built the new way. Fully interactive: edit, add or remove items. */
 const meta = {
-    title: "Prototypes/Punch Cards V2/Combo 1 · Golf & Cart",
+    title: "Prototypes/Punch Cards/3 Archive/Combos/Combo 1 · Golf & Cart",
     id: "prototypes-punch-cards-v2-combo-1",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

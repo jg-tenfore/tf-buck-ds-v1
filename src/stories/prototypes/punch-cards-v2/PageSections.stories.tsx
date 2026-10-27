@@ -7,7 +7,7 @@ import { CoursesCard, DetailsCard, ExpirationCard, ItemRow, ItemsCard, PageHeade
  * Bundle from the concept screenshot.
  */
 const meta = {
-    title: "Prototypes/Punch Cards V2/1 Page Sections",
+    title: "Prototypes/Punch Cards/2 Punch Card Products (Products › Punch Cards)/2 Create & Edit/3 Page Sections",
     id: "prototypes-punch-cards-v2-page-sections",
     parameters: { layout: "padded", backgrounds: { disable: true } },
     decorators: [(Story) => <div className="min-h-screen bg-secondary p-6">{Story()}</div>],

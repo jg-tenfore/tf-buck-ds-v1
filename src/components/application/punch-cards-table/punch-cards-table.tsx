@@ -1,9 +1,9 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import { ArrowDown, ArrowUpRight, ChevronDown, ChevronRight, Download01, FilterLines, SearchLg, Settings01, Ticket01, XClose } from "@untitledui/icons";
+import { ArrowDown, ArrowUpRight, ChevronDown, ChevronRight, Download01, FilterLines, List, SearchLg, Settings01, Ticket01, XClose } from "@untitledui/icons";
 import { Dialog as AriaDialog, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover } from "react-aria-components";
-import { ScreenModal, ScreenShell, Td, Th } from "@/components/application/migration-v2/kit";
+import { ScreenModal, ScreenShell, TabStrip, Td, Th } from "@/components/application/migration-v2/kit";
 import { NAV_IDS } from "@/components/application/migration-v2/nav-tree";
 import { ITEM_KINDS, type ItemKind, isAllScope, kindMeta } from "@/components/application/punch-cards-v2/data";
 import { Badge } from "@/components/base/badges/badges";
@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
 import { cx } from "@/utils/cx";
+import { CardDetailTab } from "./card-detail-tab";
 import {
     AS_OF,
     type CardStatus,
@@ -155,7 +156,7 @@ const OFFERING_COLUMNS: { kind: ItemKind; label: string }[] = [
     { kind: "lesson", label: "Lessons" },
 ];
 
-/** "Any green fee" / "Any cart fee" say nothing under a Rounds or Transportation balance; specific targets do. */
+/** "Any round" / "Any transportation" say nothing under a Rounds or Transportation balance; specific targets do. */
 const detailOf = (item: OwnedItem) =>
     item.kind === "green-fee" || item.kind === "transportation"
         ? item.target.startsWith("Any ")
@@ -173,7 +174,7 @@ const SCOPED_KINDS: ItemKind[] = ["transportation", "activity", "clinic", "produ
 
 /**
  * One offering's balance in its own column: remaining / awarded with a bar, per included item.
- * - text (1c, 1c-A): a line naming it, e.g. "All activities · 60 min" or "Simulator Bays · 60 min"
+ * - text (1c, 1c-A): a line naming it, e.g. "Any activity · 60 min" or "Simulator Bays · 60 min"
  * - tag (1c-B): an "All" tag beside the balance for whole-category items; specific ones are named
  * - chip (1c-C): just "All" or "Specific" under the bar; the full name is in the tooltip
  */
@@ -289,6 +290,10 @@ export function PunchCardsTable({
     offeringColumns = false,
     scopeDisplay = "text",
     extraCards = [],
+    detailTabs = false,
+    cardFilter = false,
+    initialCardTitle = "all",
+    initialOpenIds = [],
 }: {
     version: Version;
     showSummary?: boolean;
@@ -299,6 +304,14 @@ export function PunchCardsTable({
     scopeDisplay?: ScopeDisplay;
     /** Extra customer cards shown first (1c variants add all-vs-specific examples). */
     extraCards?: OwnedCard[];
+    /** 1b (10/27): a card opens as a closable tab with edit + transfer, instead of a modal. */
+    detailTabs?: boolean;
+    /** 1b (10/27): filter by punch card (e.g. only Range & Refresh). */
+    cardFilter?: boolean;
+    /** Start filtered to one punch card (stories). */
+    initialCardTitle?: string;
+    /** Start with these cards open as tabs, the last one active (stories). */
+    initialOpenIds?: string[];
 }) {
     const [query, setQuery] = useState("");
     const [kinds, setKinds] = useState<ItemKind[]>([]);
@@ -317,10 +330,24 @@ export function PunchCardsTable({
     const [page, setPage] = useState(1);
     const [ascending, setAscending] = useState(false);
     const [hiddenKinds, setHiddenKinds] = useState<ItemKind[]>([]);
+    const [cards, setCards] = useState<OwnedCard[]>(() => [...extraCards, ...OWNED_CARDS]);
+    const [cardTitle, setCardTitle] = useState(initialCardTitle);
+    const [openTabs, setOpenTabs] = useState<string[]>(initialOpenIds);
+    const [activeTab, setActiveTab] = useState(initialOpenIds.at(-1) ?? "list");
+    /** Open a card: as a tab (1b) or in the details modal (earlier explorations). */
+    const openCard = (card: OwnedCard) => {
+        if (!detailTabs) return setDetail(card);
+        setOpenTabs((tabs) => (tabs.includes(card.id) ? tabs : [...tabs, card.id]));
+        setActiveTab(card.id);
+    };
+    const closeTab = (id: string) => {
+        setOpenTabs((tabs) => tabs.filter((t) => t !== id));
+        if (activeTab === id) setActiveTab("list");
+    };
     const concept = CONCEPTS[version];
 
     // Every result set and statistic is derived from the same customer-card model.
-    const scoped = [...extraCards, ...OWNED_CARDS].filter((card) => {
+    const scoped = cards.filter((card) => {
         const searchText = [card.id, card.customer, card.email, card.title, card.order, ...card.items.map((item) => item.target)].join(" ").toLowerCase();
         return (
             searchText.includes(query.trim().toLowerCase()) &&
@@ -328,7 +355,8 @@ export function PunchCardsTable({
             (status === "all" || statusOf(card) === status) &&
             (course === "all" || card.course === course) &&
             (membership === "all" || (membership === "member" ? card.member : !card.member)) &&
-            (period === "all" || card.purchased >= "2026-10-01")
+            (period === "all" || card.purchased >= "2026-10-01") &&
+            (cardTitle === "all" || card.title === cardTitle)
         );
     });
     const results = scoped
@@ -373,6 +401,7 @@ export function PunchCardsTable({
         setCourse("all");
         setMembership("all");
         setPeriod("all");
+        setCardTitle("all");
         changed();
     };
     const groupKeys = [...new Set(results.map((card) => (groupBy === "product" ? card.title : (card.customer ?? "Unassigned customer"))))];
@@ -391,7 +420,7 @@ export function PunchCardsTable({
                 />
             </Td>
             <Td className={offeringColumns ? "min-w-35" : "min-w-48"}>
-                <button type="button" onClick={() => setDetail(card)} className="cursor-pointer text-left font-semibold text-brand-secondary hover:underline">
+                <button type="button" onClick={() => openCard(card)} className="cursor-pointer text-left font-semibold text-brand-secondary hover:underline">
                     {card.customer ?? "Unassigned customer"}
                 </button>
                 <div className="mt-1 text-xs text-tertiary">
@@ -401,7 +430,7 @@ export function PunchCardsTable({
             <Td className={offeringColumns ? "min-w-40" : "min-w-52"}>
                 <button
                     type="button"
-                    onClick={() => setDetail(card)}
+                    onClick={() => openCard(card)}
                     className="max-w-60 cursor-pointer text-left font-medium text-primary hover:text-brand-secondary"
                 >
                     {card.title}
@@ -432,7 +461,7 @@ export function PunchCardsTable({
                                 {card.items.some((item) => item.kind !== focusKind) && (
                                     <button
                                         type="button"
-                                        onClick={() => setDetail(card)}
+                                        onClick={() => openCard(card)}
                                         className="cursor-pointer text-left text-xs font-medium text-brand-secondary"
                                     >
                                         View other included items <ArrowUpRight aria-hidden="true" className="inline size-3" />
@@ -494,400 +523,463 @@ export function PunchCardsTable({
                     </div>
                 </header>
             }
+            tabs={
+                detailTabs && openTabs.length > 0 ? (
+                    <TabStrip
+                        tabs={[
+                            { id: "list", label: "Customer cards", icon: List },
+                            ...openTabs.map((id) => {
+                                const card = cards.find((c) => c.id === id)!;
+                                return { id, label: card.customer ?? "Unassigned", sublabel: `${card.title} · ${id}`, icon: Ticket01, closable: true };
+                            }),
+                        ]}
+                        activeId={activeTab}
+                        onSelect={setActiveTab}
+                        onClose={closeTab}
+                    />
+                ) : undefined
+            }
         >
-            {showIntro && (
-                <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                    <div className="flex items-center gap-2">
-                        <span className="font-semibold text-brand-secondary">{concept.label}</span>
-                        <span className="text-quaternary">/</span>
-                        <span className="text-tertiary">{concept.description}</span>
-                    </div>
-                    <span className="shrink-0 text-quaternary">Sample data · Oct 15, 2026</span>
-                </div>
-            )}
-
-            {showSummary && (
-                <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-                    {[
-                        {
-                            label: "Customer cards",
-                            value: scoped.length,
-                            hint: `${new Set(scoped.filter((card) => card.customer).map((card) => card.customer)).size} customers · all statuses`,
-                            segment: "all" as Segment,
-                        },
-                        {
-                            label: "Ready to use",
-                            value: scoped.filter((card) => inSegment(card, "ready")).length,
-                            hint: "Active cards with a remaining balance",
-                            segment: "ready" as Segment,
-                        },
-                        {
-                            label: "Expiring soon",
-                            value: scoped.filter((card) => inSegment(card, "expiring")).length,
-                            hint: "In the next 30 days",
-                            segment: "expiring" as Segment,
-                        },
-                        {
-                            label: "Not yet used",
-                            value: scoped.filter((card) => inSegment(card, "unused")).length,
-                            hint: "Usable cards with no redemptions",
-                            segment: "unused" as Segment,
-                        },
-                    ].map((stat) => (
-                        <button
-                            type="button"
-                            key={stat.label}
-                            onClick={() => changeSegment(stat.segment)}
-                            className="cursor-pointer rounded-xl bg-primary p-4 text-left shadow-xs ring-1 ring-secondary transition hover:ring-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
-                        >
-                            <div className="text-xs font-medium text-tertiary">{stat.label}</div>
-                            <div className="mt-2 flex items-center justify-between">
-                                <span className="text-display-xs font-semibold text-primary tabular-nums">{stat.value}</span>
-                                <ArrowUpRight aria-hidden="true" className="size-4 text-fg-quaternary" />
+            {detailTabs && activeTab !== "list" ? (
+                <CardDetailTab
+                    key={activeTab}
+                    card={cards.find((c) => c.id === activeTab)!}
+                    onSave={(next) => setCards((all) => all.map((c) => (c.id === next.id ? next : c)))}
+                />
+            ) : (
+                <>
+                    {showIntro && (
+                        <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                            <div className="flex items-center gap-2">
+                                <span className="font-semibold text-brand-secondary">{concept.label}</span>
+                                <span className="text-quaternary">/</span>
+                                <span className="text-tertiary">{concept.description}</span>
                             </div>
-                            <p className="mt-1 text-xs text-tertiary">{stat.hint}</p>
-                        </button>
-                    ))}
-                </div>
-            )}
+                            <span className="shrink-0 text-quaternary">Sample data · Oct 15, 2026</span>
+                        </div>
+                    )}
 
-            {version === "offerings" && (
-                <div className="flex flex-wrap items-center gap-1 rounded-xl bg-primary p-1.5 shadow-xs ring-1 ring-secondary" aria-label="Offering workspaces">
-                    {[{ kind: "all", label: "All offerings", icon: Ticket01 }, ...ITEM_KINDS].map(({ kind, label, icon: Icon }) => {
-                        const active = kind === "all" ? !kinds.length : kinds[0] === kind;
-                        const count = OWNED_CARDS.filter((card) => kind === "all" || card.items.some((item) => item.kind === kind)).length;
-                        return (
-                            <button
-                                type="button"
-                                key={kind}
-                                aria-pressed={active}
-                                onClick={() => changeKinds(kind === "all" ? [] : [kind as ItemKind])}
-                                className={cx(
-                                    "flex cursor-pointer items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-focus-ring",
-                                    active ? "bg-brand-primary_alt text-brand-secondary" : "text-tertiary hover:bg-primary_hover",
-                                )}
-                            >
-                                <Icon aria-hidden="true" className="size-4" />
-                                {label}
-                                <span className="text-xs opacity-70">{count}</span>
-                            </button>
-                        );
-                    })}
-                </div>
-            )}
-
-            <div className={cx("grid min-w-0 items-start gap-5", version === "groups" && "xl:grid-cols-[200px_minmax(0,1fr)]")}>
-                {version === "groups" && (
-                    <aside className="rounded-xl bg-primary p-3 shadow-xs ring-1 ring-secondary">
-                        <h2 className="px-3 pt-2 pb-3 text-xs font-semibold tracking-wider text-tertiary uppercase">Card views</h2>
-                        <div className="flex flex-wrap gap-1 xl:flex-col">
-                            {SEGMENTS.map((item) => (
+                    {showSummary && (
+                        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+                            {[
+                                {
+                                    label: "Customer cards",
+                                    value: scoped.length,
+                                    hint: `${new Set(scoped.filter((card) => card.customer).map((card) => card.customer)).size} customers · all statuses`,
+                                    segment: "all" as Segment,
+                                },
+                                {
+                                    label: "Ready to use",
+                                    value: scoped.filter((card) => inSegment(card, "ready")).length,
+                                    hint: "Active cards with a remaining balance",
+                                    segment: "ready" as Segment,
+                                },
+                                {
+                                    label: "Expiring soon",
+                                    value: scoped.filter((card) => inSegment(card, "expiring")).length,
+                                    hint: "In the next 30 days",
+                                    segment: "expiring" as Segment,
+                                },
+                                {
+                                    label: "Not yet used",
+                                    value: scoped.filter((card) => inSegment(card, "unused")).length,
+                                    hint: "Usable cards with no redemptions",
+                                    segment: "unused" as Segment,
+                                },
+                            ].map((stat) => (
                                 <button
                                     type="button"
-                                    key={item.id}
-                                    aria-pressed={segment === item.id}
-                                    title={item.hint}
-                                    onClick={() => changeSegment(item.id)}
-                                    className={cx(
-                                        "flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left text-sm font-medium focus-visible:outline-2 focus-visible:outline-focus-ring",
-                                        segment === item.id ? "bg-brand-primary_alt text-brand-secondary" : "text-secondary hover:bg-primary_hover",
-                                    )}
+                                    key={stat.label}
+                                    onClick={() => changeSegment(stat.segment)}
+                                    className="cursor-pointer rounded-xl bg-primary p-4 text-left shadow-xs ring-1 ring-secondary transition hover:ring-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
                                 >
-                                    {item.label}
-                                    <span className="text-xs tabular-nums">{scoped.filter((card) => inSegment(card, item.id)).length}</span>
+                                    <div className="text-xs font-medium text-tertiary">{stat.label}</div>
+                                    <div className="mt-2 flex items-center justify-between">
+                                        <span className="text-display-xs font-semibold text-primary tabular-nums">{stat.value}</span>
+                                        <ArrowUpRight aria-hidden="true" className="size-4 text-fg-quaternary" />
+                                    </div>
+                                    <p className="mt-1 text-xs text-tertiary">{stat.hint}</p>
                                 </button>
                             ))}
                         </div>
-                        <p className="mt-4 border-t border-secondary px-3 pt-3 pb-1 text-xs leading-relaxed text-tertiary">
-                            Mixed cards appear once. Open a card to see each included item and its balance.
-                        </p>
-                    </aside>
-                )}
+                    )}
 
-                <section className="min-w-0 overflow-hidden rounded-xl bg-primary shadow-xs ring-1 ring-secondary" aria-label="Customer punch card report">
-                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-secondary px-5 py-4">
-                        <div>
-                            <h2 className="flex items-center gap-2 text-md font-semibold text-primary">
-                                {version === "groups"
-                                    ? SEGMENTS.find((item) => item.id === segment)?.label
-                                    : version === "offerings"
-                                      ? focusTitle
-                                      : "Customer cards"}
-                                <Badge color="gray" size="sm">
-                                    {results.length}
-                                </Badge>
-                            </h2>
-                            <p className="mt-1 text-xs text-tertiary">
-                                {focusKind
-                                    ? `${kindMeta(focusKind).description}. Balances show this offering; status applies to the whole card.`
-                                    : "Balances stay separate for each included item."}
-                            </p>
+                    {version === "offerings" && (
+                        <div
+                            className="flex flex-wrap items-center gap-1 rounded-xl bg-primary p-1.5 shadow-xs ring-1 ring-secondary"
+                            aria-label="Offering workspaces"
+                        >
+                            {[{ kind: "all", label: "All offerings", icon: Ticket01 }, ...ITEM_KINDS].map(({ kind, label, icon: Icon }) => {
+                                const active = kind === "all" ? !kinds.length : kinds[0] === kind;
+                                const count = OWNED_CARDS.filter((card) => kind === "all" || card.items.some((item) => item.kind === kind)).length;
+                                return (
+                                    <button
+                                        type="button"
+                                        key={kind}
+                                        aria-pressed={active}
+                                        onClick={() => changeKinds(kind === "all" ? [] : [kind as ItemKind])}
+                                        className={cx(
+                                            "flex cursor-pointer items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-focus-ring",
+                                            active ? "bg-brand-primary_alt text-brand-secondary" : "text-tertiary hover:bg-primary_hover",
+                                        )}
+                                    >
+                                        <Icon aria-hidden="true" className="size-4" />
+                                        {label}
+                                        <span className="text-xs opacity-70">{count}</span>
+                                    </button>
+                                );
+                            })}
                         </div>
-                        <AriaDialogTrigger>
-                            <Button color="secondary" size="sm" iconLeading={Settings01}>
-                                Columns
-                            </Button>
-                            <AriaPopover placement="bottom end" className="z-40 rounded-xl bg-primary p-4 shadow-lg ring-1 ring-secondary">
-                                <AriaDialog aria-label="Visible columns" className="flex flex-col gap-3 outline-hidden">
-                                    {offeringColumns && (
-                                        <>
-                                            <p className="text-sm font-semibold text-primary">Offering columns</p>
-                                            {OFFERING_COLUMNS.map((c) => (
-                                                <Checkbox
-                                                    key={c.kind}
-                                                    label={c.label}
-                                                    isSelected={!hiddenKinds.includes(c.kind)}
-                                                    onChange={(on) => setHiddenKinds(on ? hiddenKinds.filter((k) => k !== c.kind) : [...hiddenKinds, c.kind])}
-                                                />
-                                            ))}
-                                        </>
-                                    )}
-                                    <p className={cx("text-sm font-semibold text-primary", offeringColumns && "mt-1 border-t border-secondary pt-3")}>
-                                        Additional columns
+                    )}
+
+                    <div className={cx("grid min-w-0 items-start gap-5", version === "groups" && "xl:grid-cols-[200px_minmax(0,1fr)]")}>
+                        {version === "groups" && (
+                            <aside className="rounded-xl bg-primary p-3 shadow-xs ring-1 ring-secondary">
+                                <h2 className="px-3 pt-2 pb-3 text-xs font-semibold tracking-wider text-tertiary uppercase">Card views</h2>
+                                <div className="flex flex-wrap gap-1 xl:flex-col">
+                                    {SEGMENTS.map((item) => (
+                                        <button
+                                            type="button"
+                                            key={item.id}
+                                            aria-pressed={segment === item.id}
+                                            title={item.hint}
+                                            onClick={() => changeSegment(item.id)}
+                                            className={cx(
+                                                "flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left text-sm font-medium focus-visible:outline-2 focus-visible:outline-focus-ring",
+                                                segment === item.id ? "bg-brand-primary_alt text-brand-secondary" : "text-secondary hover:bg-primary_hover",
+                                            )}
+                                        >
+                                            {item.label}
+                                            <span className="text-xs tabular-nums">{scoped.filter((card) => inSegment(card, item.id)).length}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                                <p className="mt-4 border-t border-secondary px-3 pt-3 pb-1 text-xs leading-relaxed text-tertiary">
+                                    Mixed cards appear once. Open a card to see each included item and its balance.
+                                </p>
+                            </aside>
+                        )}
+
+                        <section
+                            className="min-w-0 overflow-hidden rounded-xl bg-primary shadow-xs ring-1 ring-secondary"
+                            aria-label="Customer punch card report"
+                        >
+                            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-secondary px-5 py-4">
+                                <div>
+                                    <h2 className="flex items-center gap-2 text-md font-semibold text-primary">
+                                        {version === "groups"
+                                            ? SEGMENTS.find((item) => item.id === segment)?.label
+                                            : version === "offerings"
+                                              ? focusTitle
+                                              : "Customer cards"}
+                                        <Badge color="gray" size="sm">
+                                            {results.length}
+                                        </Badge>
+                                    </h2>
+                                    <p className="mt-1 text-xs text-tertiary">
+                                        {focusKind
+                                            ? `${kindMeta(focusKind).description}. Balances show this offering; status applies to the whole card.`
+                                            : "Balances stay separate for each included item."}
                                     </p>
-                                    <Checkbox label="Purchase date" isSelected={showPurchase} onChange={setShowPurchase} />
-                                    <Checkbox label="Card price (pre-tax)" isSelected={showPrice} onChange={setShowPrice} />
-                                    <span className="max-w-52 text-xs text-tertiary">Order IDs and full item details are available by opening a card.</span>
-                                </AriaDialog>
-                            </AriaPopover>
-                        </AriaDialogTrigger>
-                    </div>
+                                </div>
+                                <AriaDialogTrigger>
+                                    <Button color="secondary" size="sm" iconLeading={Settings01}>
+                                        Columns
+                                    </Button>
+                                    <AriaPopover placement="bottom end" className="z-40 rounded-xl bg-primary p-4 shadow-lg ring-1 ring-secondary">
+                                        <AriaDialog aria-label="Visible columns" className="flex flex-col gap-3 outline-hidden">
+                                            {offeringColumns && (
+                                                <>
+                                                    <p className="text-sm font-semibold text-primary">Offering columns</p>
+                                                    {OFFERING_COLUMNS.map((c) => (
+                                                        <Checkbox
+                                                            key={c.kind}
+                                                            label={c.label}
+                                                            isSelected={!hiddenKinds.includes(c.kind)}
+                                                            onChange={(on) =>
+                                                                setHiddenKinds(on ? hiddenKinds.filter((k) => k !== c.kind) : [...hiddenKinds, c.kind])
+                                                            }
+                                                        />
+                                                    ))}
+                                                </>
+                                            )}
+                                            <p className={cx("text-sm font-semibold text-primary", offeringColumns && "mt-1 border-t border-secondary pt-3")}>
+                                                Additional columns
+                                            </p>
+                                            <Checkbox label="Purchase date" isSelected={showPurchase} onChange={setShowPurchase} />
+                                            <Checkbox label="Card price (pre-tax)" isSelected={showPrice} onChange={setShowPrice} />
+                                            <span className="max-w-52 text-xs text-tertiary">
+                                                Order IDs and full item details are available by opening a card.
+                                            </span>
+                                        </AriaDialog>
+                                    </AriaPopover>
+                                </AriaDialogTrigger>
+                            </div>
 
-                    <div className="flex flex-col gap-3 border-b border-secondary p-4">
-                        <div className="flex flex-wrap items-center gap-2">
-                            <div className="min-w-48 flex-1 xl:max-w-80">
-                                <Input
-                                    aria-label="Search customer punch cards"
-                                    placeholder="Search customer, card, or order…"
-                                    icon={SearchLg}
-                                    value={query}
-                                    onChange={(value) => {
-                                        setQuery(value);
-                                        changed();
-                                    }}
-                                />
-                            </div>
-                            {version !== "offerings" && <OfferingFilter selected={kinds} onChange={changeKinds} />}
-                            <Picker
-                                label="Purchase period"
-                                value={period}
-                                options={[
-                                    { id: "all", label: "Purchased · All time" },
-                                    { id: "month", label: "Purchased · This month" },
-                                ]}
-                                onChange={(value) => {
-                                    setPeriod(value);
-                                    changed();
-                                }}
-                            />
-                            {version === "groups" && (
-                                <Picker
-                                    label="Group by"
-                                    value={groupBy}
-                                    options={[
-                                        { id: "product", label: "Group by · Punch card" },
-                                        { id: "customer", label: "Group by · Customer" },
-                                    ]}
-                                    onChange={(value) => {
-                                        setGroupBy(value);
-                                        setCollapsed([]);
-                                    }}
-                                />
-                            )}
-                            <Button color="secondary" size="md" iconLeading={FilterLines} onClick={() => setFiltersOpen(true)}>
-                                Filters{filterCount ? ` (${filterCount})` : ""}
-                            </Button>
-                        </div>
-                        {(kinds.length > 0 || filterCount > 0 || period !== "all" || segment !== "all" || query) && (
-                            <div className="flex flex-wrap items-center gap-2 text-xs">
-                                {kinds.map((kind) => (
-                                    <FilterTag key={kind} label={kindMeta(kind).label} onRemove={() => changeKinds(kinds.filter((value) => value !== kind))} />
-                                ))}
-                                {status !== "all" && (
-                                    <FilterTag
-                                        label={`Status: ${status}`}
-                                        onRemove={() => {
-                                            setStatus("all");
-                                            changed();
-                                        }}
-                                    />
-                                )}
-                                {course !== "all" && (
-                                    <FilterTag
-                                        label={course}
-                                        onRemove={() => {
-                                            setCourse("all");
-                                            changed();
-                                        }}
-                                    />
-                                )}
-                                {membership !== "all" && (
-                                    <FilterTag
-                                        label={membership === "member" ? "Members" : "Guests"}
-                                        onRemove={() => {
-                                            setMembership("all");
-                                            changed();
-                                        }}
-                                    />
-                                )}
-                                {period !== "all" && (
-                                    <FilterTag
-                                        label="Purchased this month"
-                                        onRemove={() => {
-                                            setPeriod("all");
-                                            changed();
-                                        }}
-                                    />
-                                )}
-                                {segment !== "all" && (
-                                    <FilterTag label={SEGMENTS.find((item) => item.id === segment)!.label} onRemove={() => changeSegment("all")} />
-                                )}
-                                <Button color="link-gray" size="sm" onClick={reset}>
-                                    Clear all
-                                </Button>
-                            </div>
-                        )}
-                        {selectedVisible.length > 0 && (
-                            <div role="status" className="flex items-center gap-3 rounded-lg bg-secondary px-3 py-2 text-xs text-secondary">
-                                <span>{selectedVisible.length} cards selected</span>
-                                <Button color="link-color" size="sm" onClick={() => exportCards(exportRows, kinds)}>
-                                    Export selected
-                                </Button>
-                                <Button color="link-gray" size="sm" onClick={() => setSelected([])}>
-                                    Deselect all
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm" aria-label="Customer-owned punch cards">
-                            <thead>
-                                <tr>
-                                    <Th>
-                                        <Checkbox
-                                            aria-label="Select all matching cards"
-                                            isSelected={results.length > 0 && selectedVisible.length === results.length}
-                                            isIndeterminate={selectedVisible.length > 0 && selectedVisible.length < results.length}
-                                            onChange={(checked) => setSelected(checked ? results.map((card) => card.id) : [])}
+                            <div className="flex flex-col gap-3 border-b border-secondary p-4">
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <div className="min-w-48 flex-1 xl:max-w-80">
+                                        <Input
+                                            aria-label="Search customer punch cards"
+                                            placeholder="Search customer, card, or order…"
+                                            icon={SearchLg}
+                                            value={query}
+                                            onChange={(value) => {
+                                                setQuery(value);
+                                                changed();
+                                            }}
                                         />
-                                    </Th>
-                                    <Th>Customer</Th>
-                                    <Th>Punch card</Th>
-                                    {offeringColumns ? (
-                                        kindColumns.map((c) => (
-                                            <Th key={c.kind} className="px-3">
-                                                {c.label}
+                                    </div>
+                                    {version !== "offerings" && <OfferingFilter selected={kinds} onChange={changeKinds} />}
+                                    {cardFilter && (
+                                        <Picker
+                                            label="Punch card"
+                                            value={cardTitle}
+                                            options={[
+                                                { id: "all", label: "Punch card · All" },
+                                                ...[...new Set(cards.map((card) => card.title))].sort().map((title) => ({ id: title, label: title })),
+                                            ]}
+                                            onChange={(value) => {
+                                                setCardTitle(value);
+                                                changed();
+                                            }}
+                                        />
+                                    )}
+                                    <Picker
+                                        label="Purchase period"
+                                        value={period}
+                                        options={[
+                                            { id: "all", label: "Purchased · All time" },
+                                            { id: "month", label: "Purchased · This month" },
+                                        ]}
+                                        onChange={(value) => {
+                                            setPeriod(value);
+                                            changed();
+                                        }}
+                                    />
+                                    {version === "groups" && (
+                                        <Picker
+                                            label="Group by"
+                                            value={groupBy}
+                                            options={[
+                                                { id: "product", label: "Group by · Punch card" },
+                                                { id: "customer", label: "Group by · Customer" },
+                                            ]}
+                                            onChange={(value) => {
+                                                setGroupBy(value);
+                                                setCollapsed([]);
+                                            }}
+                                        />
+                                    )}
+                                    <Button color="secondary" size="md" iconLeading={FilterLines} onClick={() => setFiltersOpen(true)}>
+                                        Filters{filterCount ? ` (${filterCount})` : ""}
+                                    </Button>
+                                </div>
+                                {(kinds.length > 0 || filterCount > 0 || period !== "all" || segment !== "all" || cardTitle !== "all" || query) && (
+                                    <div className="flex flex-wrap items-center gap-2 text-xs">
+                                        {kinds.map((kind) => (
+                                            <FilterTag
+                                                key={kind}
+                                                label={kindMeta(kind).label}
+                                                onRemove={() => changeKinds(kinds.filter((value) => value !== kind))}
+                                            />
+                                        ))}
+                                        {cardTitle !== "all" && (
+                                            <FilterTag
+                                                label={cardTitle}
+                                                onRemove={() => {
+                                                    setCardTitle("all");
+                                                    changed();
+                                                }}
+                                            />
+                                        )}
+                                        {status !== "all" && (
+                                            <FilterTag
+                                                label={`Status: ${status}`}
+                                                onRemove={() => {
+                                                    setStatus("all");
+                                                    changed();
+                                                }}
+                                            />
+                                        )}
+                                        {course !== "all" && (
+                                            <FilterTag
+                                                label={course}
+                                                onRemove={() => {
+                                                    setCourse("all");
+                                                    changed();
+                                                }}
+                                            />
+                                        )}
+                                        {membership !== "all" && (
+                                            <FilterTag
+                                                label={membership === "member" ? "Members" : "Guests"}
+                                                onRemove={() => {
+                                                    setMembership("all");
+                                                    changed();
+                                                }}
+                                            />
+                                        )}
+                                        {period !== "all" && (
+                                            <FilterTag
+                                                label="Purchased this month"
+                                                onRemove={() => {
+                                                    setPeriod("all");
+                                                    changed();
+                                                }}
+                                            />
+                                        )}
+                                        {segment !== "all" && (
+                                            <FilterTag label={SEGMENTS.find((item) => item.id === segment)!.label} onRemove={() => changeSegment("all")} />
+                                        )}
+                                        <Button color="link-gray" size="sm" onClick={reset}>
+                                            Clear all
+                                        </Button>
+                                    </div>
+                                )}
+                                {selectedVisible.length > 0 && (
+                                    <div role="status" className="flex items-center gap-3 rounded-lg bg-secondary px-3 py-2 text-xs text-secondary">
+                                        <span>{selectedVisible.length} cards selected</span>
+                                        <Button color="link-color" size="sm" onClick={() => exportCards(exportRows, kinds)}>
+                                            Export selected
+                                        </Button>
+                                        <Button color="link-gray" size="sm" onClick={() => setSelected([])}>
+                                            Deselect all
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-sm" aria-label="Customer-owned punch cards">
+                                    <thead>
+                                        <tr>
+                                            <Th>
+                                                <Checkbox
+                                                    aria-label="Select all matching cards"
+                                                    isSelected={results.length > 0 && selectedVisible.length === results.length}
+                                                    isIndeterminate={selectedVisible.length > 0 && selectedVisible.length < results.length}
+                                                    onChange={(checked) => setSelected(checked ? results.map((card) => card.id) : [])}
+                                                />
                                             </Th>
-                                        ))
-                                    ) : (
+                                            <Th>Customer</Th>
+                                            <Th>Punch card</Th>
+                                            {offeringColumns ? (
+                                                kindColumns.map((c) => (
+                                                    <Th key={c.kind} className="px-3">
+                                                        {c.label}
+                                                    </Th>
+                                                ))
+                                            ) : (
+                                                <>
+                                                    <Th>{contextualLabel}</Th>
+                                                    <Th>Remaining / awarded</Th>
+                                                </>
+                                            )}
+                                            <Th>{offeringColumns ? "Status / expires" : "Card status / expiration"}</Th>
+                                            {showPurchase && <Th>Purchased</Th>}
+                                            {showPrice && <Th>Price pre-tax</Th>}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {version === "groups"
+                                            ? groupKeys.map((key) => {
+                                                  const cards = results.filter(
+                                                      (card) => (groupBy === "product" ? card.title : (card.customer ?? "Unassigned customer")) === key,
+                                                  );
+                                                  const isCollapsed = collapsed.includes(key);
+                                                  return (
+                                                      <Fragment key={key}>
+                                                          <tr className="bg-secondary">
+                                                              <td colSpan={columnCount} className="border-t border-secondary px-4 py-3">
+                                                                  <button
+                                                                      type="button"
+                                                                      aria-expanded={!isCollapsed}
+                                                                      onClick={() =>
+                                                                          setCollapsed((previous) =>
+                                                                              isCollapsed ? previous.filter((value) => value !== key) : [...previous, key],
+                                                                          )
+                                                                      }
+                                                                      className="flex w-full cursor-pointer flex-wrap items-center gap-2 text-left text-sm font-semibold text-secondary"
+                                                                  >
+                                                                      {isCollapsed ? (
+                                                                          <ChevronRight aria-hidden="true" className="size-4" />
+                                                                      ) : (
+                                                                          <ChevronDown aria-hidden="true" className="size-4" />
+                                                                      )}
+                                                                      {key}
+                                                                      <Badge color="gray" size="sm">
+                                                                          {cards.length} cards
+                                                                      </Badge>
+                                                                      <span className="ml-auto text-xs font-normal text-tertiary">
+                                                                          {cards.filter((card) => ["Active", "Expiring soon"].includes(statusOf(card))).length}{" "}
+                                                                          ready to use
+                                                                      </span>
+                                                                  </button>
+                                                              </td>
+                                                          </tr>
+                                                          {!isCollapsed && cards.map(renderRow)}
+                                                      </Fragment>
+                                                  );
+                                              })
+                                            : pageRows.map(renderRow)}
+                                        {!results.length && (
+                                            <tr>
+                                                <td colSpan={columnCount} className="px-6 py-16 text-center">
+                                                    <SearchLg aria-hidden="true" className="mx-auto mb-3 size-7 text-fg-quaternary" />
+                                                    <h3 className="font-semibold text-primary">No customer cards found</h3>
+                                                    <p className="mt-1 mb-4 text-sm text-tertiary">Try a different customer, offering type, or status.</p>
+                                                    <Button color="secondary" size="sm" onClick={reset}>
+                                                        Clear all filters
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-secondary px-5 py-3 text-xs text-tertiary">
+                                <span aria-live="polite">
+                                    {version === "groups"
+                                        ? `${results.length} cards across ${groupKeys.length} ${groupBy === "product" ? "punch cards" : "customers"}`
+                                        : `${results.length ? (currentPage - 1) * PAGE_SIZE + 1 : 0}–${Math.min(currentPage * PAGE_SIZE, results.length)} of ${results.length} customer cards`}
+                                </span>
+                                <div className="flex items-center gap-3">
+                                    <Button
+                                        color="link-gray"
+                                        size="sm"
+                                        iconLeading={ArrowDown}
+                                        onClick={() => {
+                                            setAscending((value) => !value);
+                                            setPage(1);
+                                        }}
+                                    >
+                                        Purchased: {ascending ? "oldest first" : "newest first"}
+                                    </Button>
+                                    {version !== "groups" && (
                                         <>
-                                            <Th>{contextualLabel}</Th>
-                                            <Th>Remaining / awarded</Th>
+                                            <Button color="secondary" size="sm" isDisabled={currentPage <= 1} onClick={() => setPage(currentPage - 1)}>
+                                                Previous
+                                            </Button>
+                                            <span>
+                                                {currentPage} / {pageCount}
+                                            </span>
+                                            <Button color="secondary" size="sm" isDisabled={currentPage >= pageCount} onClick={() => setPage(currentPage + 1)}>
+                                                Next
+                                            </Button>
                                         </>
                                     )}
-                                    <Th>{offeringColumns ? "Status / expires" : "Card status / expiration"}</Th>
-                                    {showPurchase && <Th>Purchased</Th>}
-                                    {showPrice && <Th>Price pre-tax</Th>}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {version === "groups"
-                                    ? groupKeys.map((key) => {
-                                          const cards = results.filter(
-                                              (card) => (groupBy === "product" ? card.title : (card.customer ?? "Unassigned customer")) === key,
-                                          );
-                                          const isCollapsed = collapsed.includes(key);
-                                          return (
-                                              <Fragment key={key}>
-                                                  <tr className="bg-secondary">
-                                                      <td colSpan={columnCount} className="border-t border-secondary px-4 py-3">
-                                                          <button
-                                                              type="button"
-                                                              aria-expanded={!isCollapsed}
-                                                              onClick={() =>
-                                                                  setCollapsed((previous) =>
-                                                                      isCollapsed ? previous.filter((value) => value !== key) : [...previous, key],
-                                                                  )
-                                                              }
-                                                              className="flex w-full cursor-pointer flex-wrap items-center gap-2 text-left text-sm font-semibold text-secondary"
-                                                          >
-                                                              {isCollapsed ? (
-                                                                  <ChevronRight aria-hidden="true" className="size-4" />
-                                                              ) : (
-                                                                  <ChevronDown aria-hidden="true" className="size-4" />
-                                                              )}
-                                                              {key}
-                                                              <Badge color="gray" size="sm">
-                                                                  {cards.length} cards
-                                                              </Badge>
-                                                              <span className="ml-auto text-xs font-normal text-tertiary">
-                                                                  {cards.filter((card) => ["Active", "Expiring soon"].includes(statusOf(card))).length} ready to
-                                                                  use
-                                                              </span>
-                                                          </button>
-                                                      </td>
-                                                  </tr>
-                                                  {!isCollapsed && cards.map(renderRow)}
-                                              </Fragment>
-                                          );
-                                      })
-                                    : pageRows.map(renderRow)}
-                                {!results.length && (
-                                    <tr>
-                                        <td colSpan={columnCount} className="px-6 py-16 text-center">
-                                            <SearchLg aria-hidden="true" className="mx-auto mb-3 size-7 text-fg-quaternary" />
-                                            <h3 className="font-semibold text-primary">No customer cards found</h3>
-                                            <p className="mt-1 mb-4 text-sm text-tertiary">Try a different customer, offering type, or status.</p>
-                                            <Button color="secondary" size="sm" onClick={reset}>
-                                                Clear all filters
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
+                                </div>
+                            </div>
+                        </section>
                     </div>
-                    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-secondary px-5 py-3 text-xs text-tertiary">
-                        <span aria-live="polite">
-                            {version === "groups"
-                                ? `${results.length} cards across ${groupKeys.length} ${groupBy === "product" ? "punch cards" : "customers"}`
-                                : `${results.length ? (currentPage - 1) * PAGE_SIZE + 1 : 0}–${Math.min(currentPage * PAGE_SIZE, results.length)} of ${results.length} customer cards`}
-                        </span>
-                        <div className="flex items-center gap-3">
-                            <Button
-                                color="link-gray"
-                                size="sm"
-                                iconLeading={ArrowDown}
-                                onClick={() => {
-                                    setAscending((value) => !value);
-                                    setPage(1);
-                                }}
-                            >
-                                Purchased: {ascending ? "oldest first" : "newest first"}
-                            </Button>
-                            {version !== "groups" && (
-                                <>
-                                    <Button color="secondary" size="sm" isDisabled={currentPage <= 1} onClick={() => setPage(currentPage - 1)}>
-                                        Previous
-                                    </Button>
-                                    <span>
-                                        {currentPage} / {pageCount}
-                                    </span>
-                                    <Button color="secondary" size="sm" isDisabled={currentPage >= pageCount} onClick={() => setPage(currentPage + 1)}>
-                                        Next
-                                    </Button>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </section>
-            </div>
 
-            <p className="text-xs text-quaternary">
-                Offering counts can overlap: a single customer card can include multiple types. Item balances are independent and cannot be exchanged between
-                offerings.
-            </p>
+                    <p className="text-xs text-quaternary">
+                        Offering counts can overlap: a single customer card can include multiple types. Item balances are independent and cannot be exchanged
+                        between offerings.
+                    </p>
+                </>
+            )}
 
             <ScreenModal
                 title="Filter customer cards"

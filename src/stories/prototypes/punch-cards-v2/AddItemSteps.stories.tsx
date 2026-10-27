@@ -8,7 +8,7 @@ import { combination } from "@/components/application/punch-cards-v2/data";
  * Next, Back, Change and Save Item all work (Save resets the story).
  */
 const meta = {
-    title: "Prototypes/Punch Cards V2/2 Add Item Steps",
+    title: "Prototypes/Punch Cards/2 Punch Card Products (Products › Punch Cards)/2 Create & Edit/2 Add Item Steps",
     id: "prototypes-punch-cards-v2-add-item-steps",
     parameters: { layout: "centered" },
     decorators: [(Story) => <div className="w-[512px]">{Story()}</div>],
@@ -28,13 +28,13 @@ export const ChooseTypeSelected: Story = {
 /** Green fee: just the punches. */
 export const GreenFee: Story = {
     name: "2. Green Fee",
-    render: () => <AddItemPanelDemo step="details" draft={{ kind: "green-fee", punches: 10, target: "Any green fee", duration: 60, query: "" }} />,
+    render: () => <AddItemPanelDemo step="details" draft={{ kind: "green-fee", punches: 10, target: "Any round", duration: 60, query: "" }} />,
 };
 
-/** Transportation: which fee (any cart fee, riding, single rider, push cart), then punches. */
+/** Transportation: which fee (any transportation, riding, single rider, push cart), then punches. */
 export const Transportation: Story = {
     name: "2. Transportation",
-    render: () => <AddItemPanelDemo step="details" draft={{ kind: "transportation", punches: 10, target: "Any cart fee", duration: 60, query: "" }} />,
+    render: () => <AddItemPanelDemo step="details" draft={{ kind: "transportation", punches: 10, target: "Any transportation", duration: 60, query: "" }} />,
 };
 
 /** Product: search the catalog, pick one, then punches. */
@@ -58,7 +58,7 @@ export const Activity: Story = {
 /** Clinic: any clinic or a specific one, then punches. */
 export const Clinic: Story = {
     name: "2. Clinic",
-    render: () => <AddItemPanelDemo step="details" draft={{ kind: "clinic", punches: 1, target: "All clinics", duration: 60, query: "" }} />,
+    render: () => <AddItemPanelDemo step="details" draft={{ kind: "clinic", punches: 1, target: "Any clinic", duration: 60, query: "" }} />,
 };
 
 /** Any length works: type the minutes per punch, e.g. a 45-minute class. */
