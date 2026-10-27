@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { CheckCircle, XClose } from "@untitledui/icons";
 import { EmbeddedShellContext, ScreenShell } from "../migration-v2/kit";
 import type { ItemDraft } from "./add-item";
@@ -55,7 +55,9 @@ export const usePunchCard = (initial: PunchCard) => {
 
     const canSave = Boolean(card.title.trim() && card.price > 0 && card.items.length && card.courses.length);
 
-    return { card, update, saveItem, removeItem, cancel, canSave, saved, setSaved, resetKey };
+    const dirty = card !== initial && !saved;
+
+    return { card, update, saveItem, removeItem, cancel, canSave, saved, setSaved, resetKey, dirty };
 };
 
 export type PunchCardState = ReturnType<typeof usePunchCard>;
@@ -82,6 +84,7 @@ export const PunchCardFrame = ({
     onBack,
     onClose,
     onSaved,
+    onDirtyChange,
     children,
 }: {
     state: PunchCardState;
@@ -92,9 +95,12 @@ export const PunchCardFrame = ({
     onClose?: () => void;
     /** Save Punch Card: hand the saved card back (the Products list updates its row). */
     onSaved?: (card: PunchCard) => void;
+    /** Reports unsaved changes (the Products page warns before closing the tab). */
+    onDirtyChange?: (dirty: boolean) => void;
     children: ReactNode;
 }) => {
     const embedded = useContext(EmbeddedShellContext);
+    useEffect(() => onDirtyChange?.(state.dirty), [state.dirty, onDirtyChange]);
     return (
         <ScreenShell
             nav={{ activeId: PUNCH_CARDS_NAV_ID, scrollToActive: true }}
@@ -112,8 +118,10 @@ export const PunchCardFrame = ({
                     }}
                     onBack={onBack}
                     onCancel={() => {
+                        // Closing the tab discards the draft (and may ask first), so only reset when staying on the page.
+                        if (onClose) return onClose();
                         state.cancel();
-                        (onClose ?? onBack)?.();
+                        onBack?.();
                     }}
                 />
             }

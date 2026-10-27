@@ -63,6 +63,7 @@ const preview: Preview = {
                         "7 Revenue › Combined Revenue",
                     ],
                     "Prototypes",
+                    "Credits - OCT 27",
                 ],
             },
         },

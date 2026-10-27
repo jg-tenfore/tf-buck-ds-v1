@@ -12,6 +12,8 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
 import { cx } from "@/utils/cx";
+import { CustomerCardStacked } from "../credits-oct-27/customer-card-tab";
+import { UnsavedChangesModal } from "../credits-oct-27/kit";
 import { CardDetailTab } from "./card-detail-tab";
 import {
     AS_OF,
@@ -294,6 +296,9 @@ export function PunchCardsTable({
     cardFilter = false,
     initialCardTitle = "all",
     initialOpenIds = [],
+    badge = "Prototype",
+    stackedDetail = false,
+    initialModal,
 }: {
     version: Version;
     showSummary?: boolean;
@@ -312,6 +317,12 @@ export function PunchCardsTable({
     initialCardTitle?: string;
     /** Start with these cards open as tabs, the last one active (stories). */
     initialOpenIds?: string[];
+    /** Badge next to the title. */
+    badge?: string;
+    /** Credits - OCT 27: card tabs use Builder 3D's stacked layout, Save / Cancel at the top, and warn before closing with unsaved changes. */
+    stackedDetail?: boolean;
+    /** Open the active card's Transfer dialog (stories). */
+    initialModal?: "transfer";
 }) {
     const [query, setQuery] = useState("");
     const [kinds, setKinds] = useState<ItemKind[]>([]);
@@ -340,9 +351,19 @@ export function PunchCardsTable({
         setOpenTabs((tabs) => (tabs.includes(card.id) ? tabs : [...tabs, card.id]));
         setActiveTab(card.id);
     };
-    const closeTab = (id: string) => {
+    const [dirtyTabs, setDirtyTabs] = useState<string[]>([]);
+    const [pendingClose, setPendingClose] = useState<string | null>(null);
+    const forceCloseTab = (id: string) => {
         setOpenTabs((tabs) => tabs.filter((t) => t !== id));
-        if (activeTab === id) setActiveTab("list");
+        setDirtyTabs((ids) => ids.filter((t) => t !== id));
+        setActiveTab((current) => (current === id ? "list" : current));
+    };
+    const closeTab = (id: string) => {
+        if (stackedDetail && dirtyTabs.includes(id)) {
+            setActiveTab(id);
+            return setPendingClose(id);
+        }
+        forceCloseTab(id);
     };
     const concept = CONCEPTS[version];
 
@@ -503,8 +524,8 @@ export function PunchCardsTable({
                         <div>
                             <div className="flex items-center gap-3">
                                 <h1 className="text-display-xs font-semibold tracking-tight text-primary">Customer Punch Cards</h1>
-                                <Badge color="gray" size="sm">
-                                    Prototype
+                                <Badge color={badge === "Beta" ? "brand" : "gray"} size="sm">
+                                    {badge}
                                 </Badge>
                             </div>
                             <p className="mt-1.5 max-w-2xl text-sm text-tertiary">
@@ -540,7 +561,31 @@ export function PunchCardsTable({
                 ) : undefined
             }
         >
-            {detailTabs && activeTab !== "list" ? (
+            {stackedDetail &&
+                openTabs.map((id) => (
+                    <div key={id} className={id === activeTab ? undefined : "hidden"}>
+                        <CustomerCardStacked
+                            card={cards.find((c) => c.id === id)!}
+                            initialModal={id === activeTab ? initialModal : undefined}
+                            onSave={(next) => setCards((all) => all.map((c) => (c.id === next.id ? next : c)))}
+                            onCancel={() => closeTab(id)}
+                            onDirtyChange={(dirty) =>
+                                setDirtyTabs((ids) => (dirty === ids.includes(id) ? ids : dirty ? [...ids, id] : ids.filter((t) => t !== id)))
+                            }
+                        />
+                    </div>
+                ))}
+            {stackedDetail && (
+                <UnsavedChangesModal
+                    isOpen={Boolean(pendingClose)}
+                    onKeepEditing={() => setPendingClose(null)}
+                    onDiscard={() => {
+                        if (pendingClose) forceCloseTab(pendingClose);
+                        setPendingClose(null);
+                    }}
+                />
+            )}
+            {stackedDetail && activeTab !== "list" ? null : detailTabs && activeTab !== "list" ? (
                 <CardDetailTab
                     key={activeTab}
                     card={cards.find((c) => c.id === activeTab)!}
