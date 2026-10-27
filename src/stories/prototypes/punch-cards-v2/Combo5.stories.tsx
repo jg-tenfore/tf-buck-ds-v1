@@ -4,7 +4,7 @@ import { PunchCardBuilder } from "@/components/application/punch-cards-v2/punch-
 
 /** Hypothetical 5 · Lesson Pack. Private lessons: 5 × 30 minutes with one pro. Fully interactive: edit, add or remove items. */
 const meta = {
-    title: "Prototypes/Punch Cards V2/Combo 5 · Lesson Pack",
+    title: "Prototypes/Punch Cards/3 Archive/Combos/Combo 5 · Lesson Pack",
     id: "prototypes-punch-cards-v2-combo-5",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

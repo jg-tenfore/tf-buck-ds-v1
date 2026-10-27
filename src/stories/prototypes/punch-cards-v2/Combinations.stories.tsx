@@ -7,7 +7,7 @@ import { CombinationsGallery } from "@/components/application/punch-cards-v2/com
  * component (Combo 1–8) built in the full flow.
  */
 const meta = {
-    title: "Prototypes/Punch Cards V2/4 Combinations Side by Side",
+    title: "Prototypes/Punch Cards/3 Archive/Combinations Side by Side",
     id: "prototypes-punch-cards-v2-combinations",
     parameters: { layout: "fullscreen" },
     decorators: [(Story) => <div className="min-h-screen bg-secondary p-8">{Story()}</div>],

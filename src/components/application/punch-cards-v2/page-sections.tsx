@@ -57,21 +57,30 @@ export const PageHeader = ({
     canSave = true,
     onCancel,
     onSave,
+    onBack,
+    embedded,
 }: {
     title?: string;
     canSave?: boolean;
     onCancel?: () => void;
     onSave?: () => void;
+    /** "‹ Punch Cards": back to the Products › Punch Cards list. */
+    onBack?: () => void;
+    /** Inside a tab on the Products › Punch Cards page: no page chrome or back link (the tab strip does that). */
+    embedded?: boolean;
 }) => (
-    <header className="flex items-end justify-between gap-6 border-b border-secondary bg-primary px-8 pt-5 pb-5">
+    <header className={cx("flex flex-wrap items-end justify-between gap-6", embedded ? "pb-1" : "border-b border-secondary bg-primary px-8 pt-5 pb-5")}>
         <div className="flex flex-col gap-1">
-            <button
-                type="button"
-                className="flex cursor-pointer items-center gap-1 text-sm font-semibold text-brand-secondary hover:text-brand-secondary_hover"
-            >
-                <ChevronLeft className="size-4" aria-hidden="true" />
-                Punch Cards
-            </button>
+            {!embedded && (
+                <button
+                    type="button"
+                    onClick={onBack}
+                    className="flex cursor-pointer items-center gap-1 text-sm font-semibold text-brand-secondary hover:text-brand-secondary_hover"
+                >
+                    <ChevronLeft className="size-4" aria-hidden="true" />
+                    Punch Cards
+                </button>
+            )}
             <h1 className="text-xl font-semibold text-primary">{title}</h1>
         </div>
         <div className="flex gap-3">

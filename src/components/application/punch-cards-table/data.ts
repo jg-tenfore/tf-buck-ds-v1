@@ -28,6 +28,9 @@ const people = [
     ["Liam Brooks", "liam.brooks@example.com"],
 ] as const;
 
+/** Customers a card can be transferred to. */
+export const CUSTOMER_NAMES = people.map(([name]) => name);
+
 export const OWNED_CARDS: OwnedCard[] = Array.from({ length: 24 }, (_, i) => {
     const card = COMBINATIONS[i % COMBINATIONS.length].card;
     const person = people[(i + Math.floor(i / people.length) * 3) % people.length];
@@ -54,7 +57,7 @@ export const OWNED_CARDS: OwnedCard[] = Array.from({ length: 24 }, (_, i) => {
 
 /**
  * Extra customer cards for the 1c "all vs specific" variants: items that cover a whole category
- * (All activities / All products / All clinics) next to specific ones, so each display can be compared.
+ * (Any activity / Any product / Any clinic) next to specific ones, so each display can be compared.
  */
 export const ALL_SCOPE_CARDS: OwnedCard[] = [
     {

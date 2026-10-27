@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { combination } from "@/components/application/punch-cards-v2/data";
-import { PunchCardBuilder } from "@/components/application/punch-cards-v2/punch-card-page";
+import { CATALOG, PunchCardProducts } from "@/components/application/punch-cards-v2/products-list";
 
 /**
- * Concept A · Modal (the concept screenshots). The whole flow working together, in today's back-office chrome with
- * Products › Punch Cards active. Add Item → choose a kind → set it up →
- * Save Item adds it to the card; pencil edits, trash removes. Save Punch Card
- * unlocks with a title, a price, at least one item and one course.
+ * Create & edit (builder 3A), inside the Products › Punch Cards page with the same tabs as Customer Punch Cards:
+ * the list is the first tab, and each card opens in its own closable tab. Add Item → choose a kind → set it up →
+ * Save Item adds it to the card; pencil edits, trash removes. Save Punch Card unlocks with a title, a price, at least
+ * one item and one course, then updates the list. Cancel closes the tab.
  */
 const meta = {
-    title: "Prototypes/Punch Cards V2/3A Full Flow · Modal",
+    title: "Prototypes/Punch Cards/2 Punch Card Products (Products › Punch Cards)/2 Create & Edit/1 Full Flow (3A)",
     id: "prototypes-punch-cards-v2-full-flow",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
@@ -17,30 +17,37 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** A blank New Punch Card: build one from scratch. */
-export const StartEmpty: Story = { name: "Start empty", render: () => <PunchCardBuilder /> };
+const bundle = combination("bundle").card;
+/** The Golf & Range Bundle's row in the Products list. */
+const bundleId = CATALOG.find((row) => row.card === bundle)!.id;
 
-/** Add Item already open on step 1. */
-export const AddItemOpen: Story = { name: "Add Item open", render: () => <PunchCardBuilder initialModal={{ open: true }} /> };
+/** Add Punch Card pressed: a "New punch card" tab, blank, next to the list tab. */
+export const StartEmpty: Story = { name: "Start empty", render: () => <PunchCardProducts initialOpen={[{}]} /> };
 
-/** The concept screenshot, filled in and ready to save. */
-export const Filled: Story = { name: "Golf & Range Bundle · filled", render: () => <PunchCardBuilder initial={combination("bundle").card} /> };
+/** A new card's tab with Add Item already open on step 1. */
+export const AddItemOpen: Story = { name: "Add Item open", render: () => <PunchCardProducts initialOpen={[{ modal: { open: true } }]} /> };
 
-/** Editing an item opens straight on step 2 with its values. */
+/** A row opened from the list: the Golf & Range Bundle in its own Edit tab, filled in and ready to save. */
+export const Filled: Story = { name: "Golf & Range Bundle · filled", render: () => <PunchCardProducts initialOpen={[{ id: bundleId }]} /> };
+
+/** Editing an item in that tab: the pencil opens Add Item straight on step 2 with its values. */
 export const Editing: Story = {
     name: "Editing an item",
     render: () => {
-        const card = combination("bundle").card;
-        const item = card.items[2];
+        const item = bundle.items[2];
         return (
-            <PunchCardBuilder
-                initial={card}
-                initialModal={{
-                    open: true,
-                    step: "details",
-                    editingId: item.id,
-                    draft: { kind: item.kind, punches: item.punches, target: item.target, duration: item.duration ?? 60, query: "" },
-                }}
+            <PunchCardProducts
+                initialOpen={[
+                    {
+                        id: bundleId,
+                        modal: {
+                            open: true,
+                            step: "details",
+                            editingId: item.id,
+                            draft: { kind: item.kind, punches: item.punches, target: item.target, duration: item.duration ?? 60, query: "" },
+                        },
+                    },
+                ]}
             />
         );
     },

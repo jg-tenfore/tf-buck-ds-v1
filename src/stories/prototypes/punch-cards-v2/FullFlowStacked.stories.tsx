@@ -8,7 +8,7 @@ import { StackedConceptPage } from "@/components/application/punch-cards-v2/stac
  * Card Items, Expiration, Applicable Courses. Add Item uses Concept A's dialog.
  */
 const meta = {
-    title: "Prototypes/Punch Cards V2/3D Full Flow · Stacked",
+    title: "Prototypes/Punch Cards/3 Archive/Builder 3D · Stacked",
     id: "prototypes-punch-cards-v2-full-flow-stacked",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

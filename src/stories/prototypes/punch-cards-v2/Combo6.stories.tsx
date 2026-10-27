@@ -4,7 +4,7 @@ import { PunchCardBuilder } from "@/components/application/punch-cards-v2/punch-
 
 /** Hypothetical 6 · Range & Refresh. Two products on one card, no golf: range buckets and a drink. Fully interactive: edit, add or remove items. */
 const meta = {
-    title: "Prototypes/Punch Cards V2/Combo 6 · Range & Refresh",
+    title: "Prototypes/Punch Cards/3 Archive/Combos/Combo 6 · Range & Refresh",
     id: "prototypes-punch-cards-v2-combo-6",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

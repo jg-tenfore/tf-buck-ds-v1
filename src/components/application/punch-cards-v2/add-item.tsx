@@ -196,7 +196,7 @@ const ProductSearch = ({ draft, onDraft }: { draft: ItemDraft; onDraft: (patch: 
                     ))}
                 </AriaListBox>
             </div>
-            <p className="text-sm text-tertiary">Pick All products, or search for a specific one: drinks, range buckets, merchandise.</p>
+            <p className="text-sm text-tertiary">Pick Any product, or search for a specific one: drinks, range buckets, merchandise.</p>
         </div>
     );
 };

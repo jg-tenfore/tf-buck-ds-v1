@@ -4,7 +4,7 @@ import { PunchCardBuilder } from "@/components/application/punch-cards-v2/punch-
 
 /** Hypothetical 2 · Range Buckets. A single product: 10 large range buckets. Fully interactive: edit, add or remove items. */
 const meta = {
-    title: "Prototypes/Punch Cards V2/Combo 2 · Range Buckets",
+    title: "Prototypes/Punch Cards/3 Archive/Combos/Combo 2 · Range Buckets",
     id: "prototypes-punch-cards-v2-combo-2",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

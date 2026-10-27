@@ -4,7 +4,7 @@ import { PunchCardBuilder } from "@/components/application/punch-cards-v2/punch-
 
 /** Hypothetical 7 · Golf & Range Bundle. The concept screenshot: green fees, range buckets, simulator hours and a clinic. Fully interactive: edit, add or remove items. */
 const meta = {
-    title: "Prototypes/Punch Cards V2/Combo 7 · Golf & Range Bundle",
+    title: "Prototypes/Punch Cards/3 Archive/Combos/Combo 7 · Golf & Range Bundle",
     id: "prototypes-punch-cards-v2-combo-7",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

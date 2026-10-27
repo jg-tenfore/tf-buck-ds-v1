@@ -9,7 +9,7 @@ import { PreviewConceptPage } from "@/components/application/punch-cards-v2/prev
  * on that kind (no "choose type" step), and every change shows on the card.
  */
 const meta = {
-    title: "Prototypes/Punch Cards V2/3C Full Flow · Live Preview",
+    title: "Prototypes/Punch Cards/3 Archive/Builder 3C · Live Preview",
     id: "prototypes-punch-cards-v2-full-flow-preview",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

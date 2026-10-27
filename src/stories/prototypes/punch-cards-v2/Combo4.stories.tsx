@@ -4,7 +4,7 @@ import { PunchCardBuilder } from "@/components/application/punch-cards-v2/punch-
 
 /** Hypothetical 4 · Clinic Pass. Group lessons: 4 clinics. Fully interactive: edit, add or remove items. */
 const meta = {
-    title: "Prototypes/Punch Cards V2/Combo 4 · Clinic Pass",
+    title: "Prototypes/Punch Cards/3 Archive/Combos/Combo 4 · Clinic Pass",
     id: "prototypes-punch-cards-v2-combo-4",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

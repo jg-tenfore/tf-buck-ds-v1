@@ -9,7 +9,7 @@ import { InlineConceptPage } from "@/components/application/punch-cards-v2/inlin
  * step, nothing covering the card); the pencil opens a line in place.
  */
 const meta = {
-    title: "Prototypes/Punch Cards V2/3B Full Flow · Inline",
+    title: "Prototypes/Punch Cards/3 Archive/Builder 3B · Inline",
     id: "prototypes-punch-cards-v2-full-flow-inline",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

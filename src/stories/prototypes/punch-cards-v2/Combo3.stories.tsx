@@ -4,7 +4,7 @@ import { PunchCardBuilder } from "@/components/application/punch-cards-v2/punch-
 
 /** Hypothetical 3 · Simulator Hours. A single activity: 10 one-hour simulator bay sessions. Fully interactive: edit, add or remove items. */
 const meta = {
-    title: "Prototypes/Punch Cards V2/Combo 3 · Simulator Hours",
+    title: "Prototypes/Punch Cards/3 Archive/Combos/Combo 3 · Simulator Hours",
     id: "prototypes-punch-cards-v2-combo-3",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
