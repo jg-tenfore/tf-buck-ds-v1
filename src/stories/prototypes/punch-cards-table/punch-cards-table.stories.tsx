@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { PunchCardsScreen } from "@/components/application/migration-v2/screens-credits";
+import { ALL_SCOPE_CARDS } from "@/components/application/punch-cards-table/data";
 import { LisaConcerns } from "@/components/application/punch-cards-table/lisa-concerns";
 import { PunchCardsTable } from "@/components/application/punch-cards-table/punch-cards-table";
 
@@ -32,6 +33,24 @@ export const FlexibleFiltersNoSummary: Story = {
 export const LisaEdits: Story = {
     name: "1c · Lisa Edits - 102726",
     render: () => <PunchCardsTable version="filters" showSummary={false} showIntro={false} offeringColumns />,
+};
+
+/** 1c-A · All vs specific, shown as text: a line names it ("All activities · 60 min" vs "Simulator Bays · 60 min"). For Weston. */
+export const LisaEditsScopeText: Story = {
+    name: "1c-A · All vs specific: text",
+    render: () => <PunchCardsTable version="filters" showSummary={false} showIntro={false} offeringColumns scopeDisplay="text" extraCards={ALL_SCOPE_CARDS} />,
+};
+
+/** 1c-B · All vs specific, shown as a tag: an "All" tag beside whole-category balances; specific items are named. For Weston. */
+export const LisaEditsScopeTag: Story = {
+    name: "1c-B · All vs specific: tag",
+    render: () => <PunchCardsTable version="filters" showSummary={false} showIntro={false} offeringColumns scopeDisplay="tag" extraCards={ALL_SCOPE_CARDS} />,
+};
+
+/** 1c-C · All vs specific, compact: an "All" or "Specific" chip under each balance; the full name is in the tooltip. For Weston. */
+export const LisaEditsScopeChip: Story = {
+    name: "1c-C · All vs specific: chip",
+    render: () => <PunchCardsTable version="filters" showSummary={false} showIntro={false} offeringColumns scopeDisplay="chip" extraCards={ALL_SCOPE_CARDS} />,
 };
 
 /** 1c · Lisa's concerns: the missed view, what 1c changes from 1b, and open questions. */

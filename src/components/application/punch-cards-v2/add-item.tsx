@@ -20,6 +20,7 @@ import { cx } from "@/utils/cx";
 import type { ItemKind, PunchItem } from "./data";
 import {
     ACTIVITY_TYPES,
+    ALL_PRODUCTS,
     CLINICS,
     INSTRUCTORS,
     ITEM_KINDS,
@@ -150,6 +151,25 @@ const ProductSearch = ({ draft, onDraft }: { draft: ItemDraft; onDraft: (patch: 
                     renderEmptyState={() => <p className="px-3 py-4 text-sm text-tertiary">No products match “{draft.query}”.</p>}
                     className="max-h-48 overflow-y-auto py-1"
                 >
+                    <AriaListBoxItem
+                        id={ALL_PRODUCTS}
+                        textValue={ALL_PRODUCTS}
+                        className={({ isSelected, isFocusVisible }) =>
+                            cx(
+                                "mx-1 flex cursor-pointer items-center gap-2 rounded-md border-b border-secondary px-2.5 py-2 text-sm outline-hidden",
+                                isSelected ? "bg-active font-semibold text-primary" : "text-secondary hover:bg-primary_hover",
+                                isFocusVisible && "ring-2 ring-brand",
+                            )
+                        }
+                    >
+                        {({ isSelected }) => (
+                            <>
+                                <Check className={cx("size-4 shrink-0 text-fg-brand-primary", !isSelected && "invisible")} aria-hidden="true" />
+                                <span className="flex-1 truncate">{ALL_PRODUCTS}</span>
+                                <span className="shrink-0 text-xs text-tertiary">Any product, any location</span>
+                            </>
+                        )}
+                    </AriaListBoxItem>
                     {results.map((p) => (
                         <AriaListBoxItem
                             key={p.name}
@@ -176,7 +196,7 @@ const ProductSearch = ({ draft, onDraft }: { draft: ItemDraft; onDraft: (patch: 
                     ))}
                 </AriaListBox>
             </div>
-            <p className="text-sm text-tertiary">Search any product: drinks, range buckets, merchandise.</p>
+            <p className="text-sm text-tertiary">Pick All products, or search for a specific one: drinks, range buckets, merchandise.</p>
         </div>
     );
 };

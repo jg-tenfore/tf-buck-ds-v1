@@ -32,7 +32,7 @@ export function LisaConcerns() {
                     <ul className="list-disc pl-5">
                         <li>Same screen as 1b: no summary boxes, no caption, same search, filters, Columns and Export.</li>
                         <li>
-                            "Offering types" and the combined "Remaining / awarded" column become one column per offering: <B>Rounds</B>, <B>Transport</B>,{" "}
+                            "Offering types" and the combined "Remaining / awarded" column become one column per offering: <B>Green fees</B>, <B>Transport</B>,{" "}
                             <B>Activities</B>, <B>Clinics</B>, then <B>Products</B> and <B>Lessons</B>, so no balance is lost.
                         </li>
                         <li>Each cell shows remaining / awarded with a bar, and what it's for when that's specific (e.g. Simulator Bays · 60 min).</li>
@@ -40,14 +40,41 @@ export function LisaConcerns() {
                     </ul>
                 </Block>
 
-                <Block title="Open questions">
+                <Block title="Decisions · 10/27">
                     <ul className="list-disc pl-5">
                         <li>
-                            Lisa's screenshot is the <B>Products › Punch Cards (Beta)</B> list (punch cards for sale: ID, title, rounds, transpos, price…). 1c
-                            adds the columns to 1b's customer-cards screen. Does the Products list need the same columns too?
+                            <B>Rounds → Green fees.</B> The 1c columns now say Green fees, and the punch card builder prototype already says Green Fee. The live
+                            builder still shows "Rounds", so the dev team needs to change it there too.
+                        </li>
+                        <li>
+                            <B>All vs specific.</B> Activities, clinics and products can cover the whole category or specific items. The builder prototype now
+                            offers <B>All activities</B>, <B>All clinics</B> and <B>All products</B> alongside the specific ones.
+                        </li>
+                    </ul>
+                </Block>
+
+                <Block title="For Weston: how should the list show all vs specific?">
+                    <p>Three options, each the same 1c screen with example cards at the top (Activity Pass, Pro Shop Punches, Range &amp; Sim Mix):</p>
+                    <ul className="list-disc pl-5">
+                        <li>
+                            <B>1c-A · Text:</B> a line under the balance names it, e.g. "All activities · 60 min" or "Simulator Bays · 60 min".
+                        </li>
+                        <li>
+                            <B>1c-B · Tag:</B> an "All" tag beside whole-category balances. Specific items keep their name.
+                        </li>
+                        <li>
+                            <B>1c-C · Chip:</B> just "All" or "Specific" under each balance (most compact). The full name shows on hover.
+                        </li>
+                    </ul>
+                </Block>
+
+                <Block title="Still open">
+                    <ul className="list-disc pl-5">
+                        <li>
+                            Lisa's screenshot was the <B>Products › Punch Cards (Beta)</B> list (the punch cards for sale). 1c adds the columns to the
+                            customer-cards screen. Does the Products list need the same columns?
                         </li>
                         <li>Should Products and Lessons stay visible by default, or start hidden under Columns?</li>
-                        <li>Should "Rounds" be renamed "Green fees" to match the punch card builder?</li>
                     </ul>
                 </Block>
             </article>

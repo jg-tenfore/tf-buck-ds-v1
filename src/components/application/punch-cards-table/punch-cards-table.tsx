@@ -5,7 +5,7 @@ import { ArrowDown, ArrowUpRight, ChevronDown, ChevronRight, Download01, FilterL
 import { Dialog as AriaDialog, DialogTrigger as AriaDialogTrigger, Popover as AriaPopover } from "react-aria-components";
 import { ScreenModal, ScreenShell, Td, Th } from "@/components/application/migration-v2/kit";
 import { NAV_IDS } from "@/components/application/migration-v2/nav-tree";
-import { ITEM_KINDS, type ItemKind, kindMeta } from "@/components/application/punch-cards-v2/data";
+import { ITEM_KINDS, type ItemKind, isAllScope, kindMeta } from "@/components/application/punch-cards-v2/data";
 import { Badge } from "@/components/base/badges/badges";
 import { Button } from "@/components/base/buttons/button";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
@@ -147,7 +147,7 @@ function Balance({ items }: { items: OwnedItem[] }) {
 
 /** One column per offering for 1c, in the order of today's list (Rounds, Transpos) then the new offerings. */
 const OFFERING_COLUMNS: { kind: ItemKind; label: string }[] = [
-    { kind: "green-fee", label: "Rounds" },
+    { kind: "green-fee", label: "Green fees" },
     { kind: "transportation", label: "Transport" },
     { kind: "activity", label: "Activities" },
     { kind: "clinic", label: "Clinics" },
@@ -165,17 +165,36 @@ const detailOf = (item: OwnedItem) =>
           ? `${item.target.split(" · ")[0]} · ${item.duration} min`
           : item.target;
 
-/** One offering's balance in its own column: remaining / awarded with a bar, per included item. */
-function KindBalance({ items }: { items: OwnedItem[] }) {
+/** How 1c variants show an item that covers a whole category vs one specific item. */
+export type ScopeDisplay = "text" | "tag" | "chip";
+
+/** Kinds that can be all-of-category or specific (green fees always cover any round). */
+const SCOPED_KINDS: ItemKind[] = ["transportation", "activity", "clinic", "product", "lesson"];
+
+/**
+ * One offering's balance in its own column: remaining / awarded with a bar, per included item.
+ * - text (1c, 1c-A): a line naming it, e.g. "All activities · 60 min" or "Simulator Bays · 60 min"
+ * - tag (1c-B): an "All" tag beside the balance for whole-category items; specific ones are named
+ * - chip (1c-C): just "All" or "Specific" under the bar; the full name is in the tooltip
+ */
+function KindBalance({ items, scopeDisplay = "text" }: { items: OwnedItem[]; scopeDisplay?: ScopeDisplay }) {
     if (!items.length) return <span className="text-quaternary">—</span>;
     return (
         <div className="flex min-w-16 flex-col gap-2">
             {items.map((item, i) => {
-                const detail = detailOf(item);
+                const scoped = SCOPED_KINDS.includes(item.kind);
+                const all = scoped && isAllScope(item.target);
+                const name = detailOf(item);
+                const detail = scopeDisplay === "chip" ? null : scopeDisplay === "tag" && all ? (item.duration ? `${item.duration} min each` : null) : name;
                 return (
-                    <div key={i}>
-                        <div className="text-xs font-medium whitespace-nowrap text-primary tabular-nums">
+                    <div key={i} title={scopeDisplay === "chip" ? (name ?? item.target) : undefined}>
+                        <div className="flex items-center gap-1.5 text-xs font-medium whitespace-nowrap text-primary tabular-nums">
                             {remaining(item)} / {item.awarded}
+                            {scopeDisplay === "tag" && all && (
+                                <Badge color="brand" size="sm">
+                                    All
+                                </Badge>
+                            )}
                         </div>
                         <div
                             role="meter"
@@ -191,6 +210,16 @@ function KindBalance({ items }: { items: OwnedItem[] }) {
                             />
                         </div>
                         {detail && <div className="mt-1 max-w-24 text-xs leading-snug text-tertiary">{detail}</div>}
+                        {scopeDisplay === "chip" && scoped && (
+                            <span
+                                className={cx(
+                                    "mt-1.5 inline-flex rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset",
+                                    all ? "bg-brand-primary_alt text-brand-secondary ring-brand" : "bg-secondary text-tertiary ring-secondary",
+                                )}
+                            >
+                                {all ? "All" : "Specific"}
+                            </span>
+                        )}
                     </div>
                 );
             })}
@@ -258,12 +287,18 @@ export function PunchCardsTable({
     showSummary = true,
     showIntro = true,
     offeringColumns = false,
+    scopeDisplay = "text",
+    extraCards = [],
 }: {
     version: Version;
     showSummary?: boolean;
     showIntro?: boolean;
     /** 1c: one remaining / awarded column per offering instead of Offering types + a combined balance column. */
     offeringColumns?: boolean;
+    /** 1c variants: how whole-category ("All …") items are told apart from specific ones. */
+    scopeDisplay?: ScopeDisplay;
+    /** Extra customer cards shown first (1c variants add all-vs-specific examples). */
+    extraCards?: OwnedCard[];
 }) {
     const [query, setQuery] = useState("");
     const [kinds, setKinds] = useState<ItemKind[]>([]);
@@ -285,7 +320,7 @@ export function PunchCardsTable({
     const concept = CONCEPTS[version];
 
     // Every result set and statistic is derived from the same customer-card model.
-    const scoped = OWNED_CARDS.filter((card) => {
+    const scoped = [...extraCards, ...OWNED_CARDS].filter((card) => {
         const searchText = [card.id, card.customer, card.email, card.title, card.order, ...card.items.map((item) => item.target)].join(" ").toLowerCase();
         return (
             searchText.includes(query.trim().toLowerCase()) &&
@@ -355,7 +390,7 @@ export function PunchCardsTable({
                     onChange={(checked) => setSelected((previous) => (checked ? [...previous, card.id] : previous.filter((id) => id !== card.id)))}
                 />
             </Td>
-            <Td className={offeringColumns ? "min-w-36" : "min-w-48"}>
+            <Td className={offeringColumns ? "min-w-35" : "min-w-48"}>
                 <button type="button" onClick={() => setDetail(card)} className="cursor-pointer text-left font-semibold text-brand-secondary hover:underline">
                     {card.customer ?? "Unassigned customer"}
                 </button>
@@ -376,7 +411,7 @@ export function PunchCardsTable({
             {offeringColumns ? (
                 kindColumns.map((c) => (
                     <Td key={c.kind} className="px-3">
-                        <KindBalance items={card.items.filter((item) => item.kind === c.kind)} />
+                        <KindBalance items={card.items.filter((item) => item.kind === c.kind)} scopeDisplay={scopeDisplay} />
                     </Td>
                 ))
             ) : (
