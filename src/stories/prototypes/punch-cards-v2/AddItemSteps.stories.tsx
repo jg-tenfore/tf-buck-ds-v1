@@ -58,7 +58,7 @@ export const Activity: Story = {
 /** Clinic: any clinic or a specific one, then punches. */
 export const Clinic: Story = {
     name: "2. Clinic",
-    render: () => <AddItemPanelDemo step="details" draft={{ kind: "clinic", punches: 1, target: "Any clinic", duration: 60, query: "" }} />,
+    render: () => <AddItemPanelDemo step="details" draft={{ kind: "clinic", punches: 1, target: "All clinics", duration: 60, query: "" }} />,
 };
 
 /** Any length works: type the minutes per punch, e.g. a 45-minute class. */

@@ -1,4 +1,4 @@
-import { COMBINATIONS, type ItemKind } from "@/components/application/punch-cards-v2/data";
+import { ALL_ACTIVITIES, ALL_CLINICS, ALL_PRODUCTS, COMBINATIONS, type ItemKind } from "@/components/application/punch-cards-v2/data";
 
 /** Fixed reporting date keeps the sample's expiring/expired states reproducible. */
 export const AS_OF = "2026-10-15";
@@ -51,6 +51,60 @@ export const OWNED_CARDS: OwnedCard[] = Array.from({ length: 24 }, (_, i) => {
         })),
     };
 });
+
+/**
+ * Extra customer cards for the 1c "all vs specific" variants: items that cover a whole category
+ * (All activities / All products / All clinics) next to specific ones, so each display can be compared.
+ */
+export const ALL_SCOPE_CARDS: OwnedCard[] = [
+    {
+        id: "CPC-10504",
+        customer: "Olivia Martinez",
+        email: "olivia.martinez@example.com",
+        member: true,
+        title: "Activity Pass",
+        course: "Bushwood Country Club",
+        purchased: "2026-10-15",
+        expires: "2027-03-31",
+        price: 300,
+        order: "ORD-9304",
+        items: [{ kind: "activity", target: ALL_ACTIVITIES, duration: 60, awarded: 10, used: 3 }],
+    },
+    {
+        id: "CPC-10505",
+        customer: "William Chen",
+        email: "william.chen@example.com",
+        member: false,
+        title: "Pro Shop Punches",
+        course: "Schule Oaks",
+        purchased: "2026-10-15",
+        expires: "2027-03-31",
+        price: 120,
+        order: "ORD-9305",
+        items: [
+            { kind: "product", target: ALL_PRODUCTS, awarded: 5, used: 1 },
+            { kind: "clinic", target: ALL_CLINICS, awarded: 2, used: 0 },
+        ],
+    },
+    {
+        id: "CPC-10506",
+        customer: "Liam Brooks",
+        email: "liam.brooks@example.com",
+        member: true,
+        title: "Range & Sim Mix",
+        course: "Bushwood Country Club",
+        purchased: "2026-10-15",
+        expires: "2027-03-31",
+        price: 260,
+        order: "ORD-9306",
+        items: [
+            { kind: "product", target: "Range Bucket – Large", awarded: 10, used: 4 },
+            { kind: "activity", target: "Simulator Bays", duration: 60, awarded: 4, used: 1 },
+            { kind: "activity", target: ALL_ACTIVITIES, duration: 30, awarded: 4, used: 0 },
+            { kind: "clinic", target: "Short Game Clinic", awarded: 1, used: 0 },
+        ],
+    },
+];
 
 export type CardStatus = "Active" | "Expiring soon" | "Exhausted" | "Expired";
 export const remaining = (item: OwnedItem) => item.awarded - item.used;

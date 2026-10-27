@@ -71,9 +71,13 @@ export type PunchItem = {
 };
 
 export const TRANSPORTATION_TYPES = ["Any cart fee", "Riding Cart", "Single Rider Cart", "Push Cart"];
-export const ACTIVITY_TYPES = ["Simulator Bays", "Fitness Classes", "Physical Therapy"];
+/** Activities, clinics and products can cover the whole category ("All …") or one specific item. */
+export const ALL_ACTIVITIES = "All activities";
+export const ALL_CLINICS = "All clinics";
+export const ALL_PRODUCTS = "All products";
+export const ACTIVITY_TYPES = [ALL_ACTIVITIES, "Simulator Bays", "Fitness Classes", "Physical Therapy"];
 export const INSTRUCTORS = ["Any pro", "Jordan Pike · Head Pro", "Sam Ortega", "Riley Chen"];
-export const CLINICS = ["Any clinic", "Junior Golf Clinic", "Short Game Clinic", "Ladies' Night Clinic", "Beginner Golf 101"];
+export const CLINICS = [ALL_CLINICS, "Junior Golf Clinic", "Short Game Clinic", "Ladies' Night Clinic", "Beginner Golf 101"];
 
 export type Product = { name: string; group: string; location: string };
 
@@ -126,6 +130,9 @@ export const itemLabel = (item: Pick<PunchItem, "kind" | "target" | "duration">)
 export const sameItem = (a: Pick<PunchItem, "kind" | "target" | "duration">, b: Pick<PunchItem, "kind" | "target" | "duration">) =>
     a.kind === b.kind && a.target === b.target && (!hasDuration(a.kind) || a.duration === b.duration);
 
+/** True when an item covers a whole category ("All activities", "Any pro"…) rather than one specific item. */
+export const isAllScope = (target: string) => target.startsWith("All ") || target.startsWith("Any ");
+
 /** "Simulator Bays" → "Simulator Bay", "Fitness Classes" → "Fitness Class". */
 const singular = (s: string) => (s.endsWith("sses") ? s.slice(0, -2) : s.replace(/s$/, ""));
 
@@ -140,11 +147,17 @@ export const itemSummary = (item: Pick<PunchItem, "kind" | "target" | "duration"
         case "transportation":
             return item.target === "Any cart fee" ? `${n} cart fee ${punchesLabel(n)}` : `${n} × ${item.target}`;
         case "product":
-            return item.target ? `${n} × ${item.target}` : `${n} product ${punchesLabel(n)}`;
+            return item.target === ALL_PRODUCTS
+                ? `${n} ${punchesLabel(n)} for any product`
+                : item.target
+                  ? `${n} × ${item.target}`
+                  : `${n} product ${punchesLabel(n)}`;
         case "activity":
-            return `${n} × ${item.duration}-minute ${singular(item.target)} ${punchesLabel(n)}`;
+            return item.target === ALL_ACTIVITIES
+                ? `${n} × ${item.duration}-minute ${punchesLabel(n)} for any activity`
+                : `${n} × ${item.duration}-minute ${singular(item.target)} ${punchesLabel(n)}`;
         case "clinic":
-            return item.target === "Any clinic" ? `${n} clinic ${punchesLabel(n)}, any clinic` : `${n} × ${item.target}`;
+            return item.target === ALL_CLINICS ? `${n} clinic ${punchesLabel(n)}, any clinic` : `${n} × ${item.target}`;
         case "lesson":
             return `${n} × ${item.duration}-minute lesson ${punchesLabel(n)} with ${item.target === "Any pro" ? "any pro" : item.target.split(" · ")[0]}`;
     }
