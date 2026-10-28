@@ -179,15 +179,16 @@ const TREE: NavNode[] = [
         n("Membership Activity", BarChartSquare02),
     ]),
     n("Products", Tag01, [
+        // Same order as today's Products menu.
         n("List", Tag01),
-        n("Groups", LayersThree01),
         n("Combos", Grid01),
+        n("Price Stickers", Printer, [n("Star", Receipt), n("Dymo", Tag01), n("Avery 5160", Grid01)]),
+        n("Groups", LayersThree01),
         n("Menus", Receipt),
+        n("Rewards", Award01),
         n("Modifiers", LayersThree01),
         n("Discount Types", Percent02),
         n("Punch Cards", Ticket01),
-        n("Rewards", Award01),
-        n("Price Stickers", Printer, [n("Star", Receipt), n("Dymo", Tag01), n("Avery 5160", Grid01)]),
     ]),
     n("Inventory", Box, [
         n("Receive", Package),

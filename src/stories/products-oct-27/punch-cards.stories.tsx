@@ -11,8 +11,8 @@ import { CATALOG, PunchCardProducts } from "@/components/application/punch-cards
  * with unsaved changes asks first.
  */
 const meta = {
-    title: "Credits - OCT 27/6 Punch Card Products (Products › Punch Cards)",
-    id: "credits-oct-27-punch-cards-stacked",
+    title: "Products - OCT 27/Punch Cards",
+    id: "products-oct-27-punch-cards",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 
@@ -21,6 +21,9 @@ type Story = StoryObj<typeof meta>;
 
 /** The catalog row for a combination card (Golf & Range Bundle, Everything Card). */
 const rowId = (key: string) => CATALOG.find((row) => row.card === combination(key).card)!.id;
+
+/** The catalog, in the list tab. */
+export const List: Story = { name: "List", render: () => <PunchCardProducts builder="stacked" confirmClose /> };
 
 /** Add Punch Card pressed: a blank "New punch card" tab next to the list tab. */
 export const StartEmpty: Story = { name: "Start empty", render: () => <PunchCardProducts builder="stacked" confirmClose initialOpen={[{}]} /> };
