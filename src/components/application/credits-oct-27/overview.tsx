@@ -67,11 +67,11 @@ const PAGES: { name: string; where: string; links: [string, string][] }[] = [
     },
     {
         name: "Punch Card Products",
-        where: "Products › Punch Cards",
+        where: "Products › Punch Cards · moved to Products - OCT 27",
         links: [
-            ["credits-oct-27-punch-cards-stacked--start-empty", "New card"],
-            ["credits-oct-27-punch-cards-stacked--ten-rounder", "10 Rounder · edit"],
-            ["credits-oct-27-punch-cards-stacked--filled", "Golf & Range Bundle"],
+            ["products-oct-27-punch-cards--start-empty", "New card"],
+            ["products-oct-27-punch-cards--ten-rounder", "10 Rounder · edit"],
+            ["products-oct-27-punch-cards--filled", "Golf & Range Bundle"],
         ],
     },
 ];
