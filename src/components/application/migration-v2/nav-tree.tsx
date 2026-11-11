@@ -140,6 +140,8 @@ const TREE: NavNode[] = [
     n("Golf", Target04, [n("Tee Sheet", Grid01, [n("Daily", Calendar)]), n("Fees", Target04), n("Print Outs", Printer, [n("Pace of Play", Hourglass01)])]),
     n("Rooms", Building05, [n("Schedules", CalendarDate)]),
     n("Simulator Bays", Monitor01, [
+        // Proposed Nov 11, 2026: the visual sheet sits first, like Tee Sheet under Golf.
+        n("Bay Sheet", Grid01),
         n("Bays", Monitor01),
         n("Fees", CurrencyDollar),
         n("Schedules", CalendarDate),
