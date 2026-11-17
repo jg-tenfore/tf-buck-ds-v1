@@ -72,6 +72,11 @@ const preview: Preview = {
                         ],
                         "Simulator Bays",
                         ["Bay Sheet", ["A · Bay columns", "B · Tee sheet rows", "Fewer bays, wider columns", "*"]],
+                        "Instruction",
+                        [
+                            "Default Clinic Photos",
+                            ["Picker · default set", "Picker · another set", "Custom photo uploaded", "Uploading a photo", "Template list", "*"],
+                        ],
                         "Punch Cards",
                         ["Customer Punch Cards", "Punch Card Products", ["List", "Create & Edit", ["Full Flow (3A)", "Add Item Steps", "Page Sections"]]],
                         "Course Settings",
@@ -91,6 +96,8 @@ const preview: Preview = {
                     ],
                     "Reviews",
                     [
+                        "Nov 17 · Default clinic photos",
+                        ["Summary", "*"],
                         "Nov 17 · Bay sheet & feedback",
                         ["Summary", "*"],
                         "Nov 11 · Bay sheet & feedback",

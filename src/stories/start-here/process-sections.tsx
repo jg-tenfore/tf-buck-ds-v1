@@ -16,7 +16,7 @@ export const ProcessHero = () => (
         chips={[`${SHIPPED.length} changes shipped since Jul 24, 2026`, "Latest: Nov 17", "4 open decisions"]}
         actions={
             <CtaRow>
-                <Cta kind="primary" href={story(SUMMARIES.nov17)}>
+                <Cta kind="primary" href={story(SUMMARIES.nov17Photos)}>
                     The newest review
                 </Cta>
                 <Cta kind="secondary" href={story(DOCS.howToReview)}>
