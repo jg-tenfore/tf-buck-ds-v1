@@ -11,7 +11,8 @@ import { Select } from "@/components/base/select/select";
 import { Toggle } from "@/components/base/toggle/toggle";
 
 const meta = {
-    title: "App Screens/Company",
+    title: "Prototypes/Full application/Company",
+    id: "app-screens-company",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

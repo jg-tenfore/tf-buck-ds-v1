@@ -10,7 +10,7 @@ import { CreditBooksScreen } from "@/components/application/migration-v2/screens
  * proposals that only re-arrange what exists (no new fields or features).
  */
 const meta = {
-    title: "Migration V2 Ideas/2 Credits › Credit Books",
+    title: "Archive/Migration V2 Ideas/Credit Books",
     id: "migration-v2-ideas-credit-books",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

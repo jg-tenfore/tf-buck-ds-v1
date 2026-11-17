@@ -26,7 +26,8 @@ import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
 
 const meta = {
-    title: "App Screens/Golf",
+    title: "Prototypes/Full application/Golf",
+    id: "app-screens-golf",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

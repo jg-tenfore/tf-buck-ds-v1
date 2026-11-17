@@ -1,0 +1,34 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { AreaCards, Folders, NextPages, OverviewHero, WhatsNew } from "./overview-sections";
+import { Callout, Page, Section } from "./ui";
+
+<Meta title="Start Here/Overview" />
+
+<Page>
+
+<OverviewHero />
+
+<Section title="What's new" intro="The latest review rounds, newest first. Each Summary says what was asked, what was built and what is still open.">
+    <WhatsNew />
+</Section>
+
+<Section
+    title="Open the prototypes, area by area"
+    intro="Click any screen to open it. Every prototype sits inside Buck's Global Nav, so it reads the way the product does."
+>
+    <AreaCards />
+</Section>
+
+<Section title="Start Here">
+    <NextPages />
+</Section>
+
+<Section title="Where things are" intro="Six folders in the sidebar, in this order.">
+    <Folders />
+    <Callout tone="gray">
+        <b>How it's built:</b> React 19 and TypeScript, Tailwind CSS v4 with Buck's semantic tokens, React Aria for accessibility, and Storybook 10. Press{" "}
+        <b>/</b> to search the sidebar.
+    </Callout>
+</Section>
+
+</Page>

@@ -13,7 +13,8 @@ import { FeaturedIcon } from "@/components/foundations/featured-icon/featured-ic
  * "Sagamore" theme keeps everything greyscale.
  */
 const meta = {
-    title: "Components/Layout & Structure/Card Headers",
+    title: "Design System/Components/Layout & Structure/Card Headers",
+    id: "components-layout-structure-card-headers",
     component: CardHeader,
     parameters: { layout: "padded" },
     argTypes: {

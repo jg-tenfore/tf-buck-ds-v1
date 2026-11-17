@@ -3,7 +3,7 @@ import { ModifiersPage } from "@/components/application/products-oct-27/modifier
 
 /** Products › Modifiers: two lists as the first tabs; modifiers and groups each open in their own tab. */
 const meta = {
-    title: "Products - OCT 27/Modifiers",
+    title: "Prototypes/Products/Modifiers",
     id: "products-oct-27-modifiers",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

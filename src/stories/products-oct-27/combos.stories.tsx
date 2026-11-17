@@ -3,7 +3,7 @@ import { CombosPage } from "@/components/application/products-oct-27/combos";
 
 /** Products › Combos: bundles sold as one item. Each combo opens in its own tab; its products are added and edited in a dialog. */
 const meta = {
-    title: "Products - OCT 27/Combos",
+    title: "Prototypes/Products/Combos",
     id: "products-oct-27-combos",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

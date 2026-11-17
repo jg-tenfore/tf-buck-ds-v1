@@ -25,7 +25,8 @@ import { Input } from "@/components/base/input/input";
 import { Toggle } from "@/components/base/toggle/toggle";
 
 const meta = {
-    title: "App Screens/Admin",
+    title: "Prototypes/Full application/Admin",
+    id: "app-screens-admin",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

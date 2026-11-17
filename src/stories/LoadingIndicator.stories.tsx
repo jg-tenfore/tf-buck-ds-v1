@@ -8,7 +8,8 @@ import { LoadingIndicator } from "@/components/application/loading-indicator/loa
  * course is just about ready.
  */
 const meta = {
-    title: "Components/Feedback & Status/Loading Indicator",
+    title: "Design System/Components/Feedback & Status/Loading Indicator",
+    id: "components-feedback-status-loading-indicator",
     component: LoadingIndicator,
     parameters: { layout: "centered" },
     argTypes: {

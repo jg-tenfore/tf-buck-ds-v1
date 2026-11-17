@@ -3,7 +3,7 @@ import { RewardsPage } from "@/components/application/products-oct-27/rewards";
 
 /** Products › Rewards: a settings page. Save changes is the primary action at the top. */
 const meta = {
-    title: "Products - OCT 27/Rewards",
+    title: "Prototypes/Products/Rewards",
     id: "products-oct-27-rewards",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

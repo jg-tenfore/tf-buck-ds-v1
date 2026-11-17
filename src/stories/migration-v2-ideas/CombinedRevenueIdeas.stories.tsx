@@ -10,7 +10,7 @@ import { CombinedRevenueScreen } from "@/components/application/migration-v2/scr
  * proposals that only re-arrange what exists (no new fields or features).
  */
 const meta = {
-    title: "Migration V2 Ideas/7 Revenue › Combined Revenue",
+    title: "Archive/Migration V2 Ideas/Combined Revenue",
     id: "migration-v2-ideas-combined-revenue",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

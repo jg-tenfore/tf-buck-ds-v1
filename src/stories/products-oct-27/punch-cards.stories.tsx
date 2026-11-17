@@ -11,7 +11,7 @@ import { CATALOG, PunchCardProducts } from "@/components/application/punch-cards
  * with unsaved changes asks first.
  */
 const meta = {
-    title: "Products - OCT 27/Punch Cards",
+    title: "Prototypes/Products/Punch Cards",
     id: "products-oct-27-punch-cards",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

@@ -8,7 +8,8 @@ import { InputGroup } from "@/components/base/input/input-group";
  * suffix on a yardage. Same ink focus ring, no fill.
  */
 const meta = {
-    title: "Components/Forms/Inputs/Input Group",
+    title: "Design System/Components/Forms/Inputs/Input Group",
+    id: "components-forms-inputs-input-group",
     component: InputGroup,
     parameters: { layout: "centered" },
     argTypes: {

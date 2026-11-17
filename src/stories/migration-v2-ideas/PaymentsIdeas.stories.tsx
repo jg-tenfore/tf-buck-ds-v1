@@ -10,7 +10,7 @@ import { PaymentsScreen } from "@/components/application/migration-v2/screens-ch
  * proposals that only re-arrange what exists (no new fields or features).
  */
 const meta = {
-    title: "Migration V2 Ideas/4 Charges › Payments",
+    title: "Archive/Migration V2 Ideas/Payments",
     id: "migration-v2-ideas-payments",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

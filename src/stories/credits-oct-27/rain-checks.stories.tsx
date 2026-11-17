@@ -7,7 +7,7 @@ import { RainChecksPage } from "@/components/application/credits-oct-27/rain-che
  * sub-tabs as sections; Option B keeps them as sub-tabs.
  */
 const meta = {
-    title: "Credits - OCT 27/2 Rain Checks",
+    title: "Prototypes/Credits/Rain Checks",
     id: "credits-oct-27-rain-checks",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

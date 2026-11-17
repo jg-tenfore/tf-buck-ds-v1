@@ -1,0 +1,49 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { CompareBays, Feedback, Hosted, Links, ReviewHero, ReviewSteps, SampleData, SidebarGuide } from "./review-sections";
+import { Callout, Page, Section } from "./ui";
+
+<Meta title="Start Here/How to review" />
+
+<Page>
+
+<ReviewHero />
+
+<Section title="Four steps" intro="The same every round.">
+    <ReviewSteps />
+</Section>
+
+<Section
+    title="How the sidebar is organized"
+    intro="Six folders, in this order. Product reviews start in Reviews; developers mostly live in Design System and Prototypes."
+>
+    <SidebarGuide />
+</Section>
+
+<Section title="Every screen has a stable link">
+    <Links />
+</Section>
+
+<Section
+    title="Compare concepts side by side"
+    intro="When a round asks a question, both answers are built. Open them in two browser tabs, or compare them here. The Bay Sheet's two layouts:"
+>
+    <CompareBays />
+    <Callout>
+        The same goes for records in Credits and Products: <b>Option A · sections</b> and <b>Option B · sub-tabs</b> are both built for gift cards, rain checks,
+        credit books and products. The open questions are listed on Process & roadmap.
+    </Callout>
+</Section>
+
+<Section title="Where feedback goes">
+    <Feedback />
+</Section>
+
+<Section title="What “Sample data” means">
+    <SampleData />
+</Section>
+
+<Section title="Where it lives">
+    <Hosted />
+</Section>
+
+</Page>

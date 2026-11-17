@@ -7,7 +7,7 @@ import { PunchCardsTable } from "@/components/application/punch-cards-table/punc
  * Transfer + History. Closing a tab with unsaved changes asks first.
  */
 const meta = {
-    title: "Credits - OCT 27/4 Punch Cards (Customer Cards)",
+    title: "Prototypes/Credits/Punch Cards (Customer Cards)",
     id: "credits-oct-27-customer-punch-cards",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

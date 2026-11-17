@@ -7,7 +7,7 @@ import { PunchCardsTable } from "@/components/application/punch-cards-table/punc
  * where Used, the expiration date and transfers are edited.
  */
 const meta = {
-    title: "Prototypes/Punch Cards/1 Customer Punch Cards (Reports › Credits)",
+    title: "Prototypes/Punch Cards/Customer Punch Cards",
     id: "prototypes-punch-cards-customer",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

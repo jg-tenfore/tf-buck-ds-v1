@@ -3,7 +3,7 @@ import { CreditsOverview } from "@/components/application/credits-oct-27/overvie
 
 /** The layout convention from the 10/27 check-in with Weston, the sub-tab decision, and links to every screen. */
 const meta = {
-    title: "Credits - OCT 27/0 Overview",
+    title: "Reviews/Oct 27 · Credits/Summary",
     id: "credits-oct-27-overview",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

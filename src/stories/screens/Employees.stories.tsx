@@ -22,7 +22,8 @@ import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 
 const meta = {
-    title: "App Screens/Employees",
+    title: "Prototypes/Full application/Employees",
+    id: "app-screens-employees",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

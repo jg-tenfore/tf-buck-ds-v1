@@ -8,7 +8,7 @@ import { combination } from "@/components/application/punch-cards-v2/data";
  * Next, Back, Change and Save Item all work (Save resets the story).
  */
 const meta = {
-    title: "Prototypes/Punch Cards/2 Punch Card Products (Products › Punch Cards)/2 Create & Edit/2 Add Item Steps",
+    title: "Prototypes/Punch Cards/Punch Card Products/Create & Edit/Add Item Steps",
     id: "prototypes-punch-cards-v2-add-item-steps",
     parameters: { layout: "centered" },
     decorators: [(Story) => <div className="w-[512px]">{Story()}</div>],

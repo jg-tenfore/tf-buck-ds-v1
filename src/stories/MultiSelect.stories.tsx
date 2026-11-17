@@ -18,7 +18,8 @@ import { GOLFERS } from "@/data/sagamore";
  * an ink focus state.
  */
 const meta = {
-    title: "Components/Forms/Multi-Select",
+    title: "Design System/Components/Forms/Multi-Select",
+    id: "components-forms-multi-select",
     component: MultiSelect,
     parameters: { layout: "centered" },
     argTypes: {

@@ -294,7 +294,8 @@ const COMMAND_GROUPS: CommandMenuGroup[] = NAV_ITEMS.map((section) => ({
 })).filter((group) => group.items.length > 0);
 
 const meta = {
-    title: "App Chrome/Global Nav",
+    title: "Design System/App Chrome/Global Nav",
+    id: "app-chrome-global-nav",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

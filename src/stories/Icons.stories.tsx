@@ -47,7 +47,8 @@ const IconGallery = ({ query = "" }: IconGalleryProps) => {
 };
 
 const meta = {
-    title: "Foundations/Icons",
+    title: "Design System/Styles/Icons",
+    id: "foundations-icons",
     component: IconGallery,
     parameters: { layout: "fullscreen" },
     argTypes: { query: { control: "text" } },

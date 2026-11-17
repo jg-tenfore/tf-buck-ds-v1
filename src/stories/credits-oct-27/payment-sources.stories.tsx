@@ -3,7 +3,7 @@ import { PaymentSourcesPage } from "@/components/application/credits-oct-27/paym
 
 /** Reports › Credits › Payment Sources in the new header. List only; reorganizing it was deferred on the 10/27 call. */
 const meta = {
-    title: "Credits - OCT 27/3 Payment Sources",
+    title: "Prototypes/Credits/Payment Sources",
     id: "credits-oct-27-payment-sources",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

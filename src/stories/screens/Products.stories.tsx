@@ -26,7 +26,8 @@ import { Input } from "@/components/base/input/input";
 import { staticAsset } from "@/utils/static-asset";
 
 const meta = {
-    title: "App Screens/Products",
+    title: "Prototypes/Full application/Products",
+    id: "app-screens-products",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

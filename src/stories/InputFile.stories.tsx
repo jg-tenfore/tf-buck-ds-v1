@@ -7,7 +7,8 @@ import { InputFile } from "@/components/base/input/input-file";
  * button, no fill.
  */
 const meta = {
-    title: "Components/Forms/Inputs/Input File",
+    title: "Design System/Components/Forms/Inputs/Input File",
+    id: "components-forms-inputs-input-file",
     component: InputFile,
     parameters: { layout: "centered" },
     argTypes: {

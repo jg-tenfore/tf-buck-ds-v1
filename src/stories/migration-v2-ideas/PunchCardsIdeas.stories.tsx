@@ -10,7 +10,7 @@ import { PunchCardsScreen } from "@/components/application/migration-v2/screens-
  * proposals that only re-arrange what exists (no new fields or features).
  */
 const meta = {
-    title: "Migration V2 Ideas/1 Credits › Punch Cards",
+    title: "Archive/Migration V2 Ideas/Punch Cards",
     id: "migration-v2-ideas-punch-cards",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

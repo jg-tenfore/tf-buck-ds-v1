@@ -15,7 +15,8 @@ const teeDate = today(getLocalTimeZone());
  * values (`CalendarDate` / `RangeValue`) for controlled defaults.
  */
 const meta = {
-    title: "Components/Forms/Date Picker",
+    title: "Design System/Components/Forms/Date Picker",
+    id: "components-forms-date-picker",
     component: DatePicker,
     parameters: { layout: "centered" },
     argTypes: {

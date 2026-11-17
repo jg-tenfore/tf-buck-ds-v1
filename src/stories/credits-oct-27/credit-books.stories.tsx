@@ -7,7 +7,7 @@ import { CreditBooksPage } from "@/components/application/credits-oct-27/credit-
  * Customers and Transactions as sections; Option B keeps them as sub-tabs.
  */
 const meta = {
-    title: "Credits - OCT 27/5 Credit Books",
+    title: "Prototypes/Credits/Credit Books",
     id: "credits-oct-27-credit-books",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

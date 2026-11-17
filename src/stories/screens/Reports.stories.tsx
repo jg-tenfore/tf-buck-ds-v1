@@ -35,7 +35,8 @@ import { Input } from "@/components/base/input/input";
 import { Select } from "@/components/base/select/select";
 
 const meta = {
-    title: "App Screens/Reports",
+    title: "Prototypes/Full application/Reports",
+    id: "app-screens-reports",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

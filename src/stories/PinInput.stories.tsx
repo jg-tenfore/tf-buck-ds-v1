@@ -7,7 +7,8 @@ import { PinInput } from "@/components/base/input/pin-input";
  * from compound parts: PinInput, .Label, .Group, .Slot, .Description.
  */
 const meta = {
-    title: "Components/Forms/Inputs/Pin Input",
+    title: "Design System/Components/Forms/Inputs/Pin Input",
+    id: "components-forms-inputs-pin-input",
     component: PinInput,
     parameters: { layout: "centered" },
     argTypes: {

@@ -15,7 +15,8 @@ import { cx } from "@/utils/cx";
  * chips, the summary total, and the confirm action all follow the treatment.
  */
 const meta = {
-    title: "Explorations/Tee Time Booking",
+    title: "Archive/Early explorations/Tee Time Booking",
+    id: "explorations-tee-time-booking",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

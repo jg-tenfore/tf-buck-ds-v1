@@ -3,7 +3,7 @@ import { ProductGroupsPage } from "@/components/application/products-oct-27/prod
 
 /** Products › Groups: drag to reorder; each group opens in its own tab with its sub-groups. */
 const meta = {
-    title: "Products - OCT 27/Product Groups",
+    title: "Prototypes/Products/Product Groups",
     id: "products-oct-27-product-groups",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

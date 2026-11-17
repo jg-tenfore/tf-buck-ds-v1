@@ -7,7 +7,8 @@ import { Toggle } from "@/components/base/toggle/toggle";
  * state is near-black under the monochromatic theme.
  */
 const meta = {
-    title: "Components/Forms/Toggle",
+    title: "Design System/Components/Forms/Toggle",
+    id: "components-forms-toggle",
     component: Toggle,
     parameters: { layout: "centered" },
     argTypes: {

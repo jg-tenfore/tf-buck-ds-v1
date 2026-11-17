@@ -40,7 +40,8 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 );
 
 const meta = {
-    title: "Foundations/Effect Styles",
+    title: "Design System/Styles/Effect Styles",
+    id: "foundations-effect-styles",
     parameters: { layout: "fullscreen" },
 } satisfies Meta<typeof EffectTile>;
 

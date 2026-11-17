@@ -11,7 +11,8 @@ const noop = () => {};
  * the complete check and the failed-upload state.
  */
 const meta = {
-    title: "Components/Forms/File Upload",
+    title: "Design System/Components/Forms/File Upload",
+    id: "components-forms-file-upload",
     component: FileUpload.DropZone,
     parameters: { layout: "padded" },
     argTypes: {

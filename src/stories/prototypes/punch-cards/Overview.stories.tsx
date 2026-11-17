@@ -3,7 +3,7 @@ import { PunchCardsOverview } from "@/components/application/punch-cards-table/p
 
 /** Start here: the two punch card pages, links to their final stories, and the decisions behind them. */
 const meta = {
-    title: "Prototypes/Punch Cards/0 Overview",
+    title: "Reviews/Oct 27 · Punch cards/Summary",
     id: "prototypes-punch-cards-overview",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

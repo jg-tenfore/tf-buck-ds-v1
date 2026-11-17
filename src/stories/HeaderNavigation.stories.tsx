@@ -10,7 +10,8 @@ import { Header } from "@/components/marketing/header-navigation/header";
  * (`HeaderNavigationBase`) and the marketing-style `Header`.
  */
 const meta = {
-    title: "Components/Navigation/Header Navigations",
+    title: "Design System/Components/Navigation/Header Navigations",
+    id: "components-navigation-header-navigations",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

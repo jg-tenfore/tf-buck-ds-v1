@@ -11,7 +11,8 @@ import { cx } from "@/utils/cx";
  * alike. Every frame uses real Sagamore photography indexed from images/sagamore.
  */
 const meta = {
-    title: "Components/Media & Visuals/Carousel",
+    title: "Design System/Components/Media & Visuals/Carousel",
+    id: "components-media-visuals-carousel",
     component: Carousel.Root,
     parameters: { layout: "centered" },
     argTypes: {

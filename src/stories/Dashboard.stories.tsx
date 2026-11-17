@@ -2,7 +2,8 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { CourseDashboard } from "@/components/application/dashboard/course-dashboard";
 
 const meta = {
-    title: "App Screens/Dashboard",
+    title: "Prototypes/Full application/Dashboard",
+    id: "app-screens-dashboard",
     component: CourseDashboard,
     parameters: { layout: "fullscreen" },
 } satisfies Meta<typeof CourseDashboard>;

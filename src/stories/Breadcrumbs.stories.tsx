@@ -9,7 +9,8 @@ import { Breadcrumbs } from "@/components/application/breadcrumbs/breadcrumbs";
  * hover. The monochromatic Sagamore theme keeps every divider in greyscale.
  */
 const meta = {
-    title: "Components/Navigation/Breadcrumbs",
+    title: "Design System/Components/Navigation/Breadcrumbs",
+    id: "components-navigation-breadcrumbs",
     component: Breadcrumbs,
     parameters: { layout: "centered" },
 } satisfies Meta<typeof Breadcrumbs>;

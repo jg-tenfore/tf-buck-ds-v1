@@ -7,7 +7,8 @@ import { Checkbox } from "@/components/base/checkbox/checkbox";
  * Monochromatic: the checked state is near-black, never coloured.
  */
 const meta = {
-    title: "Components/Forms/Checkbox",
+    title: "Design System/Components/Forms/Checkbox",
+    id: "components-forms-checkbox",
     component: Checkbox,
     parameters: { layout: "centered" },
     argTypes: {

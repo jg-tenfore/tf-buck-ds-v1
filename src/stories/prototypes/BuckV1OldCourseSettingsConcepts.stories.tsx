@@ -11,7 +11,8 @@ import { ConceptSearchDialog } from "@/components/application/buck-v1-old/concep
  * /concept-3-command-menu and /concept-4-search-dialog (`npm run proto:course-settings`).
  */
 const meta = {
-    title: "Prototypes/Buck V1 Old – Course Settings/Concepts",
+    title: "Prototypes/Course Settings/Concepts",
+    id: "prototypes-buck-v1-old-course-settings-concepts",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

@@ -7,7 +7,8 @@ import { InputNumber } from "@/components/base/input/input-number";
  * Hairline border, ink focus ring, no fill.
  */
 const meta = {
-    title: "Components/Forms/Inputs/Input Number",
+    title: "Design System/Components/Forms/Inputs/Input Number",
+    id: "components-forms-inputs-input-number",
     component: InputNumber,
     parameters: { layout: "centered" },
     argTypes: {

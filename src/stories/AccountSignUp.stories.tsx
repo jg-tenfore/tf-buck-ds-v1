@@ -8,7 +8,8 @@ import { AuthSimple } from "./account-auth-simple";
  * Apple icon social group.
  */
 const meta: Meta = {
-    title: "Sign in ∕ Sign up/Sign up",
+    title: "Design System/Account Login/Sign up",
+    id: "sign-in-∕-sign-up-sign-up",
     parameters: { layout: "fullscreen" },
 };
 

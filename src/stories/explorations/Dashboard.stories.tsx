@@ -16,7 +16,8 @@ import { cx } from "@/utils/cx";
  * between them is the color treatment — every component is shared.
  */
 const meta = {
-    title: "Explorations/Dashboard",
+    title: "Archive/Early explorations/Dashboard",
+    id: "explorations-dashboard",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

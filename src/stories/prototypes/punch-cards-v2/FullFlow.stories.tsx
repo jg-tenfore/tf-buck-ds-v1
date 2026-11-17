@@ -9,7 +9,7 @@ import { CATALOG, PunchCardProducts } from "@/components/application/punch-cards
  * one item and one course, then updates the list. Cancel closes the tab.
  */
 const meta = {
-    title: "Prototypes/Punch Cards/2 Punch Card Products (Products › Punch Cards)/2 Create & Edit/1 Full Flow (3A)",
+    title: "Prototypes/Punch Cards/Punch Card Products/Create & Edit/Full Flow (3A)",
     id: "prototypes-punch-cards-v2-full-flow",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

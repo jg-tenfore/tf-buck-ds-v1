@@ -10,7 +10,8 @@ import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 
 const meta = {
-    title: "App Screens/Events",
+    title: "Prototypes/Full application/Events",
+    id: "app-screens-events",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 
