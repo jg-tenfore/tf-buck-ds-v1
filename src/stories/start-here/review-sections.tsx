@@ -20,7 +20,7 @@ export const ReviewHero = () => (
         art={heroArt}
         actions={
             <CtaRow>
-                <Cta kind="primary" href={story(SUMMARIES.nov17Photos)}>
+                <Cta kind="primary" href={story(SUMMARIES.nov17Packages)}>
                     Open the newest Summary
                 </Cta>
                 <Cta kind="secondary" href={story(DOCS.screenIndex)}>
@@ -37,7 +37,7 @@ export const ReviewSteps = () => (
             {
                 label: "Open",
                 title: "The newest Reviews folder",
-                body: "Reviews are listed newest first. Today that's Nov 17 · Default clinic photos, then Nov 17 · Bay sheet & feedback.",
+                body: "Reviews are listed newest first. Today that's Nov 17 · Lesson packages (punch-card style), then Nov 17 · Default clinic photos.",
                 meta: "Sidebar › Reviews",
             },
             { label: "Read", title: "Its Summary", body: "What was asked, what was built, what changed on purpose, and the open questions.", meta: "One page" },
@@ -57,7 +57,7 @@ export const SidebarGuide = () => (
         <MiniCard eyebrow="Everyone" title="Start Here" href={story(DOCS.overview)} cta="Overview" tone="subtle">
             What Buck's design system is, its rules, the roadmap, and this page.
         </MiniCard>
-        <MiniCard eyebrow="Product" title="Reviews" href={story(SUMMARIES.nov17Photos)} cta="Newest summary" tone="subtle">
+        <MiniCard eyebrow="Product" title="Reviews" href={story(SUMMARIES.nov17Packages)} cta="Newest summary" tone="subtle">
             One folder per round, newest first, each opening on a Summary. The place to start a review.
         </MiniCard>
         <MiniCard eyebrow="Product and developers" title="Prototypes" href={story(DOCS.screenIndex)} cta="Screen index" tone="subtle">

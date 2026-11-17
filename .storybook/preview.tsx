@@ -74,6 +74,18 @@ const preview: Preview = {
                         ["Bay Sheet", ["A · Bay columns", "B · Tee sheet rows", "Fewer bays, wider columns", "*"]],
                         "Instruction",
                         [
+                            "Lesson Packages",
+                            [
+                                "Builder · new 5-pack",
+                                "Builder · 10-pack",
+                                "Builder · price above singles",
+                                "Builder · deep discount",
+                                "Packages list",
+                                "Customer credits",
+                                "Extend-expiry dialog",
+                                "Apply a credit dialog",
+                                "*",
+                            ],
                             "Default Clinic Photos",
                             ["Picker · default set", "Picker · another set", "Custom photo uploaded", "Uploading a photo", "Template list", "*"],
                         ],
@@ -96,6 +108,8 @@ const preview: Preview = {
                     ],
                     "Reviews",
                     [
+                        "Nov 17 · Lesson packages (punch-card style)",
+                        ["Summary", "*"],
                         "Nov 17 · Default clinic photos",
                         ["Summary", "*"],
                         "Nov 17 · Bay sheet & feedback",
