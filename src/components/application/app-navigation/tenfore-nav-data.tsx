@@ -158,6 +158,7 @@ export const TENFORE_NAV_ITEMS: NavItemType[] = [
         items: [
             { label: "Clinics", href: "/instruction/clinics", icon: PresentationChart01 },
             { label: "Templates", href: "/instruction/clinics/templates", icon: Clipboard },
+            { label: "Lesson Packages", href: "/instruction/lesson-packages", icon: Ticket01 },
             { label: "Instances", href: "/instruction/clinics/instances", icon: Calendar },
             { label: "Waitlist", href: "/instruction/clinics/waitlist", icon: List },
             { label: "Sold", href: "/instruction/clinics/sold", icon: ReceiptCheck },

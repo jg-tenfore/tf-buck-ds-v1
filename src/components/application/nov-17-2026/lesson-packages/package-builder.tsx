@@ -254,7 +254,7 @@ export const PackageBuilder = ({
     const title = editing ? `${instructor.name} · ${packLabel(pack)}` : "New lesson package";
 
     return (
-        <AppShell activeUrl="/instruction">
+        <AppShell activeUrl="/instruction/lesson-packages">
             <PageHeader
                 title={title}
                 badge={

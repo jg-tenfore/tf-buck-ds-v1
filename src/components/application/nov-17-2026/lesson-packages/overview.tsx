@@ -162,23 +162,20 @@ export function Nov17LessonPackagesOverview() {
                     </p>
                 </Block>
 
-                <Block title="Still open">
+                <Block title="Decided (Justin, Nov 17)">
                     <ul className="list-disc pl-5">
                         <li>
-                            <B>Who can create packs?</B> Built so anyone with Instruction access can. If only admins should, instructors would see the list and
-                            customer credits but not New package or Edit.
+                            <B>Only admins create and change packs.</B> This matches D-3: instructors can't change prices. Instructors see the list and their
+                            golfers' credits, and apply a credit at the lesson, but don't get New package or Edit.
                         </li>
                         <li>
-                            <B>Can one pack mix lesson types?</B> Built as one lesson type per pack, like Crane (a 45-minute credit pays for a 45-minute
-                            private). Mixing would need a rule for what a credit is worth on a longer or shorter lesson.
+                            <B>One lesson type per pack.</B> A credit always pays for the same lesson, as Crane shows golfers.
                         </li>
                         <li>
-                            <B>A pack priced above singles.</B> The builder warns but still lets it publish, in case a pack bundles extras. It could block
-                            publishing instead.
+                            <B>A pack priced above singles warns but can still publish</B>, because a pack may bundle extras like range balls or video notes.
                         </li>
                         <li>
-                            <B>No Lesson Packages item in the Global Nav yet.</B> These screens sit under Instruction; adding a sub-item is a one-line change
-                            once the name is agreed.
+                            <B>Global Nav: Instruction › Lesson Packages</B>, next to Templates.
                         </li>
                     </ul>
                 </Block>
