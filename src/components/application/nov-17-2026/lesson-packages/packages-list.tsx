@@ -48,10 +48,10 @@ export const PackagesList = ({
     const revenue = packages.reduce((n, p) => n + p.sold * p.price, 0);
 
     return (
-        <AppShell activeUrl="/instruction">
+        <AppShell activeUrl="/instruction/lesson-packages">
             <PageHeader
                 title="Lesson Packages"
-                subtitle="Packs of lesson credits: golfers buy them now and book the lessons one at a time."
+                subtitle="Packs of lesson credits: golfers buy them now and book the lessons one at a time. Only admins create and change packs."
                 action={
                     <Button iconLeading={Plus} size="md" onClick={onNew}>
                         New package
