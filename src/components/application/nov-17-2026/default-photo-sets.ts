@@ -68,7 +68,7 @@ export const DEFAULT_PHOTO_SETS: PhotoSet[] = [
  * The set a course gets before it picks one. Provisional: which set is the
  * TenFore-wide default is still open (see the Nov 17 Summary).
  */
-export const TENFORE_DEFAULT_SET: PhotoSetId = "morning-parkland";
+export const TENFORE_DEFAULT_SET: PhotoSetId = "overcast-classic";
 
 export const photoSet = (id: PhotoSetId): PhotoSet => DEFAULT_PHOTO_SETS.find((s) => s.id === id) ?? DEFAULT_PHOTO_SETS[0];
 

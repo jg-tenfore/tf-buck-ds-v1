@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 /** Beginner Golfer (a group clinic) on the set every course starts with. */
 export const PickerDefault: Story = {
     name: "Picker · default set",
-    render: () => <ClinicTemplatePhotos initialView="edit" templateId="t5" initialSet="morning-parkland" />,
+    render: () => <ClinicTemplatePhotos initialView="edit" templateId="t5" initialSet="overcast-classic" />,
 };
 
 /** Junior Camp (Age 8–12) with Evening links picked: the preview follows the pick. */
@@ -31,7 +31,7 @@ export const PickerAnotherSet: Story = {
 /** Fall Get Golf Ready — Men's with Sagamore's own photo. Use default puts the set's photo back. */
 export const OwnPhoto: Story = {
     name: "Custom photo uploaded",
-    render: () => <ClinicTemplatePhotos initialView="edit" templateId="t7" initialSet="morning-parkland" scrollToPhoto />,
+    render: () => <ClinicTemplatePhotos initialView="edit" templateId="t7" initialSet="overcast-classic" scrollToPhoto />,
 };
 
 /** Private Lessons with a photo part-way up (held at 64% for review). */
@@ -51,7 +51,7 @@ export const Uploading: Story = {
 /** Clinic Templates as cards: seven use the set's photos (rotating through its three per category), one has its own. */
 export const TemplateList: Story = {
     name: "Template list",
-    render: () => <ClinicTemplatePhotos initialView="list" initialSet="morning-parkland" />,
+    render: () => <ClinicTemplatePhotos initialView="list" initialSet="overcast-classic" />,
 };
 
 /** The same list after the course switches to Autumn. */

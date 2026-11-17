@@ -40,8 +40,8 @@ const BUILT: { title: string; body: ReactNode; links: [string, string][] }[] = [
         body: (
             <>
                 Six generic sets, each with <B>three photos</B> for every kind of template (private lesson, group clinic, junior camp, junior league and Op 36):
-                15 per set, 90 in all. No TenFore logo anywhere, so two courses on different sets won't look the same. Morning parkland is marked{" "}
-                <B>TenFore default</B> for now.
+                15 per set, 90 in all. No TenFore logo anywhere, so two courses on different sets won't look the same. <B>Overcast classic</B> is the
+                TenFore default (Justin's pick, Nov 17): soft, even light that fits any course and season.
             </>
         ),
         links: [[`${S}picker-default`, "See the sets"]],
@@ -82,7 +82,7 @@ const BUILT: { title: string; body: ReactNode; links: [string, string][] }[] = [
         title: "5 · Template list as cards",
         body: "Clinic Templates as cards, each with its photo. Templates in the same category rotate through the set's three photos, picked from the template's id, so the list doesn't repeat a picture and a template keeps its photo every time. A label on each photo says whether it's the set's or the course's own, and the banner names the set with a Change set button. Edit opens the builder; Save brings the new set back to every card.",
         links: [
-            [`${S}template-list`, "Morning parkland"],
+            [`${S}template-list`, "Overcast classic"],
             [`${S}template-list-autumn`, "Autumn"],
         ],
     },
@@ -158,9 +158,6 @@ export function Nov17PhotosOverview() {
 
                 <Block title="Still open">
                     <ul className="list-disc pl-5">
-                        <li>
-                            <B>The TenFore-wide default set.</B> Which set a course gets before it picks one. Morning parkland is a placeholder.
-                        </li>
                         <li>
                             <B>Can a course mix sets?</B> Built as one set per course, with an own photo per template. The other way is a set per template (or
                             per category), which gives more variety but one more choice on every template.
