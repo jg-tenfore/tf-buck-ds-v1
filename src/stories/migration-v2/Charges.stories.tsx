@@ -3,7 +3,7 @@ import { ChargesScreen } from "@/components/application/migration-v2/screens-cha
 
 /** Reports › Charges › Charges — orders charged to a customer account (references/100126/3-charges->charges). */
 const meta = {
-    title: "Migration V2/3 Charges › Charges",
+    title: "Research/Today's Buck (Migration V2)/Charges",
     id: "migration-v2-charges",
     component: ChargesScreen,
     parameters: { layout: "fullscreen" },

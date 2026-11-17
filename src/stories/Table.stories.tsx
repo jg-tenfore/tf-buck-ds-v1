@@ -16,7 +16,8 @@ import { Button } from "@/components/base/buttons/button";
  * board do the talking.
  */
 const meta = {
-    title: "Components/Layout & Structure/Table",
+    title: "Design System/Components/Layout & Structure/Table",
+    id: "components-layout-structure-table",
     component: Table,
     parameters: {
         layout: "padded",

@@ -10,7 +10,7 @@ import { CombinedReportScreen } from "@/components/application/migration-v2/scre
  * proposals that only re-arrange what exists (no new fields or features).
  */
 const meta = {
-    title: "Migration V2 Ideas/6 Revenue › Combined Report",
+    title: "Archive/Migration V2 Ideas/Combined Report",
     id: "migration-v2-ideas-combined-report",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

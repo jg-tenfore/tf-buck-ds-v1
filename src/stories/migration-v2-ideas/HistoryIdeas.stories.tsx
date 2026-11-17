@@ -10,7 +10,7 @@ import { ChargeHistoryScreen } from "@/components/application/migration-v2/scree
  * proposals that only re-arrange what exists (no new fields or features).
  */
 const meta = {
-    title: "Migration V2 Ideas/5 Charges › History",
+    title: "Archive/Migration V2 Ideas/History",
     id: "migration-v2-ideas-history",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

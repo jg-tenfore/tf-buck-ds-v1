@@ -3,7 +3,7 @@ import { MenusPage } from "@/components/application/products-oct-27/menus";
 
 /** Products › Menus: reorder with up / down; each menu (and Add menu) opens in its own tab. */
 const meta = {
-    title: "Products - OCT 27/Menus",
+    title: "Prototypes/Products/Menus",
     id: "products-oct-27-menus",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

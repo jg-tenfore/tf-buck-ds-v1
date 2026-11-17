@@ -3,7 +3,7 @@ import { PaymentsScreen } from "@/components/application/migration-v2/screens-ch
 
 /** Reports › Charges › Payments — payments taken against charges (references/100126/4-charges->payments). */
 const meta = {
-    title: "Migration V2/4 Charges › Payments",
+    title: "Research/Today's Buck (Migration V2)/Payments",
     id: "migration-v2-payments",
     component: PaymentsScreen,
     parameters: { layout: "fullscreen" },

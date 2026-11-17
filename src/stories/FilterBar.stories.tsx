@@ -16,7 +16,8 @@ import { FilterBar } from "@/components/application/filter-bar/filter-bar";
  * stays greyscale to match the monochromatic Sagamore clubhouse theme.
  */
 const meta = {
-    title: "Components/Layout & Structure/Filter Bars",
+    title: "Design System/Components/Layout & Structure/Filter Bars",
+    id: "components-layout-structure-filter-bars",
     component: FilterBar,
     parameters: { layout: "padded" },
     argTypes: {

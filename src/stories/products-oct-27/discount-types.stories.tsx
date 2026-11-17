@@ -3,7 +3,7 @@ import { DiscountTypesPage } from "@/components/application/products-oct-27/disc
 
 /** Products › Discount Types: each discount opens in its own tab; one choice of kind replaces the three amount fields. */
 const meta = {
-    title: "Products - OCT 27/Discount Types",
+    title: "Prototypes/Products/Discount Types",
     id: "products-oct-27-discount-types",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

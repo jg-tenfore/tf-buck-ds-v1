@@ -10,7 +10,8 @@ import { Input } from "@/components/base/input/input";
 import { Toggle } from "@/components/base/toggle/toggle";
 
 const meta = {
-    title: "App Screens/Activities",
+    title: "Prototypes/Full application/Activities",
+    id: "app-screens-activities",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

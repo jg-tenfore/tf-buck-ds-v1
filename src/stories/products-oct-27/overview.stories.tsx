@@ -3,7 +3,7 @@ import { ProductsOverview } from "@/components/application/products-oct-27/overv
 
 /** The layout convention, the primary / secondary actions rule, and links to every Products screen. */
 const meta = {
-    title: "Products - OCT 27/Overview",
+    title: "Reviews/Oct 27 · Products/Summary",
     id: "products-oct-27-overview",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

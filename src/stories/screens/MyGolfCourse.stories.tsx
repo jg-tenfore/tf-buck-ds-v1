@@ -32,7 +32,8 @@ import { CourseDashboard } from "@/components/application/dashboard/course-dashb
 import { Input } from "@/components/base/input/input";
 
 const meta = {
-    title: "App Screens/My Golf Course",
+    title: "Prototypes/Full application/My Golf Course",
+    id: "app-screens-my-golf-course",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

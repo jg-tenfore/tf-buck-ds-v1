@@ -12,7 +12,8 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
  * exactly what ships. Sourced from the brand palette (references/080626).
  */
 const meta = {
-    title: "Foundations/Colors",
+    title: "Design System/Styles/Colors",
+    id: "foundations-colors",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

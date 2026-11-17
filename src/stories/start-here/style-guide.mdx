@@ -1,0 +1,33 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { ActionsRule, HeaderRule, RecordRule, SlideOverRule, SmallRules, StyleHero, TabsRule, TokenRule } from "./style-guide-sections";
+import { Page, Section } from "./ui";
+
+<Meta title="Start Here/Style guide" />
+
+<Page>
+
+<StyleHero />
+
+<Section title="Tokens and frame" intro="What every screen is made of, and where it sits.">
+    <TokenRule />
+</Section>
+
+<Section title="Pages" intro="The header, the tabs and the actions are the same on every page built since Oct 27.">
+    <HeaderRule />
+    <TabsRule />
+    <ActionsRule />
+</Section>
+
+<Section title="Records" intro="A record is one gift card, product or combo, open in its own tab.">
+    <RecordRule />
+</Section>
+
+<Section title="Dense screens">
+    <SlideOverRule />
+</Section>
+
+<Section title="Small rules that add up">
+    <SmallRules />
+</Section>
+
+</Page>

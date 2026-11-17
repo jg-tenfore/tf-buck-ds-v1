@@ -3,7 +3,7 @@ import { PriceStickersPage } from "@/components/application/products-oct-27/pric
 
 /** Products › Price Stickers: Star, Dymo and Avery 5160. Print is the primary action; a live preview shows the sticker. */
 const meta = {
-    title: "Products - OCT 27/Price Stickers",
+    title: "Prototypes/Products/Price Stickers",
     id: "products-oct-27-price-stickers",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

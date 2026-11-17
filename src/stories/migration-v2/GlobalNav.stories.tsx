@@ -8,7 +8,8 @@ import { NAV_IDS } from "@/components/application/migration-v2/nav-tree";
  * Try it: open and close sections, use expand/collapse all, or type to filter.
  */
 const meta = {
-    title: "Migration V2/Global Nav",
+    title: "Research/Today's Buck (Migration V2)/Global Nav",
+    id: "migration-v2-global-nav",
     component: GlobalNav,
     parameters: { layout: "fullscreen" },
     decorators: [

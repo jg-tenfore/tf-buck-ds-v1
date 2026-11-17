@@ -9,7 +9,7 @@ import { PunchCardsTable } from "@/components/application/punch-cards-table/punc
  * The final design is "1 Customer Punch Cards". Story IDs are fixed, so links shared earlier still work.
  */
 const meta = {
-    title: "Prototypes/Punch Cards/3 Archive/Customer Punch Cards Explorations",
+    title: "Archive/Punch Card explorations/Customer Punch Cards Explorations",
     id: "prototypes-punch-cards-table",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

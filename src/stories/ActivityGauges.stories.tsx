@@ -3,7 +3,8 @@ import { PolarAngleAxis, RadialBar, RadialBarChart, ResponsiveContainer } from "
 import { BRAND, ChartCard, CHART_INK } from "@/components/application/charts/chart-kit";
 
 const meta = {
-    title: "Components/Charts & Data/Activity Gauges",
+    title: "Design System/Components/Charts & Data/Activity Gauges",
+    id: "components-charts-data-activity-gauges",
     parameters: { layout: "padded" },
 } satisfies Meta;
 

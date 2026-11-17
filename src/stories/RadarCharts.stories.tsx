@@ -3,7 +3,8 @@ import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, Responsi
 import { BRAND, ChartCard, ChartLegend, CHART_INK, CHART_SERIES, ChartTooltip } from "@/components/application/charts/chart-kit";
 
 const meta = {
-    title: "Components/Charts & Data/Radar Charts",
+    title: "Design System/Components/Charts & Data/Radar Charts",
+    id: "components-charts-data-radar-charts",
     parameters: { layout: "padded" },
 } satisfies Meta;
 

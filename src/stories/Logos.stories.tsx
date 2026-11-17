@@ -9,7 +9,8 @@ import { TfLogoMark } from "@/components/foundations/logo/tf-logo-mark";
  * surfaces where the colour mark can't be used.
  */
 const meta = {
-    title: "Foundations/Logos",
+    title: "Design System/Styles/Logos",
+    id: "foundations-logos",
     component: TfLogo,
     parameters: { layout: "fullscreen" },
     argTypes: {

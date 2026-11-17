@@ -3,7 +3,8 @@ import { Area, AreaChart, Bar, BarChart, CartesianGrid, Line, LineChart, Respons
 import { axisProps, BRAND, ChartCard, ChartLegend, CHART_INK, CHART_SERIES, ChartTooltip } from "@/components/application/charts/chart-kit";
 
 const meta = {
-    title: "Components/Charts & Data/Line & Bar Charts",
+    title: "Design System/Components/Charts & Data/Line & Bar Charts",
+    id: "components-charts-data-line-bar-charts",
     parameters: { layout: "padded" },
 } satisfies Meta;
 

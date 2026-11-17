@@ -3,7 +3,7 @@ import { CombinedRevenueScreen } from "@/components/application/migration-v2/scr
 
 /** Reports › Revenue › Combined Revenue (design: references/100126/7-6-revenue-combinedRevenue; data: references/100226). */
 const meta = {
-    title: "Migration V2/7 Revenue › Combined Revenue",
+    title: "Research/Today's Buck (Migration V2)/Combined Revenue",
     id: "migration-v2-combined-revenue",
     component: CombinedRevenueScreen,
     parameters: { layout: "fullscreen" },

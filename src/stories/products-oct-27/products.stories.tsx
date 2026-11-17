@@ -8,7 +8,7 @@ import { ProductsListPage } from "@/components/application/products-oct-27/produ
  * today's eight sub-tabs as stacked sections (A) or kept as sub-tabs (B).
  */
 const meta = {
-    title: "Products - OCT 27/Products",
+    title: "Prototypes/Products/Products",
     id: "products-oct-27-products",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

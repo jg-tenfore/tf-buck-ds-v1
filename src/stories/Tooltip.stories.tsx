@@ -8,7 +8,8 @@ import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
  * surface is ink-solid with white type, matching the monochromatic theme.
  */
 const meta = {
-    title: "Components/Feedback & Status/Tooltip",
+    title: "Design System/Components/Feedback & Status/Tooltip",
+    id: "components-feedback-status-tooltip",
     component: Tooltip,
     parameters: { layout: "centered" },
     argTypes: {

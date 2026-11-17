@@ -7,7 +7,8 @@ import { AuthSimple } from "./account-auth-simple";
  * social group.
  */
 const meta: Meta = {
-    title: "Sign in ∕ Sign up/Log in",
+    title: "Design System/Account Login/Log in",
+    id: "sign-in-∕-sign-up-log-in",
     parameters: { layout: "fullscreen" },
 };
 

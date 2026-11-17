@@ -48,7 +48,8 @@ const DEMO_GROUPS: CommandMenuGroup[] = [
 ];
 
 const meta = {
-    title: "App Chrome/Command Menu",
+    title: "Design System/App Chrome/Command Menu",
+    id: "app-chrome-command-menu",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

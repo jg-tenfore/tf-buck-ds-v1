@@ -8,7 +8,7 @@ import { PunchCardProducts } from "@/components/application/punch-cards-v2/produ
  * new card in its own tab; a row opens that card to edit in a tab (same tabs as Customer Punch Cards). Builder: 3A.
  */
 const meta = {
-    title: "Prototypes/Punch Cards/2 Punch Card Products (Products › Punch Cards)/1 List",
+    title: "Prototypes/Punch Cards/Punch Card Products/List",
     id: "prototypes-punch-card-products-list",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

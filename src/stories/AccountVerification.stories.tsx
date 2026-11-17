@@ -11,7 +11,8 @@ import { FeaturedIcon } from "@/components/foundations/featured-icon/featured-ic
  * system parts: FeaturedIcon, PinInput, Button and the Tenfore logo.
  */
 const meta: Meta = {
-    title: "Sign in ∕ Sign up/Verification",
+    title: "Design System/Account Login/Verification",
+    id: "sign-in-∕-sign-up-verification",
     parameters: { layout: "fullscreen" },
 };
 

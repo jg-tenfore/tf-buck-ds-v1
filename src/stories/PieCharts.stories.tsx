@@ -3,7 +3,8 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { ChartCard, CHART_INK, CHART_SERIES, ChartTooltip } from "@/components/application/charts/chart-kit";
 
 const meta = {
-    title: "Components/Charts & Data/Pie Charts",
+    title: "Design System/Components/Charts & Data/Pie Charts",
+    id: "components-charts-data-pie-charts",
     parameters: { layout: "padded" },
 } satisfies Meta;
 

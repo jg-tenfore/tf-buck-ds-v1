@@ -8,7 +8,8 @@ import { Tag, TagGroup, TagList } from "@/components/base/tags/tags";
  * multiple selection. Monochromatic and calm by default.
  */
 const meta = {
-    title: "Components/Forms/Tags",
+    title: "Design System/Components/Forms/Tags",
+    id: "components-forms-tags",
     component: Tag,
     parameters: { layout: "centered" },
 } satisfies Meta<typeof Tag>;

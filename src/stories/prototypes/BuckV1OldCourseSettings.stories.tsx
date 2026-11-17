@@ -7,7 +7,8 @@ import { BuckV1OldCourseSettings, CourseSettingsPage } from "@/components/applic
  * runs as its own local: `npm run proto:course-settings` → http://localhost:6020.
  */
 const meta = {
-    title: "Prototypes/Buck V1 Old – Course Settings/Original",
+    title: "Prototypes/Course Settings/Original",
+    id: "prototypes-buck-v1-old-course-settings-original",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

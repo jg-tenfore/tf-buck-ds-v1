@@ -26,7 +26,8 @@ import { Input } from "@/components/base/input/input";
 import { sagamoreImagesByCategory } from "@/components/foundations/sagamore/sagamore-assets";
 
 const meta = {
-    title: "App Screens/F & B",
+    title: "Prototypes/Full application/F & B",
+    id: "app-screens-f-b",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

@@ -3,7 +3,8 @@ import { CurrencyDollar, Flag06, TrendUp01, Users01 } from "@untitledui/icons";
 import { MetricCard } from "@/components/application/metrics/metric-card";
 
 const meta = {
-    title: "Components/Charts & Data/Metrics",
+    title: "Design System/Components/Charts & Data/Metrics",
+    id: "components-charts-data-metrics",
     parameters: { layout: "padded" },
 } satisfies Meta;
 

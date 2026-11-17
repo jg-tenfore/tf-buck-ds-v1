@@ -6,7 +6,7 @@ import { AllOrdersPage, RoundsByCustomerPage, TeeSheetReportPage } from "@/compo
  * names the row it answers.
  */
 const meta = {
-    title: "Nov 11, 2026/Feedback File",
+    title: "Prototypes/MCG Feedback Fixes",
     id: "nov-11-2026-feedback",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

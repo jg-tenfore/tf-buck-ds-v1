@@ -1,0 +1,20 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { ArchiveExample, ArchiveFolders, ArchiveHero, ArchiveReasons } from "./archive-sections";
+import { Page, Section } from "./ui";
+
+<Meta title="Archive/About the archive" />
+
+<Page>
+
+<ArchiveHero />
+
+<Section title="What's in it" intro="Three folders, each with what replaced it.">
+    <ArchiveFolders />
+</Section>
+
+<Section title="Why keep it">
+    <ArchiveReasons />
+    <ArchiveExample />
+</Section>
+
+</Page>

@@ -4,7 +4,8 @@ import { Calendar } from "@/components/application/date-picker/calendar";
 import { RangeCalendar } from "@/components/application/date-picker/range-calendar";
 
 const meta = {
-    title: "Components/Forms/Calendar",
+    title: "Design System/Components/Forms/Calendar",
+    id: "components-forms-calendar",
     component: Calendar,
     parameters: { layout: "centered" },
 } satisfies Meta<typeof Calendar>;

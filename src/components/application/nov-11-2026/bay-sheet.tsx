@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties, ReactNode } from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
     Calendar,
     CheckCircle,
@@ -52,6 +52,9 @@ export const BAY_SHEET_NAV = "simulator-bays/bay-sheet";
 export type Panel = { kind: "book"; draft: BookDraft } | { kind: "details"; id: string } | { kind: "block"; draft: BlockDraft };
 
 type Layout = "columns" | "rows";
+
+/** Nov 11 is the sheet as first reviewed; Nov 17 adds what Weston asked for on the Nov 17 call. */
+export type Edition = "nov11" | "nov17";
 
 const ribbonColor = (res: Reservation) => (membershipOf(customerById(res.customerId)) ?? NO_MEMBERSHIP).color;
 
@@ -176,24 +179,85 @@ const Toolbar = ({
 
 const SLOT_PX = 44;
 const COL_W = 148;
+/** Nov 17: columns share the width, but never get narrower than this. */
+const MIN_COL_W = 132;
+const DRAG_TYPE = "text/x-bay-booking";
 const GUTTER = 76;
 const px = (minutes: number) => ((minutes - DAY_START) / SLOT) * SLOT_PX;
 
-const ColumnChip = ({ res, dim, onOpen }: { res: Reservation; dim: boolean; onOpen: () => void }) => {
+const ColumnChip = ({
+    res,
+    dim,
+    onOpen,
+    editable,
+    passThrough,
+    onDragStart,
+    onDragEnd,
+    onExtend,
+}: {
+    res: Reservation;
+    dim: boolean;
+    onOpen: () => void;
+    /** Nov 17: drag to move, drag the bottom edge to extend. */
+    editable?: boolean;
+    /** While something is being dragged, chips let the drop reach the slots under them. */
+    passThrough?: boolean;
+    onDragStart?: () => void;
+    onDragEnd?: () => void;
+    onExtend?: (duration: number) => void;
+}) => {
     const customer = customerById(res.customerId)!;
     const live = holdsTime(res);
-    const height = (res.duration / SLOT) * SLOT_PX - 4;
+    const [preview, setPreview] = useState<number | null>(null);
+    const resizing = useRef(false);
+    const duration = preview ?? res.duration;
+    const height = (duration / SLOT) * SLOT_PX - 4;
+    const canEdit = Boolean(editable && live);
+
+    /* Dragging the bottom edge snaps to half hours; the change is checked when it's let go. */
+    const startResize = (e: React.PointerEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        resizing.current = true;
+        const y0 = e.clientY;
+        const snap = (y: number) => Math.max(SLOT, res.duration + Math.round((y - y0) / SLOT_PX) * SLOT);
+        const move = (ev: PointerEvent) => setPreview(snap(ev.clientY));
+        const up = (ev: PointerEvent) => {
+            window.removeEventListener("pointermove", move);
+            window.removeEventListener("pointerup", up);
+            const next = snap(ev.clientY);
+            setPreview(null);
+            setTimeout(() => (resizing.current = false), 0);
+            if (next !== res.duration) onExtend?.(next);
+        };
+        window.addEventListener("pointermove", move);
+        window.addEventListener("pointerup", up);
+    };
+
     return (
-        <button
-            type="button"
-            onClick={onOpen}
+        <div
+            role="button"
+            tabIndex={0}
+            onClick={() => !resizing.current && onOpen()}
+            onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), onOpen())}
+            draggable={canEdit}
+            onDragStart={(e) => {
+                if (resizing.current) return e.preventDefault();
+                e.dataTransfer.setData(DRAG_TYPE, res.id);
+                e.dataTransfer.effectAllowed = "move";
+                onDragStart?.();
+            }}
+            onDragEnd={onDragEnd}
             aria-label={`${customer.name}, ${fmtTime(res.start)}, ${fmtDuration(res.duration)}, ${STATUS_LABEL[res.status]}`}
             style={{ top: px(res.start) + 2, height }}
             className={cx(
-                "absolute z-[2] flex cursor-pointer flex-col overflow-hidden rounded-lg text-left shadow-xs ring-1 transition duration-100 ease-linear ring-inset hover:shadow-md",
+                "group absolute z-[2] flex flex-col overflow-hidden rounded-lg text-left shadow-xs ring-1 transition duration-100 ease-linear ring-inset hover:shadow-md",
+                canEdit ? "cursor-grab active:cursor-grabbing" : "cursor-pointer",
                 live ? "right-1.5 left-1.5" : "right-1.5 left-1/2 border border-dashed border-secondary bg-primary opacity-70 shadow-none ring-0",
                 live && (res.status === "checkedIn" ? "bg-success-primary ring-secondary" : "bg-primary ring-secondary"),
+                preview !== null && "z-[3] shadow-lg ring-2 ring-brand",
                 dim && "opacity-30",
+                passThrough && "pointer-events-none",
             )}
         >
             {live && <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: ribbonColor(res) }} />}
@@ -202,7 +266,7 @@ const ColumnChip = ({ res, dim, onOpen }: { res: Reservation; dim: boolean; onOp
                 {live ? (
                     <span className="flex items-center justify-between gap-1 text-[11px] text-tertiary">
                         <span className="truncate tabular-nums">
-                            {res.party} · {fmtDuration(res.duration)}
+                            {res.party} · {fmtDuration(duration)}
                         </span>
                         <Marks res={res} />
                     </span>
@@ -211,11 +275,27 @@ const ColumnChip = ({ res, dim, onOpen }: { res: Reservation; dim: boolean; onOp
                 )}
                 {live && res.note && height > 90 && <span className="line-clamp-2 text-[11px] text-secondary">{res.note}</span>}
             </span>
-        </button>
+            {preview !== null && (
+                <span className="absolute right-2 bottom-2.5 rounded bg-brand-solid px-1.5 py-0.5 text-[11px] font-medium text-white tabular-nums">
+                    until {fmtTime(res.start + preview)}
+                </span>
+            )}
+            {canEdit && (
+                <span
+                    aria-hidden="true"
+                    title="Drag to extend"
+                    onPointerDown={startResize}
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute inset-x-0 bottom-0 flex h-2.5 cursor-ns-resize items-center justify-center"
+                >
+                    <span className="h-1 w-8 rounded-full bg-quaternary opacity-0 transition duration-100 ease-linear group-hover:opacity-100" />
+                </span>
+            )}
+        </div>
     );
 };
 
-const BlockChip = ({ block, onOpen, compact }: { block: Block; onOpen: () => void; compact?: boolean }) => (
+const BlockChip = ({ block, onOpen, compact, passThrough }: { block: Block; onOpen: () => void; compact?: boolean; passThrough?: boolean }) => (
     <button
         type="button"
         onClick={onOpen}
@@ -223,6 +303,7 @@ const BlockChip = ({ block, onOpen, compact }: { block: Block; onOpen: () => voi
         className={cx(
             "flex cursor-pointer flex-col gap-0.5 overflow-hidden rounded-lg bg-secondary px-2.5 py-1.5 text-left ring-1 ring-secondary ring-inset",
             compact ? "min-w-48" : "absolute right-1.5 left-1.5 z-[1]",
+            passThrough && "pointer-events-none",
         )}
     >
         <span className="flex items-center gap-1 text-xs font-semibold text-secondary">
@@ -247,6 +328,9 @@ const ColumnsSheet = ({
     onBook,
     onOpen,
     onOpenBlock,
+    edition,
+    onMove,
+    onExtend,
 }: {
     bays: readonly (typeof BAYS)[number][];
     reservations: Reservation[];
@@ -255,17 +339,28 @@ const ColumnsSheet = ({
     onBook: (bayId: string, start: number) => void;
     onOpen: (id: string) => void;
     onOpenBlock: (id: string) => void;
+    edition?: Edition;
+    onMove?: (id: string, bayId: string, start: number) => void;
+    onExtend?: (id: string, duration: number) => void;
 }) => {
     const times = slots();
     const height = times.length * SLOT_PX;
+    const fluid = edition === "nov17";
+    const [dragging, setDragging] = useState(false);
+    const [over, setOver] = useState<string | null>(null);
+    /* Nov 11: every bay is 148px. Nov 17: bays share the width, so four bays get far wider columns than ten. */
+    const col = fluid ? { minWidth: MIN_COL_W } : { width: COL_W };
     return (
         <div className="h-[720px] overflow-auto rounded-xl bg-primary ring-1 ring-secondary">
-            <div className="relative" style={{ width: GUTTER + bays.length * COL_W, minWidth: "100%" }}>
+            <div
+                className="relative"
+                style={fluid ? { width: "100%", minWidth: GUTTER + bays.length * MIN_COL_W } : { width: GUTTER + bays.length * COL_W, minWidth: "100%" }}
+            >
                 {/* Bay names ride along as the day scrolls. */}
                 <div className="sticky top-0 z-20 flex border-b border-secondary bg-primary">
                     <div className="sticky left-0 z-30 shrink-0 bg-primary" style={{ width: GUTTER }} />
                     {bays.map((b) => (
-                        <div key={b.id} className="flex shrink-0 flex-col border-l border-secondary px-3 py-2.5" style={{ width: COL_W }}>
+                        <div key={b.id} className={cx("flex flex-col border-l border-secondary px-3 py-2.5", fluid ? "flex-1" : "shrink-0")} style={col}>
                             <span className="truncate text-sm font-semibold text-primary">{b.name}</span>
                             <span className="text-xs text-tertiary">Up to {b.capacity}</span>
                         </div>
@@ -287,32 +382,62 @@ const ColumnsSheet = ({
                         ))}
                     </div>
                     {bays.map((b) => (
-                        <div key={b.id} className="relative shrink-0 border-l border-secondary" style={{ width: COL_W, height }}>
-                            {times.map((t) => (
-                                <button
-                                    key={t}
-                                    type="button"
-                                    aria-label={`Book ${b.name} at ${fmtTime(t)}`}
-                                    onClick={() => onBook(b.id, t)}
-                                    style={{ height: SLOT_PX }}
-                                    className={cx(
-                                        "group flex w-full cursor-pointer items-center justify-center text-xs font-medium text-transparent transition duration-100 ease-linear hover:bg-brand-primary_alt hover:text-brand-secondary",
-                                        t % 60 === 0 ? "border-t border-secondary" : "border-t border-dashed border-tertiary",
-                                    )}
-                                >
-                                    <Plus className="size-3.5" aria-hidden="true" />
-                                    {fmtTime(t)}
-                                </button>
-                            ))}
+                        <div key={b.id} className={cx("relative border-l border-secondary", fluid ? "flex-1" : "shrink-0")} style={{ ...col, height }}>
+                            {times.map((t) => {
+                                const key = `${b.id}-${t}`;
+                                return (
+                                    <button
+                                        key={t}
+                                        type="button"
+                                        aria-label={`Book ${b.name} at ${fmtTime(t)}`}
+                                        onClick={() => onBook(b.id, t)}
+                                        onDragOver={(e) => {
+                                            if (!onMove || !e.dataTransfer.types.includes(DRAG_TYPE)) return;
+                                            e.preventDefault();
+                                            e.dataTransfer.dropEffect = "move";
+                                            if (over !== key) setOver(key);
+                                        }}
+                                        onDragLeave={() => over === key && setOver(null)}
+                                        onDrop={(e) => {
+                                            const id = e.dataTransfer.getData(DRAG_TYPE);
+                                            setOver(null);
+                                            setDragging(false);
+                                            if (id) onMove?.(id, b.id, t);
+                                        }}
+                                        style={{ height: SLOT_PX }}
+                                        className={cx(
+                                            "group flex w-full cursor-pointer items-center justify-center gap-1 text-xs font-medium text-transparent transition duration-100 ease-linear hover:bg-brand-primary_alt hover:text-brand-secondary",
+                                            t % 60 === 0 ? "border-t border-secondary" : "border-t border-dashed border-tertiary",
+                                            over === key && "bg-brand-primary_alt text-brand-secondary ring-2 ring-brand ring-inset",
+                                        )}
+                                    >
+                                        <Plus className="size-3.5" aria-hidden="true" />
+                                        {over === key ? `Move to ${fmtTime(t)}` : fmtTime(t)}
+                                    </button>
+                                );
+                            })}
                             {blocks
                                 .filter((x) => x.bayId === b.id)
                                 .map((x) => (
-                                    <BlockChip key={x.id} block={x} onOpen={() => onOpenBlock(x.id)} />
+                                    <BlockChip key={x.id} block={x} passThrough={dragging} onOpen={() => onOpenBlock(x.id)} />
                                 ))}
                             {reservations
                                 .filter((x) => x.bayId === b.id)
                                 .map((x) => (
-                                    <ColumnChip key={x.id} res={x} dim={isDim(x)} onOpen={() => onOpen(x.id)} />
+                                    <ColumnChip
+                                        key={x.id}
+                                        res={x}
+                                        dim={isDim(x)}
+                                        onOpen={() => onOpen(x.id)}
+                                        editable={Boolean(onMove)}
+                                        passThrough={dragging}
+                                        onDragStart={() => setDragging(true)}
+                                        onDragEnd={() => {
+                                            setDragging(false);
+                                            setOver(null);
+                                        }}
+                                        onExtend={(d) => onExtend?.(x.id, d)}
+                                    />
                                 ))}
                         </div>
                     ))}
@@ -529,10 +654,42 @@ const RowsSheet = ({
 /*  The page                                                                  */
 /* -------------------------------------------------------------------------- */
 
-const LAYOUT_COPY: Record<Layout, string> = {
-    columns: "Every bay for the day. Click open time to book it; click a booking to see or change it.",
-    rows: "Every bay for the day, read like the tee sheet: one row per half hour.",
+const LAYOUT_COPY: Record<Edition, Record<Layout, string>> = {
+    nov11: {
+        columns: "Every bay for the day. Click open time to book it; click a booking to see or change it.",
+        rows: "Every bay for the day, read like the tee sheet: one row per half hour.",
+    },
+    nov17: {
+        columns: "Every bay for the day. Click open time to book it, drag a booking to move it, drag its bottom edge to extend it.",
+        rows: "Every bay for the day, read like the tee sheet: one row per half hour. Book from any row.",
+    },
 };
+
+type Notice = { tone: "success" | "error"; text: string; undo?: Reservation[] };
+
+/** What just happened on the sheet. A move or an extend can be undone; a refusal says why. */
+const SheetNotice = ({ notice, onUndo, onDismiss }: { notice: Notice | null; onUndo: () => void; onDismiss: () => void }) =>
+    notice ? (
+        <div
+            role={notice.tone === "error" ? "alert" : "status"}
+            className={cx(
+                "flex items-center justify-between gap-3 rounded-xl px-4 py-3 text-sm ring-1 ring-inset",
+                notice.tone === "error" ? "bg-error-primary text-error-primary ring-error_subtle" : "bg-success-primary text-primary ring-fg-success-secondary",
+            )}
+        >
+            <span>{notice.text}</span>
+            <span className="flex items-center gap-3">
+                {notice.undo && (
+                    <Button size="sm" color="link-color" onClick={onUndo}>
+                        Undo
+                    </Button>
+                )}
+                <button type="button" aria-label="Dismiss" onClick={onDismiss} className="cursor-pointer text-fg-quaternary">
+                    ✕
+                </button>
+            </span>
+        </div>
+    ) : null;
 
 export const BaySheetPage = ({
     layout,
@@ -540,8 +697,11 @@ export const BaySheetPage = ({
     initialBays = [],
     initialQuery = "",
     note,
+    edition = "nov17",
 }: {
     layout: Layout;
+    /** Which round of the sheet to draw. Nov 11 stays as it was reviewed. */
+    edition?: Edition;
     initialPanel?: Panel;
     initialBays?: string[];
     initialQuery?: string;
@@ -554,6 +714,8 @@ export const BaySheetPage = ({
     const [bayFilter, setBayFilter] = useState<string[]>(initialBays);
     const [query, setQuery] = useState(initialQuery);
     const [toast, setToast] = useState<string | null>(null);
+    const [notice, setNotice] = useState<Notice | null>(null);
+    const nov17 = edition === "nov17";
 
     const bays = bayFilter.length ? BAYS.filter((b) => bayFilter.includes(b.id as string)) : BAYS;
     const q = query.trim().toLowerCase();
@@ -571,6 +733,43 @@ export const BaySheetPage = ({
     };
     const open = panel?.kind === "details" ? reservations.find((r) => r.id === panel.id) : undefined;
 
+    /*
+     * Nov 17: move (drag to another bay or time) and extend (drag the bottom edge,
+     * or +30m / +1h in the details panel). Same guards as booking: no overlap, the
+     * party has to fit the bay, nothing runs past closing. A repeating booking
+     * changes on this day only, like any other edit.
+     */
+    const change = (id: string, next: Partial<Reservation>, kind: "move" | "extend") => {
+        const res = reservations.find((x) => x.id === id);
+        if (!res) return;
+        const after = { ...res, ...next };
+        if (after.bayId === res.bayId && after.start === res.start && after.duration === res.duration) return;
+        const name = customerById(res.customerId)?.name;
+        const bay = bayById(after.bayId);
+        const verb = kind === "move" ? "move" : "extend";
+        const refuse = (why: string) => setNotice({ tone: "error", text: `Can't ${verb} ${name}'s booking: ${why}` });
+        if (after.start + after.duration > DAY_END) return refuse(`it would run past closing at ${fmtTime(DAY_END)}.`);
+        if (after.party > bay.capacity) return refuse(`${bay.name} holds up to ${bay.capacity} and this party is ${after.party}.`);
+        const clash = conflictFor(reservations, blocks, { ...after, id });
+        if (clash)
+            return refuse(
+                clash.kind === "reservation"
+                    ? `${customerById(clash.with.customerId)?.name} has ${bay.name} ${fmtTime(clash.with.start)}–${fmtTime(clash.with.start + clash.with.duration)}.`
+                    : `${bay.name} is blocked ${fmtTime(clash.with.start)}–${fmtTime(clash.with.start + clash.with.duration)} (${clash.with.label}).`,
+            );
+        const before = reservations;
+        setReservations((all) => all.map((x) => (x.id === id ? after : x)));
+        const series = res.seriesId ? " Only this day changes; the rest of the series stays put." : "";
+        setNotice({
+            tone: "success",
+            text:
+                kind === "move"
+                    ? `${name} moved to ${bay.name} at ${fmtTime(after.start)}.${series}`
+                    : `${name} now runs until ${fmtTime(after.start + after.duration)} (${fmtDuration(after.duration)}).${series}`,
+            undo: before,
+        });
+    };
+
     const sheetProps = {
         bays,
         reservations,
@@ -586,15 +785,20 @@ export const BaySheetPage = ({
             nav={{ activeId: BAY_SHEET_NAV, scrollToActive: true }}
             course="bushwood"
             title="Bay Sheet"
-            description={LAYOUT_COPY[layout]}
+            description={LAYOUT_COPY[edition][layout]}
             header={
                 <CreditsHeader
                     crumbs={["Simulator Bays", "Bay Sheet"]}
                     title="Bay Sheet"
-                    description={LAYOUT_COPY[layout]}
+                    description={LAYOUT_COPY[edition][layout]}
                     actions={
                         <ActionBar
-                            primary={{ id: "book", label: "New booking", icon: Plus, onAction: () => setPanel({ kind: "book", draft: firstFree() }) }}
+                            /* Nov 17: no New booking button. Booking starts on the sheet itself (click open time, or Book on a row). */
+                            primary={
+                                nov17
+                                    ? undefined
+                                    : { id: "book", label: "New booking", icon: Plus, onAction: () => setPanel({ kind: "book", draft: firstFree() }) }
+                            }
                             secondary={[
                                 { id: "print", label: "Print", icon: Printer },
                                 {
@@ -611,11 +815,29 @@ export const BaySheetPage = ({
         >
             {note && <div className="rounded-lg bg-brand-primary_alt px-4 py-3 text-sm text-brand-secondary ring-1 ring-brand ring-inset">{note}</div>}
             <Toast message={toast} onDismiss={() => setToast(null)} />
+            <SheetNotice
+                notice={notice}
+                onDismiss={() => setNotice(null)}
+                onUndo={() => {
+                    if (notice?.undo) setReservations(notice.undo);
+                    setNotice({ tone: "success", text: "Undone." });
+                }}
+            />
             <Toolbar query={query} onQuery={setQuery} bayFilter={bayFilter} onBayFilter={setBayFilter} />
             {layout === "columns" ? (
                 <>
-                    <SummaryLine reservations={reservations.filter((r) => bays.some((b) => b.id === r.bayId))} />
-                    <ColumnsSheet {...sheetProps} />
+                    <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+                        <SummaryLine reservations={reservations.filter((r) => bays.some((b) => b.id === r.bayId))} />
+                        {nov17 && (
+                            <span className="text-xs text-tertiary">Click open time to book · Drag a booking to move it · Drag its bottom edge to extend</span>
+                        )}
+                    </div>
+                    <ColumnsSheet
+                        {...sheetProps}
+                        edition={edition}
+                        onMove={nov17 ? (id, bayId, start) => change(id, { bayId, start }, "move") : undefined}
+                        onExtend={nov17 ? (id, duration) => change(id, { duration }, "extend") : undefined}
+                    />
                 </>
             ) : (
                 <>
@@ -643,7 +865,8 @@ export const BaySheetPage = ({
             )}
             {open && (
                 <DetailsPanel
-                    key={open.id}
+                    key={`${open.id}-${open.bayId}-${open.start}-${open.duration}`}
+                    onExtend={nov17 ? (minutes) => change(open.id, { duration: open.duration + minutes }, "extend") : undefined}
                     res={open}
                     reservations={reservations}
                     blocks={blocks}

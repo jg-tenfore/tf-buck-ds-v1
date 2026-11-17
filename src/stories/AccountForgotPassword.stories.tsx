@@ -11,7 +11,8 @@ import { FeaturedIcon } from "@/components/foundations/featured-icon/featured-ic
  * except the final success screen. Voice: a member resetting their booking login.
  */
 const meta: Meta = {
-    title: "Sign in ∕ Sign up/Forgot password",
+    title: "Design System/Account Login/Forgot password",
+    id: "sign-in-∕-sign-up-forgot-password",
     parameters: { layout: "fullscreen" },
 };
 

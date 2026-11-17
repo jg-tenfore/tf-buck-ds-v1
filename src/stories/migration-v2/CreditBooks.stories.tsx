@@ -3,7 +3,7 @@ import { CreditBooksScreen } from "@/components/application/migration-v2/screens
 
 /** Reports › Credits › Credit Books — course-funded credit balances (references/100126/2-credits->creditBooks). */
 const meta = {
-    title: "Migration V2/2 Credits › Credit Books",
+    title: "Research/Today's Buck (Migration V2)/Credit Books",
     id: "migration-v2-credit-books",
     component: CreditBooksScreen,
     parameters: { layout: "fullscreen" },

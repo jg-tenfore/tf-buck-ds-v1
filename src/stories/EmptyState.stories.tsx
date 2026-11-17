@@ -10,7 +10,8 @@ import { Button } from "@/components/base/buttons/button";
  * `Description`, and `Footer`. Monochromatic, so the featured icon stays `gray`.
  */
 const meta = {
-    title: "Components/Feedback & Status/EmptyState",
+    title: "Design System/Components/Feedback & Status/EmptyState",
+    id: "components-feedback-status-emptystate",
     component: EmptyState,
     parameters: { layout: "centered" },
     argTypes: {

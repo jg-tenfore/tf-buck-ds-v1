@@ -8,7 +8,7 @@ import { GiftCardsPage } from "@/components/application/credits-oct-27/gift-card
  * Option B keeps them as sub-tabs.
  */
 const meta = {
-    title: "Credits - OCT 27/1 Gift Cards",
+    title: "Prototypes/Credits/Gift Cards",
     id: "credits-oct-27-gift-cards",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;

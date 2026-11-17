@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
-import { AlertCircle, AlertTriangle, CheckCircle, Lock01, Receipt, Repeat04, SearchLg, Ticket01, Trash01, UserX01, XClose } from "@untitledui/icons";
+import { AlertCircle, AlertTriangle, CheckCircle, Lock01, Plus, Receipt, Repeat04, SearchLg, Ticket01, Trash01, UserX01, XClose } from "@untitledui/icons";
 import { Dialog as AriaDialog, Modal as AriaModal, ModalOverlay as AriaModalOverlay } from "react-aria-components";
 import { Badge } from "@/components/base/badges/badges";
 import { Button } from "@/components/base/buttons/button";
@@ -16,6 +16,7 @@ import {
     type Block,
     type Customer,
     DAILY_LIMIT,
+    DAY_END,
     DURATIONS,
     NO_MEMBERSHIP,
     REPEAT_LABEL,
@@ -420,6 +421,7 @@ export const DetailsPanel = ({
     onSave,
     onStatus,
     onCancelSeries,
+    onExtend,
 }: {
     res: Reservation;
     reservations: Reservation[];
@@ -428,6 +430,8 @@ export const DetailsPanel = ({
     onSave: (res: Reservation, message: string) => void;
     onStatus: (res: Reservation, message: string) => void;
     onCancelSeries: (seriesId: string) => void;
+    /** Nov 17: extend in place by +30m or +1h, without retyping the length. */
+    onExtend?: (minutes: number) => void;
 }) => {
     const customer = customerById(res.customerId)!;
     const [where, setWhere] = useState({ bayId: res.bayId, start: res.start, duration: res.duration, party: res.party });
@@ -510,6 +514,7 @@ export const DetailsPanel = ({
                         {conflict.kind === "reservation" ? `${customerById(conflict.with.customerId)?.name} has it.` : `Blocked: ${conflict.with.label}.`}
                     </Callout>
                 )}
+                {onExtend && live && <ExtendRow res={res} reservations={reservations} blocks={blocks} disabled={dirty} onExtend={onExtend} />}
             </Group>
 
             <Group title="Fee">
@@ -559,6 +564,55 @@ export const DetailsPanel = ({
                 </Callout>
             )}
         </SlideOver>
+    );
+};
+
+/** +30m / +1h, each checked against the next booking or block, and closing time. */
+const ExtendRow = ({
+    res,
+    reservations,
+    blocks,
+    disabled,
+    onExtend,
+}: {
+    res: Reservation;
+    reservations: Reservation[];
+    blocks: Block[];
+    disabled: boolean;
+    onExtend: (minutes: number) => void;
+}) => {
+    const options = [30, 60].map((m) => {
+        const end = res.start + res.duration + m;
+        const clash = conflictFor(reservations, blocks, { bayId: res.bayId, start: res.start, duration: res.duration + m, id: res.id });
+        const why =
+            end > DAY_END
+                ? `runs past closing`
+                : clash
+                  ? clash.kind === "reservation"
+                      ? `${customerById(clash.with.customerId)?.name} is next at ${fmtTime(clash.with.start)}`
+                      : `blocked at ${fmtTime(clash.with.start)}`
+                  : undefined;
+        return { m, end, why };
+    });
+    const blocked = options.find((o) => o.why);
+    return (
+        <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm font-medium text-secondary">Extend</span>
+            {options.map((o) => (
+                <Button key={o.m} size="sm" color="secondary" iconLeading={Plus} isDisabled={disabled || Boolean(o.why)} onClick={() => onExtend(o.m)}>
+                    {fmtDuration(o.m)} · until {fmtTime(o.end)}
+                </Button>
+            ))}
+            {disabled ? (
+                <span className="text-xs text-tertiary">Save or undo your edits first.</span>
+            ) : (
+                blocked && (
+                    <span className="text-xs text-tertiary">
+                        Can't add {fmtDuration(blocked.m)}: {blocked.why}.
+                    </span>
+                )
+            )}
+        </div>
     );
 };
 

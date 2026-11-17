@@ -6,6 +6,9 @@ const config: StorybookConfig = {
     framework: "@storybook/nextjs-vite",
     staticDirs: [
         "../public",
+        // legacy-redirects.js: sends links to moved docs pages to their new id
+        // (loaded by manager-head.html and preview-head.html).
+        "./static",
         // Serve sample imagery at stable URLs (…-images/...) in both dev and
         // static builds, independent of Vite asset resolution. Used by stories
         // and upcoming app screens (Sagamore course, Pro Shop store, etc.).

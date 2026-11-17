@@ -28,7 +28,8 @@ import type { NavItemType } from "@/components/application/app-navigation/config
 type Icon = ComponentType<HTMLAttributes<HTMLOrSVGElement>>;
 
 const meta: Meta = {
-    title: "App Chrome/Nav Proposal",
+    title: "Research/Nav Proposal",
+    id: "app-chrome-nav-proposal",
     parameters: { layout: "fullscreen" },
 };
 

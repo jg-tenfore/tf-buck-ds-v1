@@ -1,0 +1,27 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { ComingUp, OpenDecisions, ProcessHero, ProcessSteps, ShippedList } from "./process-sections";
+import { Page, Section } from "./ui";
+
+<Meta title="Start Here/Process & roadmap" />
+
+<Page>
+
+<ProcessHero />
+
+<Section title="How work flows" intro="Five steps, the same every round.">
+    <ProcessSteps />
+</Section>
+
+<Section id="open-decisions" title="Open decisions" intro="Questions for Weston. Both options are built for each, so they can be compared on screen.">
+    <OpenDecisions />
+</Section>
+
+<Section title="Coming up: the CraneWeb online shop" intro="CraneWeb replaces today's golfer-facing web shop. Three pieces came up on the Nov 11 call.">
+    <ComingUp />
+</Section>
+
+<Section title="What has shipped" intro="Every change merged to main, newest first, with its pull request number. Underlined lines open what they shipped.">
+    <ShippedList />
+</Section>
+
+</Page>

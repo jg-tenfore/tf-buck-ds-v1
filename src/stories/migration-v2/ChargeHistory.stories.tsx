@@ -3,7 +3,7 @@ import { ChargeHistoryScreen } from "@/components/application/migration-v2/scree
 
 /** Reports › Charges › History — every charge, payment and frozen invoice for one customer (references/100126/5-charges->customerHistory). */
 const meta = {
-    title: "Migration V2/5 Charges › History",
+    title: "Research/Today's Buck (Migration V2)/History",
     id: "migration-v2-charge-history",
     component: ChargeHistoryScreen,
     parameters: { layout: "fullscreen" },

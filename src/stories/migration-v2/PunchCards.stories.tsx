@@ -3,7 +3,7 @@ import { PunchCardsScreen } from "@/components/application/migration-v2/screens-
 
 /** Reports › Credits › Punch Cards — punch cards sold and punches left (references/100126/1-credits->punchCards). */
 const meta = {
-    title: "Migration V2/1 Credits › Punch Cards",
+    title: "Research/Today's Buck (Migration V2)/Punch Cards",
     id: "migration-v2-punch-cards",
     component: PunchCardsScreen,
     parameters: { layout: "fullscreen" },
