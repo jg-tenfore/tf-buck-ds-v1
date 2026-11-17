@@ -19,7 +19,7 @@ export const ArchiveHero = () => (
                 <Cta kind="primary" href={story(DOCS.overview)}>
                     Back to the Overview
                 </Cta>
-                <Cta kind="secondary" href={story(SUMMARIES.nov17)}>
+                <Cta kind="secondary" href={story(SUMMARIES.nov17Photos)}>
                     The newest review
                 </Cta>
             </CtaRow>
