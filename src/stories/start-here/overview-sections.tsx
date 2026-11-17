@@ -22,7 +22,7 @@ export const OverviewHero = () => (
         art={heroArt}
         actions={
             <CtaRow>
-                <Cta kind="primary" href={story(SUMMARIES.nov17Photos)}>
+                <Cta kind="primary" href={story(SUMMARIES.nov17Packages)}>
                     Open the newest review
                 </Cta>
                 <Cta kind="secondary" href={story(DOCS.howToReview)}>
@@ -44,6 +44,19 @@ export const WhatsNew = () => (
     <CardGrid min={220}>
         <MiniCard
             eyebrow="Nov 17 · Newest"
+            title="Lesson packages"
+            href={story(SUMMARIES.nov17Packages)}
+            cta="Summary"
+            links={[
+                ["Builder", story("nov-17-2026-lesson-packages--builder-five-pack")],
+                ["Customer credits", story("nov-17-2026-lesson-packages--customer-credits")],
+            ]}
+            tone="brand"
+        >
+            Packs of lesson credits golfers book one at a time: staff type the pack price, Buck works out the per-lesson price and the saving.
+        </MiniCard>
+        <MiniCard
+            eyebrow="Nov 17"
             title="Default clinic photos"
             href={story(SUMMARIES.nov17Photos)}
             cta="Summary"
@@ -51,7 +64,6 @@ export const WhatsNew = () => (
                 ["Picker", story("nov-17-2026-default-clinic-photos--picker-default")],
                 ["Template list", story("nov-17-2026-default-clinic-photos--template-list")],
             ]}
-            tone="brand"
         >
             Six default photo sets for clinic templates: a course picks one in the template builder, and any template can use its own photo.
         </MiniCard>
@@ -226,7 +238,7 @@ export const Folders = () => (
         <MiniCard eyebrow="3" title="Design System" href={story("foundations-colors--brand")} cta="Colors">
             Styles, components, the App Chrome (Global Nav, Command Menu) and the account login screens.
         </MiniCard>
-        <MiniCard eyebrow="4" title="Reviews" href={story(SUMMARIES.nov17Photos)} cta="Newest summary">
+        <MiniCard eyebrow="4" title="Reviews" href={story(SUMMARIES.nov17Packages)} cta="Newest summary">
             One folder per review round, newest first. Each opens on a Summary: what was asked, what was built, what's open.
         </MiniCard>
         <MiniCard eyebrow="5" title="Research" href={story("migration-v2-global-nav--expanded")} cta="Today's Buck">

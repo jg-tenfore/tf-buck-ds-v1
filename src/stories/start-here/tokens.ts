@@ -32,6 +32,7 @@ export const DOCS = {
 
 /** Each review round's Summary page, newest first. */
 export const SUMMARIES = {
+    nov17Packages: "nov-17-2026-lesson-packages-overview--overview",
     nov17Photos: "nov-17-2026-default-photos-overview--overview",
     nov17: "nov-17-2026-overview--overview",
     nov11: "nov-11-2026-overview--overview",
@@ -42,7 +43,7 @@ export const SUMMARIES = {
 
 /** Story counts, taken from Storybook's index.json on Nov 17, 2026. */
 export const COUNTS = {
-    prototypes: 193,
+    prototypes: 201,
     fullApplication: 74,
     areas: 19,
     products: 40,
@@ -51,5 +52,5 @@ export const COUNTS = {
     punchCards: 32,
     courseSettings: 6,
     feedbackFixes: 7,
-    reviews: 6,
+    reviews: 7,
 } as const;
