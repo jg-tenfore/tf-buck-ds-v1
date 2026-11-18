@@ -100,7 +100,17 @@ const preview: Preview = {
                         "Styles",
                         ["Colors", "Typography", "Icons", "Logos", "Effect Styles", "Radius", "Border", "Spacing", "Data Visualization"],
                         "Components",
-                        ["Actions", "Forms", "Feedback & Status", "Layout & Structure", "Charts & Data", "Media & Visuals", "Navigation"],
+                        [
+                            "Actions",
+                            "Forms",
+                            // Time Picker sits with the other date and time fields; the rest stay alphabetical.
+                            ["Calendar", "Checkbox", "Date Picker", "Date Time Picker", "Date Selector", "Time Picker", "*"],
+                            "Feedback & Status",
+                            "Layout & Structure",
+                            "Charts & Data",
+                            "Media & Visuals",
+                            "Navigation",
+                        ],
                         "App Chrome",
                         ["Global Nav", "Command Menu"],
                         "Account Login",

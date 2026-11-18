@@ -2,7 +2,7 @@ import { getLocalTimeZone, today } from "@internationalized/date";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { DatePicker } from "@/components/application/date-picker/date-picker";
 import { DateRangePicker } from "@/components/application/date-picker/date-range-picker";
-import { Input } from "@/components/base/input/input";
+import { TimePicker } from "@/components/application/time-picker/time-picker";
 
 const teeDate = today(getLocalTimeZone());
 
@@ -75,7 +75,7 @@ export const DateTimePicker: Story = {
                 <span className="text-sm font-medium text-secondary">Tee date</span>
                 <DatePicker defaultValue={teeDate} size="md" />
             </div>
-            <Input type="time" label="Tee time" defaultValue="07:10" className="w-36" />
+            <TimePicker label="Tee time" interval={15} defaultValue={7 * 60 + 10} className="w-44" />
         </div>
     ),
 };
