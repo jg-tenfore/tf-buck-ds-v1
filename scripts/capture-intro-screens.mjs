@@ -29,7 +29,7 @@ mkdirSync(out, { recursive: true });
 const SHOTS = [
     // Simulator Bays › Bay Sheet (Nov 11)
     ["bay-a", "nov-17-2026-bay-sheet--concept-a"],
-    ["bay-b", "nov-17-2026-bay-sheet--concept-b"],
+    ["bay-b", "nov-11-2026-bay-sheet--concept-b"],
     ["bay-book", "nov-17-2026-bay-sheet--book"],
     // Products (Oct 27)
     ["products-list", "products-oct-27-products--list"],

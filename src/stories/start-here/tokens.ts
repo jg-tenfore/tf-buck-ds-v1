@@ -43,12 +43,12 @@ export const SUMMARIES = {
 
 /** Story counts, taken from Storybook's index.json on Nov 17, 2026. */
 export const COUNTS = {
-    prototypes: 201,
+    prototypes: 199,
     fullApplication: 74,
     areas: 19,
     products: 40,
     credits: 21,
-    baySheet: 7,
+    baySheet: 5,
     punchCards: 32,
     courseSettings: 6,
     feedbackFixes: 7,

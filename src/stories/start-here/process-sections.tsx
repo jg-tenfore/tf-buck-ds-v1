@@ -100,16 +100,6 @@ export const ShippedList = () => <Shipped items={SHIPPED} />;
 export const OpenDecisions = () => (
     <CardGrid min={420}>
         <Decision
-            title="Bay Sheet: which layout?"
-            a={["A · Bay columns", "Bays across, time down; a booking's height is its length. Best for “which bay is free at 6?”"]}
-            b={["B · Tee sheet rows", "The Daily Tee Sheet's layout: day stats, then a row per half hour. Best for “what's happening next?”"]}
-            source="Asked in Reviews › Nov 11 · Summary. A third answer is on the table: A with B's day stats on top."
-            links={[
-                ["Open A", story("nov-17-2026-bay-sheet--concept-a")],
-                ["Open B", story("nov-17-2026-bay-sheet--concept-b")],
-            ]}
-        />
-        <Decision
             title="Records: sections or sub-tabs?"
             a={["Option A · sections", "Every former sub-tab becomes a section on one scrolling page."]}
             b={["Option B · sub-tabs", "The sub-tabs stay under the record header; each holds stacked sections."]}
