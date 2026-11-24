@@ -96,15 +96,15 @@ export const CompareBays = () => (
         items={[
             {
                 img: shotBayA,
-                label: "A · Bay columns",
+                label: "A · Bay columns (picked)",
                 note: "Bays across, time down. Best for “which bay is free at 6?”",
-                href: story("nov-17-2026-bay-sheet--concept-a"),
+                href: story("nov-11-2026-bay-sheet--concept-a"),
             },
             {
                 img: shotBayB,
                 label: "B · Tee sheet rows",
                 note: "A row per half hour, with day stats on top. Best for “what's happening next?”",
-                href: story("nov-17-2026-bay-sheet--concept-b"),
+                href: story("nov-11-2026-bay-sheet--concept-b"),
             },
         ]}
     />

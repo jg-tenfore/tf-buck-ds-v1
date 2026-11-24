@@ -71,7 +71,7 @@ const preview: Preview = {
                             ["List", "*"],
                         ],
                         "Simulator Bays",
-                        ["Bay Sheet", ["A · Bay columns", "B · Tee sheet rows", "Fewer bays, wider columns", "*"]],
+                        ["Bay Sheet", ["A · Bay columns", "Fewer bays, wider columns", "*"]],
                         "Instruction",
                         [
                             "Lesson Packages",

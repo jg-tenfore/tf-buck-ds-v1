@@ -128,15 +128,15 @@ export const AreaCards = () => (
             badge="Newest"
             eyebrow={`Simulator Bays · ${COUNTS.baySheet} screens`}
             title="Bay Sheet"
-            body="Every bay for the day on one sheet: book, repeat, block a bay, add a note. Two layouts to compare, both opening the same booking panel."
+            body="Every bay for the day on one sheet, bays across and time down: book, repeat, block a bay, add a note, drag a booking to move or extend it."
             note={
                 <>
-                    <b className="font-semibold text-secondary">Look at:</b> A against B, the overlap and daily-limit warnings.
+                    <b className="font-semibold text-secondary">Look at:</b> dragging a booking, the overlap and daily-limit warnings.
                 </>
             }
             href={story("nov-17-2026-bay-sheet--concept-a")}
-            cta="Open layout A"
-            links={[["Layout B", story("nov-17-2026-bay-sheet--concept-b")]]}
+            cta="Open the Bay Sheet"
+            links={[["Fewer bays", story("nov-17-2026-bay-sheet--fewer-bays")]]}
         />
         <ShotCard
             shot={shotProducts}

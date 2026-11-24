@@ -62,14 +62,11 @@ const CHANGES: { title: string; body: ReactNode; links: [string, string][] }[] =
                 <B>+30m</B> or <B>+1h</B>, which are greyed out with the reason when the next booking or a block is in the way. The fee follows the new length.
             </>
         ),
-        links: [
-            [`${NOW}extend`, "Extend from the booking"],
-            [`${NOW}extend-tab`, "On B, tab open"],
-        ],
+        links: [[`${NOW}extend`, "Extend from the booking"]],
     },
     {
         title: "4 · No New booking button",
-        body: "Booking starts on the sheet: click open time on A, or Book on a row on B. Block a bay stays as a page action, since a block isn't tied to one slot and can cover several bays.",
+        body: "Booking starts on the sheet: click open time in any bay. Block a bay stays as a page action, since a block isn't tied to one slot and can cover several bays.",
         links: [
             [`${NOW}book`, "Book from the sheet"],
             [`${NOW}block-bay`, "Block a bay"],
@@ -111,8 +108,6 @@ export function Nov17Overview() {
                         links={[
                             [`${NOW}concept-a`, "Nov 17 · A"],
                             [`${THEN}concept-a`, "Nov 11 · A"],
-                            [`${NOW}concept-b`, "Nov 17 · B"],
-                            [`${THEN}concept-b`, "Nov 11 · B"],
                         ]}
                     />
                 </Block>
@@ -131,9 +126,15 @@ export function Nov17Overview() {
                     />
                 </Block>
 
+                <Block title="Decided">
+                    <p>
+                        <B>Layout A (bay columns)</B> was picked on Nov 24. Layout B (tee sheet rows) is gone from Prototypes; it stays in the Nov 11 review
+                        folder for reference.
+                    </p>
+                </Block>
+
                 <Block title="Still open">
                     <ul className="list-disc pl-5">
-                        <li>Layout A (bay columns) or B (tee sheet rows). Drag to move and drag to extend are built on A only; B extends from the booking.</li>
                         <li>Whether the daily limit counts bookings or hours, and whether repeats need an end date (from Nov 11).</li>
                     </ul>
                 </Block>

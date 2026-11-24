@@ -210,6 +210,7 @@ const ColumnChip = ({
     const live = holdsTime(res);
     const [preview, setPreview] = useState<number | null>(null);
     const resizing = useRef(false);
+    const dragActive = useRef(false);
     const duration = preview ?? res.duration;
     const height = (duration / SLOT) * SLOT_PX - 4;
     const canEdit = Boolean(editable && live);
@@ -245,9 +246,15 @@ const ColumnChip = ({
                 if (resizing.current) return e.preventDefault();
                 e.dataTransfer.setData(DRAG_TYPE, res.id);
                 e.dataTransfer.effectAllowed = "move";
-                onDragStart?.();
+                // Wait a tick: changing the dragged chip (pointer-events-none) inside dragstart makes
+                // desktop Chrome cancel the drag straight away. Skip it if the drag already ended.
+                dragActive.current = true;
+                setTimeout(() => dragActive.current && onDragStart?.(), 0);
             }}
-            onDragEnd={onDragEnd}
+            onDragEnd={() => {
+                dragActive.current = false;
+                onDragEnd?.();
+            }}
             aria-label={`${customer.name}, ${fmtTime(res.start)}, ${fmtDuration(res.duration)}, ${STATUS_LABEL[res.status]}`}
             style={{ top: px(res.start) + 2, height }}
             className={cx(
